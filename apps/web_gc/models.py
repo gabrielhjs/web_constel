@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 
 
 class Talao(models.Model):
@@ -10,7 +11,15 @@ class Talao(models.Model):
         (2, 'Usado'),
     ]
     HELP_TEXT = "Insira um código válido de Talão"
-    talao = models.IntegerField(unique=True, help_text=HELP_TEXT)
+
+    talao = models.IntegerField(
+        unique=True,
+        help_text=HELP_TEXT,
+        validators=[
+            MinLengthValidator(6),
+            MaxLengthValidator(6),
+        ],
+    )
     status = models.IntegerField(choices=STATUS_CHOISES, default=0)
 
     def __str__(self):
@@ -40,7 +49,7 @@ class Combustivel(models.Model):
 
     HELP_TEXT = 'Insira um combustível'
 
-    combustivel = models.CharField(max_length=10, help_text=HELP_TEXT)
+    combustivel = models.CharField(unique=True, max_length=10, help_text=HELP_TEXT)
 
 
 class CadastroTalao(models.Model):
