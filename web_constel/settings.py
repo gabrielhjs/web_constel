@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'constel',
     'apps.web_gc',
     'django.contrib.admin',
     'django.contrib.auth',

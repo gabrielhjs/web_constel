@@ -5,6 +5,7 @@ from apps.web_gc.models import Talao, Vale
 
 
 class TalaoTestCase(TestCase):
+    """Testando a Model Talao"""
 
     def test_invalidos(self):
         """Testando se é possível cadastrar talões com formatos inválidos"""
@@ -26,10 +27,12 @@ class TalaoTestCase(TestCase):
         ]
         for talao in validos:
             with atomic():
-                self.assertTrue(Talao.objects.create(talao=talao))
+                test = Talao(talao=talao)
+                test.save()
 
 
 class ValeTestCase(TestCase):
+    """Testando a Model Vale"""
 
     def test_invalidos(self):
         """Testando se é possível cadastrar vales com formatos inválidos"""
