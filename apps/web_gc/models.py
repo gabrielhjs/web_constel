@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MinLengthValidator, MaxLengthValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Talao(models.Model):
@@ -16,8 +16,8 @@ class Talao(models.Model):
         unique=True,
         help_text=HELP_TEXT,
         validators=[
-            MinLengthValidator(6),
-            MaxLengthValidator(6),
+            MinValueValidator(100, 'Talão inválido'),
+            MaxValueValidator(999999, 'Talão inválido'),
         ],
     )
     status = models.IntegerField(choices=STATUS_CHOISES, default=0)
@@ -36,7 +36,14 @@ class Vale(models.Model):
     ]
     HELP_TEXT = "Insira um código válido de Vale"
 
-    vale = models.IntegerField(unique=True, help_text=HELP_TEXT)
+    vale = models.IntegerField(
+        unique=True,
+        help_text=HELP_TEXT,
+        validators=[
+            MinValueValidator(10000, 'Vale inválido'),
+            MaxValueValidator(999999, 'Vale inválido'),
+        ],
+    )
     status = models.IntegerField(choices=STATUS_CHOISES, default=0)
     talao = models.ForeignKey(Talao, on_delete=models.CASCADE)
 
