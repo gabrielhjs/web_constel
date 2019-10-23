@@ -123,5 +123,6 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-   '/constel/static/cosntel/',
+    '/constel/static/constel/',
+    '/apps/web_gc/static/web_gc/',
 )

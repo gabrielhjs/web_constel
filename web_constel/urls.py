@@ -18,6 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('apps/web_gc', include('apps.web_gc.urls')),
-    path('constel/', include('constel.urls')),
+    path('', include('constel.urls')),
     path('admin/', admin.site.urls),
 ]
