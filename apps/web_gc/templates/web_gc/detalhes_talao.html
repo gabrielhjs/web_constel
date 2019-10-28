@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% extends 'constel/base.html' %}
+{% block title %} Talão {{ talao.talao }} {% endblock %}
+{% block content %}
+<table>
+    <tbody>
+    <tr>
+        <td>
+            <p>Talão:</p>
+        </td>
+        <td>
+            <p>{{ talao.talao }}</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>Data de cadastro:</p>
+        </td>
+        <td>
+            <p>{{ talao.data }}</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>Status:</p>
+        </td>
+        <td>
+            <p>{{ talao.status }}</p>
+        </td>
+    </tr>
+</table>
+{% endblock %}

@@ -2,6 +2,14 @@
 {% extends 'constel/base.html' %}
 {% block title %}Cadastro Talão{% endblock %}
 {% block content %}
-<h1>PÁGINA DO GC</h1>
-<h1 class="grande">AMO A ELVIRA</h1>
+<div><h1>Gas Control</h1></div>
+<div>
+    <a href="{% url 'cadastro_talao' %}"><button>Cadastrar novo Talão</button></a>
+</div>
+<div>
+    <a href="{% url 'consulta_talao' %}"><button>Consultar Talão</button></a>
+</div>
+<div>
+    <a href="{% url 'index' %}"><button>Sair</button></a>
+</div>
 {% endblock %}

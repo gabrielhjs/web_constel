@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from .forms import FormTalao
-from .models import CadastroTalao, Talao
+from .models import Talao
 
 
 def view_index(request):
@@ -16,14 +16,26 @@ def get_name(request):
         form = FormTalao(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            form.save()
-            talao = Talao.objects.get(talao=form.data.get('talao'))
-            cadastro = CadastroTalao(talao=talao)
-            cadastro.save()
-            return HttpResponseRedirect('')
+            return form.save()
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = FormTalao()
 
     return render(request, 'web_gc/cadastro_talao.html', {'form': form})
+
+
+def view_taloes(request):
+    lista_talao = Talao.objects.all()
+    context = {
+        'lista_talao': lista_talao
+    }
+    return render(request, 'web_gc/consulta_talao.html', context)
+
+
+def view_talao(request, talao_id):
+    talao = Talao.objects.filter(talao=talao_id)
+    context = {
+        'talao': talao,
+    }
+    return render(request, 'web_gc/detalhes_talao.html', context)

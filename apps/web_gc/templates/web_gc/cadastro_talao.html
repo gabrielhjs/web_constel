@@ -2,9 +2,10 @@
 {% extends 'constel/base.html' %}
 {% block title %}Cadastro Talão{% endblock %}
 {% block content %}
-<form method="post">
+<form method="post" action="{% url 'gc_index' %}">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Submit">
 </form>
+<a href="{% url 'gc_index' %}"><button>Voltar</button></a>
 {% endblock %}

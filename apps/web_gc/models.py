@@ -20,7 +20,8 @@ class Talao(models.Model):
             MaxValueValidator(999999, 'Talão inválido'),
         ],
     )
-    status = models.IntegerField(choices=STATUS_CHOISES, default=0)
+    status = models.IntegerField(choices=STATUS_CHOISES, default=0, editable=True)
+    data = models.DateTimeField(auto_now=True, editable=True)
 
     def __str__(self):
         return '%s' % self.talao
@@ -64,6 +65,9 @@ class CadastroTalao(models.Model):
 
     talao = models.ForeignKey(Talao, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '%s' % self.talao
 
 
 class EntregaTalao(models.Model):

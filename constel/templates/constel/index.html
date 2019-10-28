@@ -2,10 +2,11 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel{% endblock %}
 {% block content %}
+<div><h1>Constel</h1></div>
 <div>
-    <a href="gc">Gas Control</a>
+    <a href="{% url 'gc_index' %}"><button>Gas Control</button></a>
 </div>
 <div>
-    <a href="#">Cont</a>
+    <a href="#"><button>Cont</button></a>
 </div>
 {% endblock %}
