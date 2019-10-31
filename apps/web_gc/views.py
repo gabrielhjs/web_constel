@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from .forms import FormTalao
+from .forms import FormTalao,FormEntregaTalao
 from .models import Talao
 
 
@@ -16,7 +16,8 @@ def get_name(request):
         form = FormTalao(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            return form.save()
+            form.save()
+            return HttpResponseRedirect('/gc')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -39,3 +40,13 @@ def view_talao(request, talao_id):
         'talao': talao,
     }
     return render(request, 'web_gc/detalhes_talao.html', context)
+
+
+def view_distribui_talao(request):
+    if request.method == 'POST':
+        form = FormEntregaTalao(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/gc')
+    else:
+        form = FormEntregaTalao()

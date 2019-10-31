@@ -4,10 +4,11 @@
 {% block content %}
 <table>
     <thead>
-      <tr>
-        <th>Talão</th>
-        <th>Detalhes</th>
-      </tr>
+        <tr>
+            <th>Talão</th>
+            <th>Data de cadastro</th>
+            <th>Status</th>
+        </tr>
     </thead>
     <tbody>
     {% for talao in lista_talao %}
@@ -16,7 +17,10 @@
                 <p>{{ talao.talao }}</p>
             </td>
             <td>
-                <div><a href="/gc/contalao/{{ talao.talao }}/"><button>Acessar</button></a></div>
+                <p>{{ talao.data }}</p>
+            </td>
+            <td>
+                <p>{{ talao.status }}</p>
             </td>
         </tr>
     {% endfor %}
