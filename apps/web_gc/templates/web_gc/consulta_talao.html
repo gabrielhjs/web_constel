@@ -8,6 +8,7 @@
             <th>Talão</th>
             <th>Data de cadastro</th>
             <th>Status</th>
+            <th>Detalhes</th>
         </tr>
     </thead>
     <tbody>
@@ -21,6 +22,11 @@
             </td>
             <td>
                 <p>{{ talao.status }}</p>
+            </td>
+            <td>
+                <div>
+                    <a href="{% url 'detalhes_talao' talao.talao %}"><button>Acessar</button></a>
+                </div>
             </td>
         </tr>
     {% endfor %}

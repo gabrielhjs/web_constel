@@ -16,14 +16,13 @@ def view_cadastrar_talao(request):
         form = FormTalao(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            form.save(commit=False)
+            form.save()
             print(form.cleaned_data['talao'])
             talao = Talao.objects.get(talao=form.cleaned_data['talao'])
             print(talao)
-            for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_inicial'] + 1):
-                vale = Vale(vale=i, status=1, talao=talao)
+            for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_final'] + 1):
+                vale = Vale(vale=i, status=0, talao=talao)
                 vale.save()
-            form.save()
             return HttpResponseRedirect('/gc')
 
     # if a GET (or any other method) we'll create a blank form
@@ -42,7 +41,7 @@ def view_taloes(request):
 
 
 def view_talao(request, talao_id):
-    talao = Talao.objects.filter(talao=talao_id)
+    talao = Talao.objects.get(talao=talao_id)
     context = {
         'talao': talao,
     }
