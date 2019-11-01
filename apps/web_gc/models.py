@@ -35,11 +35,9 @@ class Vale(models.Model):
         (1, 'Disponível'),
         (2, 'Usado'),
     ]
-    HELP_TEXT = "Insira um código válido de Vale"
 
     vale = models.IntegerField(
         unique=True,
-        help_text=HELP_TEXT,
         validators=[
             MinValueValidator(10000, 'Vale inválido'),
             MaxValueValidator(999999, 'Vale inválido'),
@@ -82,12 +80,8 @@ class EntregaTalao(models.Model):
 class EntregaVale(models.Model):
     """Classe que registra a entrega de vales para os funcionários"""
 
-    HELP_TEXT_VALE = 'Insira um vale cadastrado no sistema'
-    HELP_TEXT_COMBUSTIVEL = 'Insira um combustível cadstrado no sistema'
-    HELP_TEXT_VALOR = 'Insira o valor deste vale'
-
-    vale = models.ForeignKey(Vale, on_delete=models.CASCADE, help_text=HELP_TEXT_VALE)
+    vale = models.ForeignKey(Vale, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now=True)
-    combustivel = models.ForeignKey(Combustivel, on_delete=models.PROTECT, help_text=HELP_TEXT_COMBUSTIVEL)
-    valor = models.FloatField(help_text=HELP_TEXT_VALOR)
+    combustivel = models.ForeignKey(Combustivel, on_delete=models.PROTECT, verbose_name='Combustível')
+    valor = models.FloatField(null=True)
     observacao = models.TextField('Observações', blank=True, max_length=255)

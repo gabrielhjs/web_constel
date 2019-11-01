@@ -1,14 +1,24 @@
-from django.forms import ModelForm
-from apps.web_gc.models import Talao, EntregaTalao
+from django import forms
+
+from apps.web_gc.models import Talao, EntregaTalao, EntregaVale
 
 
-class FormTalao(ModelForm):
+class FormTalao(forms.ModelForm):
+    vale_inicial = forms.IntegerField(min_value=10000, max_value=999999)
+    vale_final = forms.IntegerField(min_value=10000, max_value=999999)
+
     class Meta:
         model = Talao
         fields = ['talao', ]
 
 
-class FormEntregaTalao(ModelForm):
+class FormEntregaTalao(forms.ModelForm):
     class Meta:
         model = EntregaTalao
-        fields = ['talao', ]
+        fields = '__all__'
+
+
+class FormEntregaVale(forms.ModelForm):
+    class Meta:
+        model = EntregaVale
+        fields = '__all__'
