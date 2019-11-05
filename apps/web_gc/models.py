@@ -57,6 +57,9 @@ class Combustivel(models.Model):
 
     combustivel = models.CharField(unique=True, max_length=10, help_text=HELP_TEXT)
 
+    def __str__(self):
+        return '%s' % self.combustivel
+
 
 class CadastroTalao(models.Model):
     """Classe que registra o cadastro de talões no sistema"""

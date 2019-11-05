@@ -1,6 +1,6 @@
 from django import forms
 
-from apps.web_gc.models import Talao, EntregaTalao, EntregaVale
+from apps.web_gc.models import Talao, EntregaTalao, EntregaVale, Combustivel
 
 
 class FormTalao(forms.ModelForm):
@@ -21,4 +21,10 @@ class FormEntregaTalao(forms.ModelForm):
 class FormEntregaVale(forms.ModelForm):
     class Meta:
         model = EntregaVale
+        fields = '__all__'
+
+
+class FormCadastraCombustivel(forms.ModelForm):
+    class Meta:
+        model = Combustivel
         fields = '__all__'

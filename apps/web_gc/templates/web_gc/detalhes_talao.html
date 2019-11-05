@@ -4,30 +4,49 @@
 {% block content %}
 <table>
     <tbody>
-    <tr>
-        <td>
-            <p>Talão:</p>
-        </td>
-        <td>
-            <p>{{ talao.talao }}</p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>Data de cadastro:</p>
-        </td>
-        <td>
-            <p>{{ talao.data }}</p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>Status:</p>
-        </td>
-        <td>
-            <p>{{ talao.status }}</p>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                <p>Talão:</p>
+            </td>
+            <td>
+                <p>{{ talao.talao }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>Data de cadastro:</p>
+            </td>
+            <td>
+                <p>{{ talao.data }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>Status:</p>
+            </td>
+            <td>
+                <p>{{ talao.status }}</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table>
+    <thead>
+        <th>Número do vale</th>
+        <th>Status</th>
+    </thead>
+    <tbody>
+        {% for vale in lista_vales %}
+            <tr>
+                <td>
+                    <p>{{ vale.vale }}</p>
+                </td>
+                <td>
+                    <p>{{ vale.status }}</p>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 <div>
     <a href="{% url 'consulta_talao' %}"><button>Voltar</button></a>

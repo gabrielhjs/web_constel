@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from .forms import FormTalao, FormEntregaTalao, FormEntregaVale
+from .forms import FormTalao, FormEntregaTalao, FormEntregaVale, FormCadastraCombustivel
 from .models import Talao, Vale
 
 
@@ -42,8 +42,10 @@ def view_taloes(request):
 
 def view_talao(request, talao_id):
     talao = Talao.objects.get(talao=talao_id)
+    lista_vales = Vale.objects.filter(talao=talao)
     context = {
         'talao': talao,
+        'lista_vales': lista_vales,
     }
     return render(request, 'web_gc/detalhes_talao.html', context)
 
@@ -52,6 +54,10 @@ def view_entrega_talao(request):
     if request.method == 'POST':
         form = FormEntregaTalao(request.POST)
         if form.is_valid():
+            talao = form.cleaned_data['talao']
+            talao.status = 1
+            Vale.objects.filter(talao=talao).update(status=1)
+            talao.save()
             form.save()
             return HttpResponseRedirect('/gc')
     else:
@@ -70,3 +76,15 @@ def view_entrega_vale(request):
         form = FormEntregaVale()
 
     return render(request, 'web_gc/entrega_vale.html', {'form': form})
+
+
+def view_cadastrar_combustivel(request):
+    if request.method == 'POST':
+        form = FormCadastraCombustivel(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/gc')
+    else:
+        form = FormCadastraCombustivel()
+
+    return render(request, 'web_gc/cadastro_combustivel.html', {'form': form})
