@@ -17,12 +17,13 @@ def view_cadastrar_talao(request):
         # check whether it's valid:
         if form.is_valid():
             form.save()
-            print(form.cleaned_data['talao'])
+
             talao = Talao.objects.get(talao=form.cleaned_data['talao'])
-            print(talao)
+
             for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_final'] + 1):
                 vale = Vale(vale=i, status=0, talao=talao)
                 vale.save()
+
             return HttpResponseRedirect('/gc')
 
     # if a GET (or any other method) we'll create a blank form

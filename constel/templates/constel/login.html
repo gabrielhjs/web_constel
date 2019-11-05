@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+{% extends 'constel/base.html' %}
+{% block title %}Constel Login{% endblock %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Login">
+</form>
+{% endblock %}
