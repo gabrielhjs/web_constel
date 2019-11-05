@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 
 from .forms import FormTalao, FormEntregaTalao, FormEntregaVale, FormCadastraCombustivel
 from .models import Talao, Vale
@@ -19,13 +20,24 @@ def view_cadastrar_talao(request):
         form = FormTalao(request.POST)
         # check whether it's valid:
         if form.is_valid():
+
             form.save()
 
             talao = Talao.objects.get(talao=form.cleaned_data['talao'])
 
-            for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_final'] + 1):
-                vale = Vale(vale=i, status=0, talao=talao)
-                vale.save()
+            try:
+
+                for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_final'] + 1):
+                    vale = Vale(vale=i, status=0, talao=talao)
+                    vale.save()
+
+            except IntegrityError as e:
+
+                talao.delete()
+
+                return HttpResponseRedirect('/gc/cadtalao')
+
+            form.save()
 
             return HttpResponseRedirect('/gc')
 
@@ -86,10 +98,7 @@ def view_entrega_vale(request):
     return render(request, 'web_gc/entrega_vale.html', {'form': form})
 
 
-<<<<<<< HEAD
 @login_required()
-=======
->>>>>>> b817b89fa1a6b8977684f92d8a969e6c0e229ac9
 def view_cadastrar_combustivel(request):
     if request.method == 'POST':
         form = FormCadastraCombustivel(request.POST)

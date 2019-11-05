@@ -10,11 +10,9 @@ class Talao(models.Model):
         (1, 'Em uso'),
         (2, 'Usado'),
     ]
-    HELP_TEXT = "Insira um código válido de Talão"
 
     talao = models.IntegerField(
         unique=True,
-        help_text=HELP_TEXT,
         validators=[
             MinValueValidator(100, 'Talão inválido'),
             MaxValueValidator(999999, 'Talão inválido'),

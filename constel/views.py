@@ -56,23 +56,29 @@ def view_cadastrar_usuario(request):
 
 def view_login(request):
 
-    if request.method == 'POST':
-        form = FormLogin(request.POST)
+    if request.user.is_authenticated:
 
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-
-            if user is not None:
-                login(request, user)
-
-                return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/')
 
     else:
-        form = FormLogin()
 
-    return render(request, 'constel/login.html', {'form': form})
+        if request.method == 'POST':
+            form = FormLogin(request.POST)
+
+            if form.is_valid():
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                user = authenticate(request, username=username, password=password)
+
+                if user is not None:
+                    login(request, user)
+
+                    return HttpResponseRedirect('/')
+
+        else:
+            form = FormLogin()
+
+        return render(request, 'constel/login.html', {'form': form})
 
 
 @login_required()
