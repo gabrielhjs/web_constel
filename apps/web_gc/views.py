@@ -86,7 +86,10 @@ def view_entrega_vale(request):
     return render(request, 'web_gc/entrega_vale.html', {'form': form})
 
 
+<<<<<<< HEAD
 @login_required()
+=======
+>>>>>>> b817b89fa1a6b8977684f92d8a969e6c0e229ac9
 def view_cadastrar_combustivel(request):
     if request.method == 'POST':
         form = FormCadastraCombustivel(request.POST)
