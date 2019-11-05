@@ -2,12 +2,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 
 from .forms import FormCadastraUsuario, FormLogin
 
 
-# @login_required(redirect_field_name='login')
+@login_required()
 def index(request):
     """
     View da página inicial do sistema
@@ -75,6 +75,7 @@ def view_login(request):
     return render(request, 'constel/login.html', {'form': form})
 
 
+@login_required()
 def view_logout(request):
     logout(request)
 

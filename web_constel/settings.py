@@ -126,3 +126,5 @@ STATICFILES_DIRS = (
     '/constel/static/constel/',
     '/apps/web_gc/static/web_gc/',
 )
+
+LOGIN_URL = '/login'
