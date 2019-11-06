@@ -3,7 +3,7 @@
 {% block title %} Talão {{ talao.talao }} {% endblock %}
 {% block content %}
 <h1>Talão</h1>
-<table>
+<table border="1">
     <tbody>
         <tr>
             <td>
@@ -32,10 +32,12 @@
     </tbody>
 </table>
 <h1>Vales</h1>
-<table>
+<table border="1">
     <thead>
-        <th>Número do vale</th>
-        <th>Status</th>
+        <tr>
+            <th>Número do vale</th>
+            <th>Status</th>
+        </tr>
     </thead>
     <tbody>
         {% for vale in lista_vales %}

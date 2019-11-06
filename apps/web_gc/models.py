@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.models import User
 
 
 class Talao(models.Model):
@@ -19,7 +20,6 @@ class Talao(models.Model):
         ],
     )
     status = models.IntegerField(choices=STATUS_CHOISES, default=0, editable=True)
-    data = models.DateTimeField(auto_now=True, editable=True)
 
     def __str__(self):
         return '%s' % self.talao
@@ -51,9 +51,7 @@ class Vale(models.Model):
 class Combustivel(models.Model):
     """Classe que contém os caombustíveis que podem ser utilizados nos vales"""
 
-    HELP_TEXT = 'Insira um combustível'
-
-    combustivel = models.CharField(unique=True, max_length=10, help_text=HELP_TEXT)
+    combustivel = models.CharField(unique=True, max_length=10)
 
     def __str__(self):
         return '%s' % self.combustivel
@@ -64,18 +62,22 @@ class CadastroTalao(models.Model):
 
     talao = models.ForeignKey(Talao, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, default=None, on_delete=models.PROTECT)
 
     def __str__(self):
-        return '%s' % self.talao
+        return '%s - %.19s' % (self.talao, self.data)
 
 
 class EntregaTalao(models.Model):
     """Classe que registra a entrega dos talões para os encarregados"""
 
-    HELP_TEXT_TALAO = 'Insira um talão cadastrado no sistema'
-
-    talao = models.ForeignKey(Talao, on_delete=models.CASCADE, help_text=HELP_TEXT_TALAO)
+    talao = models.ForeignKey(Talao, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now=True)
+    current_user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='current_user_talao')
+    to_user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='to_user_talao')
+
+    def __str__(self):
+        return '%s - %.19s' % (self.talao, self.data)
 
 
 class EntregaVale(models.Model):
@@ -86,3 +88,8 @@ class EntregaVale(models.Model):
     combustivel = models.ForeignKey(Combustivel, on_delete=models.PROTECT, verbose_name='Combustível')
     valor = models.FloatField(null=True)
     observacao = models.TextField('Observações', blank=True, max_length=255)
+    current_user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='current_user_vale')
+    to_user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='to_user_vale')
+
+    def __str__(self):
+        return '%s - %.19s' % (self.vale, self.data)
