@@ -61,10 +61,20 @@ def view_taloes(request):
 
 @login_required()
 def view_talao(request, talao_id):
-    talao = Talao.objects.get(talao=talao_id)
+    talao = Talao.objects.select_related('CadastroTalao').get(talao=talao_id)
+    try:
+        cadastro_talao = CadastroTalao.objects.get(talao=talao)
+    except CadastroTalao.DoesNotExist:
+        cadastro_talao = None
+    try:
+        entrega_talao = EntregaTalao.objects.get(talao=talao)
+    except EntregaTalao.DoesNotExist:
+        entrega_talao = None
     lista_vales = Vale.objects.filter(talao=talao)
     context = {
         'talao': talao,
+        'cadastro_talao': cadastro_talao,
+        'entrega_talao': entrega_talao,
         'lista_vales': lista_vales,
     }
     return render(request, 'web_gc/detalhes_talao.html', context)
