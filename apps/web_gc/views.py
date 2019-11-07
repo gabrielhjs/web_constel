@@ -8,42 +8,37 @@ from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale
 
 
 @login_required()
-def view_index(request):
-    return render(request, 'web_gc/index.html')
-
-
-@login_required()
 @permission_required('web_gc.Talao', raise_exception=True)
 def view_cadastrar_talao(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = FormTalao(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
+    """
+    View de carregamento e gestão do cadastro de novos talões,
+    Deve ser acessada somente pelo adm e funcionários autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
 
+    if request.method == 'POST':
+        form = FormTalao(request.POST)
+
+        if form.is_valid():
+            # Registro do cadastro do novo talão
             form.save()
             talao = Talao.objects.get(talao=form.cleaned_data['talao'])
             cadastro_talao = CadastroTalao(talao=talao, user=request.user)
 
             try:
-
                 for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_final'] + 1):
                     vale = Vale(vale=i, status=0, talao=talao)
                     vale.save()
 
-            except IntegrityError as e:
-
+            except IntegrityError:
                 talao.delete()
                 cadastro_talao.delete()
-
                 return HttpResponseRedirect('/gc/cadtalao')
 
             cadastro_talao.save()
-
             return HttpResponseRedirect('/gc')
 
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = FormTalao()
 
@@ -51,40 +46,40 @@ def view_cadastrar_talao(request):
 
 
 @login_required()
-def view_taloes(request):
-    lista_talao = Talao.objects.all()
-    context = {
-        'lista_talao': lista_talao
-    }
-    return render(request, 'web_gc/consulta_talao.html', context)
+@permission_required('web_gc.Combustivel', raise_exception=True)
+def view_cadastrar_combustivel(request):
+    """
+    View de carregamento e gestão de combustível novos cadastrados no sistema,
+    deve ser acessado apenas pelo adm e funcionãrios autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
 
+    if request.method == 'POST':
+        # Registro do cadastro do combustível
+        form = FormCadastraCombustivel(request.POST)
 
-@login_required()
-def view_talao(request, talao_id):
-    talao = Talao.objects.select_related('CadastroTalao').get(talao=talao_id)
-    try:
-        cadastro_talao = CadastroTalao.objects.get(talao=talao)
-    except CadastroTalao.DoesNotExist:
-        cadastro_talao = None
-    try:
-        entrega_talao = EntregaTalao.objects.get(talao=talao)
-    except EntregaTalao.DoesNotExist:
-        entrega_talao = None
-    lista_vales = Vale.objects.filter(talao=talao)
-    context = {
-        'talao': talao,
-        'cadastro_talao': cadastro_talao,
-        'entrega_talao': entrega_talao,
-        'lista_vales': lista_vales,
-    }
-    return render(request, 'web_gc/detalhes_talao.html', context)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/gc')
+    else:
+        form = FormCadastraCombustivel()
+
+    return render(request, 'web_gc/cadastro_combustivel.html', {'form': form})
 
 
 @login_required()
 @permission_required('web_gc.EntregaTalao', raise_exception=True)
 def view_entrega_talao(request):
+    """
+    View de carregamento e gestão de entrega de talões cadastrados no sistema,
+    deve ser acessado apenas pelo adm e funcionãrios autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
 
     if request.method == 'POST':
+        # Registro da entrega do talão
         form = FormEntregaTalao(request.POST)
 
         if form.is_valid():
@@ -98,7 +93,6 @@ def view_entrega_talao(request):
             )
             entrega_talao.save()
             talao.save()
-
             return HttpResponseRedirect('/gc')
     else:
         form = FormEntregaTalao()
@@ -109,11 +103,19 @@ def view_entrega_talao(request):
 @login_required()
 @permission_required('web_gc.EntregaVale', raise_exception=True)
 def view_entrega_vale(request):
+    """
+    View de carregamento e gestão de entrega de vales cadastrados no sistema,
+    deve ser acessado apenas pelo adm e funcionãrios autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
 
     if request.method == 'POST':
         form = FormEntregaVale(request.POST)
 
         if form.is_valid():
+            # Registro da entrega do vale
+
             vale = form.cleaned_data['vale']
             vale.status = 2
             entrega_vale = EntregaVale(
@@ -126,7 +128,6 @@ def view_entrega_vale(request):
             )
             entrega_vale.save()
             vale.save()
-
             return HttpResponseRedirect('/gc')
 
     else:
@@ -136,14 +137,59 @@ def view_entrega_vale(request):
 
 
 @login_required()
-@permission_required('web_gc.Combustivel', raise_exception=True)
-def view_cadastrar_combustivel(request):
-    if request.method == 'POST':
-        form = FormCadastraCombustivel(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/gc')
-    else:
-        form = FormCadastraCombustivel()
+def view_index(request):
+    """
+    View de carregamento da página inicial do GC
+    :param request: informações gerais
+    :return: carregamento da página inicial
+    """
 
-    return render(request, 'web_gc/cadastro_combustivel.html', {'form': form})
+    return render(request, 'web_gc/index.html')
+
+
+@login_required()
+def view_taloes(request):
+    """
+    View de exibição dos talões cadastrados no sistema
+    :param request: informações gerais
+    :return: lista de talões cadastrados
+    """
+
+    lista_talao = Talao.objects.all()
+    context = {
+        'lista_talao': lista_talao
+    }
+    return render(request, 'web_gc/consulta_talao.html', context)
+
+
+@login_required()
+def view_talao(request, **kwargs):
+    """
+    View de exibição de informações de talão
+    :param request: informações gerais
+    :param talao_id: id do talão desejado
+    :return: informações do talão requerido
+    """
+
+    talao = Talao.objects.get(talao=kwargs.get('talao_id'))
+
+    try:
+        cadastro_talao = CadastroTalao.objects.get(talao=talao)
+
+    except CadastroTalao.DoesNotExist:
+        cadastro_talao = None
+
+    try:
+        entrega_talao = EntregaTalao.objects.get(talao=talao)
+
+    except EntregaTalao.DoesNotExist:
+        entrega_talao = None
+
+    lista_vales = Vale.objects.filter(talao=talao)
+    context = {
+        'talao': talao,
+        'cadastro_talao': cadastro_talao,
+        'entrega_talao': entrega_talao,
+        'lista_vales': lista_vales,
+    }
+    return render(request, 'web_gc/detalhes_talao.html', context)

@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 
 
 class Talao(models.Model):
-    """Classe de talões que contém vales"""
+    """
+    Classe de talões que contém vales
+    """
 
     STATUS_CHOISES = [
         (0, 'Disponível para uso'),
@@ -24,9 +26,14 @@ class Talao(models.Model):
     def __str__(self):
         return '%s' % self.talao
 
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+
 
 class Vale(models.Model):
-    """Classe de vales que podem ser distribuidos para os funcionarios"""
+    """
+    Classe de vales que podem ser distribuidos para os funcionarios
+    """
 
     STATUS_CHOISES = [
         (0, 'Indisponível para uso'),
@@ -47,18 +54,28 @@ class Vale(models.Model):
     def __str__(self):
         return '%s' % self.vale
 
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+
 
 class Combustivel(models.Model):
-    """Classe que contém os caombustíveis que podem ser utilizados nos vales"""
+    """
+    Classe que contém os caombustíveis que podem ser utilizados nos vales
+    """
 
     combustivel = models.CharField(unique=True, max_length=10)
 
     def __str__(self):
         return '%s' % self.combustivel
 
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+
 
 class CadastroTalao(models.Model):
-    """Classe que registra o cadastro de talões no sistema"""
+    """
+    Classe que registra o cadastro de talões no sistema
+    """
 
     talao = models.ForeignKey(Talao, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now=True)
@@ -67,9 +84,15 @@ class CadastroTalao(models.Model):
     def __str__(self):
         return '%s - %.19s' % (self.talao, self.data)
 
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+    DoesNotExist = None
+
 
 class EntregaTalao(models.Model):
-    """Classe que registra a entrega dos talões para os encarregados"""
+    """
+    Classe que registra a entrega dos talões para os encarregados
+    """
 
     talao = models.ForeignKey(Talao, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now=True)
@@ -79,9 +102,15 @@ class EntregaTalao(models.Model):
     def __str__(self):
         return '%s - %.19s' % (self.talao, self.data)
 
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+    DoesNotExist = None
+
 
 class EntregaVale(models.Model):
-    """Classe que registra a entrega de vales para os funcionários"""
+    """
+    Classe que registra a entrega de vales para os funcionários
+    """
 
     vale = models.ForeignKey(Vale, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now=True)
@@ -93,3 +122,6 @@ class EntregaVale(models.Model):
 
     def __str__(self):
         return '%s - %.19s' % (self.vale, self.data)
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None

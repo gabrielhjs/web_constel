@@ -5,14 +5,19 @@ from apps.web_gc.models import Talao, Vale
 
 
 class TalaoTestCase(TestCase):
-    """Testando a Model Talao"""
+    """
+    Testando a Model Talao
+    """
 
     def test_invalidos(self):
-        """Testando se é possível cadastrar talões com formatos inválidos"""
+        """
+        Testando se é possível cadastrar talões com formatos inválidos
+        """
         invalidos = [
             'a',
             'asdasd',
             '012as',
+            '100',
         ]
         for talao in invalidos:
             with atomic():
@@ -21,7 +26,9 @@ class TalaoTestCase(TestCase):
                     test.save()
 
     def test_validos(self):
-        """Testando se é possível cadastrar talões com formatos válidos"""
+        """
+        Testando se é possível cadastrar talões com formatos válidos
+        """
         validos = [
             123456,
         ]
@@ -32,10 +39,14 @@ class TalaoTestCase(TestCase):
 
 
 class ValeTestCase(TestCase):
-    """Testando a Model Vale"""
+    """
+    Testando a Model Vale
+    """
 
     def test_invalidos(self):
-        """Testando se é possível cadastrar vales com formatos inválidos"""
+        """
+        Testando se é possível cadastrar vales com formatos inválidos
+        """
         invalidos = [
             'a',
             'asdasd',
@@ -50,7 +61,9 @@ class ValeTestCase(TestCase):
                     test.save()
 
     def test_validos(self):
-        """Testando se é possível cadastrar vales com formatos válidos"""
+        """
+        Testando se é possível cadastrar vales com formatos válidos
+        """
         validos = [
             123456,
         ]
