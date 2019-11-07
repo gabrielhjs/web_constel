@@ -3,57 +3,53 @@
 {% block title %} Talão {{ talao.talao }} {% endblock %}
 {% block content %}
 <h1>Talão</h1>
-<table border="1">
+<table border="2">
+    <thead>
+        <tr>
+            <th>Talão</th>
+            <th>Data de cadastro</th>
+            <th>Quem cadastrou</th>
+            <th>Data de entrega</th>
+            <th>Quem entregou</th>
+            <th>Quem recebeu</th>
+            <th>Status</th>
+        </tr>
+    </thead>
     <tbody>
         <tr>
-            <td><p>Talão:</p></td>
             <td><p>{{ talao.talao }}</p></td>
-        </tr>
-        <tr>
-            <td><p>Data de cadastro:</p></td>
-            <td><p>{{ talao_cadastro.data }}</p></td>
-        </tr>
-        <tr>
-            <td><p>Usuário que cadastrou:</p></td>
-            <td><p>{{ talao_cadastro_user.user.username }}</p></td>
-        </tr>
-        <tr>
-            <td><p>Data de entrega:</p></td>
-            <td><p>{{ talao_entrega.data }}</p></td>
-        </tr>
-        <tr>
-            <td><p>Usuário que entregou:</p></td>
-            <td><p>{{ talao_entrega_user.user.username }}</p></td>
-        </tr>
-        <tr>
-            <td><p>Usuário que recebeu:</p></td>
-            <td><p>{{ talao_entrega_user_to.user_to.username }}</p></td>
-        </tr>
-        <tr>
-            <td><p>Status:</p></td>
+            <td><p>{{ talao.talao_cadastro.first.data }}</p></td>
+            <td><p>{{ talao.talao_cadastro.first.user }}</p></td>
+            <td><p>{{ talao.talao_entrega.first.data }}</p></td>
+            <td><p>{{ talao.talao_entrega.first.user }}</p></td>
+            <td><p>{{ talao.talao_entrega.first.user_to }}</p></td>
             <td><p>{{ talao.status }}</p></td>
         </tr>
     </tbody>
 </table>
 <h1>Vales</h1>
-<table border="1">
+<table border="2">
     <thead>
         <tr>
             <th>Número do vale</th>
+            <th>Data de entrega</th>
+            <th>Quem recebeu</th>
+            <th>Combustível</th>
+            <th>Valor</th>
             <th>Status</th>
         </tr>
     </thead>
     <tbody>
-        {% for vale in talao_vales %}
-            <tr>
-                <td>
-                    <p>{{ vale.vale }}</p>
-                </td>
-                <td>
-                    <p>{{ vale.status }}</p>
-                </td>
-            </tr>
-        {% endfor %}
+    {% for vale in talao.talao_vales.all %}
+        <tr>
+            <td><p>{{ vale.vale }}</p></td>
+            <td><p>{{ vale.vale_entrega.first.data }}</p></td>
+            <td><p>{{ vale.status }}</p></td>
+            <td><p>{{ vale.status }}</p></td>
+            <td><p>{{ vale.status }}</p></td>
+            <td><p>{{ vale.status }}</p></td>
+        </tr>
+    {% endfor %}
     </tbody>
 </table>
 <div>

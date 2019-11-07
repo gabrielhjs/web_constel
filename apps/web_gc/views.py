@@ -155,10 +155,11 @@ def view_taloes(request):
     :return: lista de talões cadastrados
     """
 
-    lista_talao = Talao.objects.all()
+    taloes = Talao.objects.all()
     context = {
-        'lista_talao': lista_talao
+        'taloes': taloes
     }
+
     return render(request, 'web_gc/consulta_talao.html', context)
 
 
@@ -172,19 +173,7 @@ def view_talao(request, **kwargs):
     """
 
     talao = Talao.objects.get(talao=kwargs.get('talao_id'))
-    talao_cadastro = talao.talao_cadastro.first()
-    talao_cadastro_user = talao.talao_cadastro.first()
-    talao_entrega = talao.talao_entrega.first()
-    talao_entrega_user = talao.talao_entrega.first()
-    talao_cadastro_user_to = talao.talao_entrega.first()
-    talao_vales = Vale.objects.filter(talao=talao)
     context = {
         'talao': talao,
-        'talao_cadastro': talao_cadastro,
-        'talao_cadastro_user': talao_cadastro_user,
-        'talao_entrega': talao_entrega,
-        'talao_entrega_user': talao_entrega_user,
-        'talao_cadastro_user_to': talao_cadastro_user_to,
-        'talao_vales': talao_vales,
     }
     return render(request, 'web_gc/detalhes_talao.html', context)
