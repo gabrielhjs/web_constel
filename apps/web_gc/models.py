@@ -49,7 +49,7 @@ class Vale(models.Model):
         ],
     )
     status = models.IntegerField(choices=STATUS_CHOISES, default=0)
-    talao = models.ForeignKey(Talao, on_delete=models.CASCADE)
+    talao = models.ForeignKey(Talao, on_delete=models.CASCADE, related_name='talao_vales')
 
     def __str__(self):
         return '%s' % self.vale
@@ -77,7 +77,7 @@ class CadastroTalao(models.Model):
     Classe que registra o cadastro de talões no sistema
     """
 
-    talao = models.ForeignKey(Talao, on_delete=models.CASCADE)
+    talao = models.ForeignKey(Talao, on_delete=models.CASCADE, related_name='talao_cadastro')
     data = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, default=None, on_delete=models.PROTECT)
 
@@ -94,10 +94,10 @@ class EntregaTalao(models.Model):
     Classe que registra a entrega dos talões para os encarregados
     """
 
-    talao = models.ForeignKey(Talao, on_delete=models.CASCADE)
+    talao = models.ForeignKey(Talao, on_delete=models.CASCADE, related_name='talao_entrega')
     data = models.DateTimeField(auto_now=True)
-    current_user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='current_user_talao')
-    to_user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='to_user_talao')
+    user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='talao_user')
+    user_to = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='talao_user_to')
 
     def __str__(self):
         return '%s - %.19s' % (self.talao, self.data)
@@ -112,7 +112,7 @@ class EntregaVale(models.Model):
     Classe que registra a entrega de vales para os funcionários
     """
 
-    vale = models.ForeignKey(Vale, on_delete=models.CASCADE)
+    vale = models.ForeignKey(Vale, on_delete=models.CASCADE, related_name='vale_entrega')
     data = models.DateTimeField(auto_now=True)
     combustivel = models.ForeignKey(Combustivel, on_delete=models.PROTECT, verbose_name='Combustível')
     valor = models.FloatField(null=True)

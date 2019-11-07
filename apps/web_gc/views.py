@@ -88,8 +88,8 @@ def view_entrega_talao(request):
             Vale.objects.filter(talao=talao).update(status=1)
             entrega_talao = EntregaTalao(
                 talao=talao,
-                current_user=request.user,
-                to_user=form.cleaned_data['to_user'],
+                user=request.user,
+                user_to=form.cleaned_data['user_to'],
             )
             entrega_talao.save()
             talao.save()
@@ -121,7 +121,7 @@ def view_entrega_vale(request):
             entrega_vale = EntregaVale(
                 vale=vale,
                 current_user=request.user,
-                to_user=form.cleaned_data['to_user'],
+                user_to=form.cleaned_data['user_to'],
                 combustivel=form.cleaned_data['combustivel'],
                 valor=form.cleaned_data['valor'],
                 observacao=form.cleaned_data['observacao'],
@@ -167,29 +167,24 @@ def view_talao(request, **kwargs):
     """
     View de exibição de informações de talão
     :param request: informações gerais
-    :param talao_id: id do talão desejado
+    :param kwargs: id do talão desejado
     :return: informações do talão requerido
     """
 
     talao = Talao.objects.get(talao=kwargs.get('talao_id'))
-
-    try:
-        cadastro_talao = CadastroTalao.objects.get(talao=talao)
-
-    except CadastroTalao.DoesNotExist:
-        cadastro_talao = None
-
-    try:
-        entrega_talao = EntregaTalao.objects.get(talao=talao)
-
-    except EntregaTalao.DoesNotExist:
-        entrega_talao = None
-
-    lista_vales = Vale.objects.filter(talao=talao)
+    talao_cadastro = talao.talao_cadastro.first()
+    talao_cadastro_user = talao.talao_cadastro.first()
+    talao_entrega = talao.talao_entrega.first()
+    talao_entrega_user = talao.talao_entrega.first()
+    talao_cadastro_user_to = talao.talao_entrega.first()
+    talao_vales = Vale.objects.filter(talao=talao)
     context = {
         'talao': talao,
-        'cadastro_talao': cadastro_talao,
-        'entrega_talao': entrega_talao,
-        'lista_vales': lista_vales,
+        'talao_cadastro': talao_cadastro,
+        'talao_cadastro_user': talao_cadastro_user,
+        'talao_entrega': talao_entrega,
+        'talao_entrega_user': talao_entrega_user,
+        'talao_cadastro_user_to': talao_cadastro_user_to,
+        'talao_vales': talao_vales,
     }
     return render(request, 'web_gc/detalhes_talao.html', context)

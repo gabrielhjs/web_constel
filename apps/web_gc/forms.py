@@ -24,13 +24,13 @@ class FormEntregaTalao(forms.ModelForm):
 
     class Meta:
         model = EntregaTalao
-        fields = ['talao', 'to_user', ]
+        fields = ['talao', 'user_to', ]
 
     def __init__(self, *args, **kwargs):
         # Redefinição dos filtros para busca de objetos nas models para exibir apenas talões aptos para entrega
         super(FormEntregaTalao, self).__init__(*args, **kwargs)
         self.fields['talao'].queryset = Talao.objects.filter(status=0)
-        self.fields['to_user'].queryset = User.objects.filter(is_active=True)
+        self.fields['user_to'].queryset = User.objects.filter(is_active=True)
 
 
 class FormEntregaVale(forms.ModelForm):

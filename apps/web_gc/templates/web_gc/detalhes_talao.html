@@ -6,36 +6,32 @@
 <table border="1">
     <tbody>
         <tr>
-            <td>
-                <p>Talão:</p>
-            </td>
-            <td>
-                <p>{{ talao.talao }}</p>
-            </td>
+            <td><p>Talão:</p></td>
+            <td><p>{{ talao.talao }}</p></td>
         </tr>
         <tr>
-            <td>
-                <p>Data de cadastro:</p>
-            </td>
-            <td>
-                <p>{{ cadastro_talao.data }}</p>
-            </td>
+            <td><p>Data de cadastro:</p></td>
+            <td><p>{{ talao_cadastro.data }}</p></td>
         </tr>
         <tr>
-            <td>
-                <p>Data de entrega:</p>
-            </td>
-            <td>
-                <p>{{ entrega_talao.data }}</p>
-            </td>
+            <td><p>Usuário que cadastrou:</p></td>
+            <td><p>{{ talao_cadastro_user.user.username }}</p></td>
         </tr>
         <tr>
-            <td>
-                <p>Status:</p>
-            </td>
-            <td>
-                <p>{{ talao.status }}</p>
-            </td>
+            <td><p>Data de entrega:</p></td>
+            <td><p>{{ talao_entrega.data }}</p></td>
+        </tr>
+        <tr>
+            <td><p>Usuário que entregou:</p></td>
+            <td><p>{{ talao_entrega_user.user.username }}</p></td>
+        </tr>
+        <tr>
+            <td><p>Usuário que recebeu:</p></td>
+            <td><p>{{ talao_entrega_user_to.user_to.username }}</p></td>
+        </tr>
+        <tr>
+            <td><p>Status:</p></td>
+            <td><p>{{ talao.status }}</p></td>
         </tr>
     </tbody>
 </table>
@@ -48,7 +44,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for vale in lista_vales %}
+        {% for vale in talao_vales %}
             <tr>
                 <td>
                     <p>{{ vale.vale }}</p>
