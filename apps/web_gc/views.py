@@ -2,13 +2,14 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 
 from .forms import FormTalao, FormEntregaTalao, FormEntregaVale, FormCadastraCombustivel
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale
 
 
 @login_required()
-@permission_required('web_gc.Talao', raise_exception=True)
+# @permission_required('web_gc.Talao', raise_exception=True)
 def view_cadastrar_talao(request):
     """
     View de carregamento e gestão do cadastro de novos talões,
@@ -46,7 +47,7 @@ def view_cadastrar_talao(request):
 
 
 @login_required()
-@permission_required('web_gc.Combustivel', raise_exception=True)
+# @permission_required('web_gc.Combustivel', raise_exception=True)
 def view_cadastrar_combustivel(request):
     """
     View de carregamento e gestão de combustível novos cadastrados no sistema,
@@ -69,7 +70,7 @@ def view_cadastrar_combustivel(request):
 
 
 @login_required()
-@permission_required('web_gc.EntregaTalao', raise_exception=True)
+# @permission_required('web_gc.EntregaTalao', raise_exception=True)
 def view_entrega_talao(request):
     """
     View de carregamento e gestão de entrega de talões cadastrados no sistema,
@@ -101,7 +102,7 @@ def view_entrega_talao(request):
 
 
 @login_required()
-@permission_required('web_gc.EntregaVale', raise_exception=True)
+# @permission_required('web_gc.EntregaVale', raise_exception=True)
 def view_entrega_vale(request):
     """
     View de carregamento e gestão de entrega de vales cadastrados no sistema,
@@ -111,7 +112,7 @@ def view_entrega_vale(request):
     """
 
     if request.method == 'POST':
-        form = FormEntregaVale(request.POST)
+        form = FormEntregaVale(request.user, request.POST)
 
         if form.is_valid():
             # Registro da entrega do vale
@@ -120,7 +121,7 @@ def view_entrega_vale(request):
             vale.status = 2
             entrega_vale = EntregaVale(
                 vale=vale,
-                current_user=request.user,
+                user=request.user,
                 user_to=form.cleaned_data['user_to'],
                 combustivel=form.cleaned_data['combustivel'],
                 valor=form.cleaned_data['valor'],
@@ -131,7 +132,7 @@ def view_entrega_vale(request):
             return HttpResponseRedirect('/gc')
 
     else:
-        form = FormEntregaVale()
+        form = FormEntregaVale(request.user)
 
     return render(request, 'web_gc/entrega_vale.html', {'form': form})
 
@@ -172,7 +173,12 @@ def view_talao(request, **kwargs):
     :return: informações do talão requerido
     """
 
-    talao = Talao.objects.get(talao=kwargs.get('talao_id'))
+    try:
+        talao = Talao.objects.get(talao=kwargs.get('talao_id'))
+
+    except ObjectDoesNotExist:
+        return HttpResponseRedirect('/gc/contalao')
+
     context = {
         'talao': talao,
     }

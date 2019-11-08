@@ -40,13 +40,16 @@ class FormEntregaVale(forms.ModelForm):
 
     class Meta:
         model = EntregaVale
-        fields = ['vale', 'to_user', 'combustivel', 'valor', 'observacao', ]
+        fields = ['vale', 'user_to', 'combustivel', 'valor', 'observacao', ]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
         # Redefinição dos filtros para busca de objetos nas models para exibir apenas vales aptos para entrega
         super(FormEntregaVale, self).__init__(*args, **kwargs)
-        self.fields['vale'].queryset = Vale.objects.filter(status=1)
-        self.fields['to_user'].queryset = User.objects.filter(is_active=True)
+        # Filtrando apenas vales que estao com o usuário logado
+        self.fields['vale'].queryset = Vale.objects.filter(talao__talao_entrega__user_to=self.user, status=1)
+        # Filtrando para permitir entrega apenas para funcionários que estão ativos nos sistema
+        self.fields['user_to'].queryset = User.objects.filter(is_active=True)
 
 
 class FormCadastraCombustivel(forms.ModelForm):

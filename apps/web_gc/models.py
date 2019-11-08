@@ -117,8 +117,8 @@ class EntregaVale(models.Model):
     combustivel = models.ForeignKey(Combustivel, on_delete=models.PROTECT, verbose_name='Combustível')
     valor = models.FloatField(null=True)
     observacao = models.TextField('Observações', blank=True, max_length=255)
-    current_user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='current_user_vale')
-    to_user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='to_user_vale')
+    user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='vale_user')
+    user_to = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='vale_user_to')
 
     def __str__(self):
         return '%s - %.19s' % (self.vale, self.data)

@@ -1,12 +1,24 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 
+from ..models import Talao
+
 
 class TestViews(TestCase):
 
-    def test_view_cadastrar_talao_POST(self):
-        client = Client()
-        response = client.post(reverse('cadastro_talao'))
+    def setUp(self):
+        self.client = Client()
+        self.url_cadastro_talao = reverse('cadastro_talao')
 
-        self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'web_gc/cadastro_talao.html')
+    def test_view_cadastrar_talao_POST(self):
+        response = self.client.post(
+            self.url_cadastro_talao,
+            {
+                'vale_inicial': 10000,
+                'vale_final': 10000,
+                'talao': 100,
+            }
+        )
+
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(Talao.objects.count(), 1)
