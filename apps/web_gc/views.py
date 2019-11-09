@@ -2,14 +2,21 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404
 
 from .forms import FormTalao, FormEntregaTalao, FormEntregaVale, FormCadastraCombustivel
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale
+from .permissions import *
 
 
 @login_required()
-# @permission_required('web_gc.Talao', raise_exception=True)
+@permission_required(
+    (
+        'web_gc.add_talao',
+        'web_gc.add_vale',
+        'web_gc.add_entregatalao',
+    ),
+    raise_exception=True)
 def view_cadastrar_talao(request):
     """
     View de carregamento e gestão do cadastro de novos talões,
@@ -47,7 +54,11 @@ def view_cadastrar_talao(request):
 
 
 @login_required()
-# @permission_required('web_gc.Combustivel', raise_exception=True)
+@permission_required(
+    (
+        'web_gc.add_combustivel',
+    ),
+    raise_exception=True)
 def view_cadastrar_combustivel(request):
     """
     View de carregamento e gestão de combustível novos cadastrados no sistema,
@@ -70,7 +81,12 @@ def view_cadastrar_combustivel(request):
 
 
 @login_required()
-# @permission_required('web_gc.EntregaTalao', raise_exception=True)
+@permission_required(
+    (
+        'web_gc.change_talao',
+        'web_gc.add_entregatalao',
+    ),
+    raise_exception=True)
 def view_entrega_talao(request):
     """
     View de carregamento e gestão de entrega de talões cadastrados no sistema,
@@ -102,7 +118,12 @@ def view_entrega_talao(request):
 
 
 @login_required()
-# @permission_required('web_gc.EntregaVale', raise_exception=True)
+@permission_required(
+    (
+        'web_gc.change_vale',
+        'web_gc.add_entregavale',
+    ),
+    raise_exception=True)
 def view_entrega_vale(request):
     """
     View de carregamento e gestão de entrega de vales cadastrados no sistema,
@@ -138,6 +159,11 @@ def view_entrega_vale(request):
 
 
 @login_required()
+@permission_required(
+    (
+        'web_gc.view_vale',
+    ),
+    raise_exception=True)
 def view_index(request):
     """
     View de carregamento da página inicial do GC
@@ -145,10 +171,21 @@ def view_index(request):
     :return: carregamento da página inicial
     """
 
-    return render(request, 'web_gc/index.html')
+    context = {
+        'gerencia_talao': combustivel_gerencia_talao(request.user),
+        'gerencia_vale': combustivel_gerencia_vale(request.user),
+        'beneficiario': combustivel_beneficiario(request.user),
+    }
+
+    return render(request, 'web_gc/index.html', context)
 
 
 @login_required()
+@permission_required(
+    (
+        'web_gc.view_talao',
+    ),
+    raise_exception=True)
 def view_taloes(request):
     """
     View de exibição dos talões cadastrados no sistema
@@ -165,6 +202,12 @@ def view_taloes(request):
 
 
 @login_required()
+@permission_required(
+    (
+        'web_gc.view_talao',
+        'web_gc.view_vale',
+    ),
+    raise_exception=True)
 def view_talao(request, **kwargs):
     """
     View de exibição de informações de talão
@@ -173,11 +216,7 @@ def view_talao(request, **kwargs):
     :return: informações do talão requerido
     """
 
-    try:
-        talao = Talao.objects.get(talao=kwargs.get('talao_id'))
-
-    except ObjectDoesNotExist:
-        return HttpResponseRedirect('/gc/contalao')
+    talao = get_object_or_404(Talao, talao=kwargs.get('talao_id'))
 
     context = {
         'talao': talao,

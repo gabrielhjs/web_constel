@@ -3,19 +3,29 @@
 {% block content %}
 <div><h1>Gas Control</h1></div>
 <div>
-    <a href="{% url 'cadastro_talao' %}"><button>Cadastrar novo Talão</button></a>
+    <a href="{% url 'cadastro_talao' %}">
+        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Cadastrar novo Talão</button>
+    </a>
 </div>
 <div>
-    <a href="{% url 'cadastro_combustivel' %}"><button>Cadastrar Combustível</button></a>
+    <a href="{% url 'cadastro_combustivel' %}">
+        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Cadastrar Combustível</button>
+    </a>
 </div>
 <div>
-    <a href="{% url 'consulta_talao' %}"><button>Consultar Talões</button></a>
+    <a href="{% url 'consulta_talao' %}">
+        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Consultar Talões</button>
+    </a>
 </div>
 <div>
-    <a href="{% url 'entrega_talao' %}"><button>Entregar Talão</button></a>
+    <a href="{% url 'entrega_talao' %}">
+        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Entregar Talão</button>
+    </a>
 </div>
 <div>
-    <a href="{% url 'entrega_vale' %}"><button>Entregar Vale</button></a>
+    <a href="{% url 'entrega_vale' %}">
+        <button {% if gerencia_vale == 0 %} disabled="disabled" {% endif %}>Entregar Vale</button>
+    </a>
 </div>
 <div>
     <a href="{% url 'index' %}"><button>Sair</button></a>

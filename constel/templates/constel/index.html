@@ -3,10 +3,14 @@
 {% block content %}
 <div><h1>Constel</h1></div>
 <div>
-    <a href="{% url 'gc_index' %}"><button>Gas Control</button></a>
+    <a href="{% url 'gc_index' %}">
+        <button {% if gerencia_gc == 0 %} disabled="disabled" {% endif %}>Gas Control</button>
+    </a>
 </div>
 <div>
-    <a href="#"><button>Cont</button></a>
+    <a href="#">
+        <button {% if gerencia_cont == 0 %} disabled="disabled" {% endif %}>Cont</button>
+    </a>
 </div>
 <div>
     <a href="{% url 'logout' %}"><button>Sair</button></a>

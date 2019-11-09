@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from .forms import FormCadastraUsuario, FormLogin
+from .permissions import *
 
 
 @login_required()
@@ -14,10 +15,13 @@ def index(request):
     :param request: None
     :return: Renderiza página inicial
     """
-    if request.user.is_authenticated:
-        return render(request, 'constel/index.html')
-    else:
-        return HttpResponseRedirect('login')
+
+    context = {
+        'gerencia_gc': gerencia_gc(request.user),
+        'gerencia_cont': gerencia_cont(request.user),
+    }
+
+    return render(request, 'constel/index.html', context)
 
 
 def view_cadastrar_usuario(request):
@@ -27,6 +31,7 @@ def view_cadastrar_usuario(request):
     :param request: POST form
     :return:
     """
+
     if request.method == 'POST':
         form = FormCadastraUsuario(request.POST)
 
@@ -57,7 +62,6 @@ def view_cadastrar_usuario(request):
 def view_login(request):
 
     if request.user.is_authenticated:
-
         return HttpResponseRedirect('/')
 
     else:
@@ -83,6 +87,6 @@ def view_login(request):
 
 @login_required()
 def view_logout(request):
-    logout(request)
 
+    logout(request)
     return HttpResponseRedirect('login')
