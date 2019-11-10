@@ -1,33 +1,35 @@
 {% extends 'constel/base.html' %}
 {% block title %}Consultar Talão{% endblock %}
 {% block content %}
-<table border="2">
-    <thead>
-        <tr>
-            <th>Talão</th>
-            <th>Data de cadastro</th>
-            <th>Quem cadastrou</th>
-            <th>Data de entrega</th>
-            <th>Quem entregou</th>
-            <th>Quem recebeu</th>
-            <th>Status</th>
-            <th>Vales</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for talao in taloes %}
-        <tr>
-            <td><p>{{ talao.talao }}</p></td>
-            <td><p>{{ talao.talao_cadastro.first.data }}</p></td>
-            <td><p>{{ talao.talao_cadastro.first.user }}</p></td>
-            <td><p>{{ talao.talao_entrega.first.data }}</p></td>
-            <td><p>{{ talao.talao_entrega.first.user }}</p></td>
-            <td><p>{{ talao.talao_entrega.first.user_to }}</p></td>
-            <td><p>{{ talao.status }}</p></td>
-            <td><div><a href="{% url 'detalhes_talao' talao.talao %}"><button>Acessar</button></a></div></td>
-        </tr>
-    {% endfor %}
-</table>
+<div class="table-content">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Talão</th>
+                <th>Data de cadastro</th>
+                <th>Quem cadastrou</th>
+                <th>Data de entrega</th>
+                <th>Quem entregou</th>
+                <th>Quem recebeu</th>
+                <th>Status</th>
+                <th>Vales</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for talao in taloes %}
+            <tr>
+                <td><p>{{ talao.talao }}</p></td>
+                <td><p>{{ talao.talao_cadastro.first.data }}</p></td>
+                <td><p>{{ talao.talao_cadastro.first.user }}</p></td>
+                <td><p>{{ talao.talao_entrega.first.data }}</p></td>
+                <td><p>{{ talao.talao_entrega.first.user }}</p></td>
+                <td><p>{{ talao.talao_entrega.first.user_to }}</p></td>
+                <td><p>{{ talao.get_status_display }}</p></td>
+                <td><div><a href="{% url 'detalhes_talao' talao.talao %}"><button>Acessar</button></a></div></td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
 <div>
     <a href="{% url 'gc_index' %}"><button>Voltar</button></a>
 </div>
