@@ -1,39 +1,12 @@
 {% extends 'constel/base.html' %}
 {% block title %} Talão {{ talao.talao }} {% endblock %}
 {% block content %}
-<h1>Talão</h1>
-<div class="table-content">
-    <table border="2">
-        <thead>
-            <tr>
-                <th>Talão</th>
-                <th>Status</th>
-                <th>Data de cadastro</th>
-                <th>Quem cadastrou</th>
-                <th>Data de entrega</th>
-                <th>Quem entregou</th>
-                <th>Quem recebeu</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ talao.talao }}</td>
-                <td>{{ talao.get_status_display }}</td>
-                <td>{{ talao.talao_cadastro.first.data }}</td>
-                <td>{{ talao.talao_cadastro.first.user }}</td>
-                <td>{{ talao.talao_entrega.first.data }}</td>
-                <td>{{ talao.talao_entrega.first.user }}</td>
-                <td>{{ talao.talao_entrega.first.user_to }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<h1>Vales</h1>
 <div class="table-content">
     <table border="2">
         <thead>
             <tr>
                 <th>Vale</th>
+                <th>Talão</th>
                 <th>Status</th>
                 <th>Data de entrega</th>
                 <th>Matrícula</th>
@@ -44,9 +17,10 @@
             </tr>
         </thead>
         <tbody>
-        {% for vale in talao.talao_vales.all %}
+        {% for vale in vales %}
             <tr>
                 <td>{{ vale.vale }}</td>
+                <td>{{ vale.talao }}</td>
                 <td>{{ vale.get_status_display }}</td>
                 <td>{{ vale.vale_entrega.first.data }}</td>
                 <td>{{ vale.vale_entrega.first.user_to }}</td>

@@ -9,8 +9,8 @@ class FormTalao(forms.ModelForm):
     Formulário de cadstro de novos talões
     """
 
-    vale_inicial = forms.IntegerField(min_value=10000, max_value=999999)
-    vale_final = forms.IntegerField(min_value=10000, max_value=999999)
+    vale_inicial = forms.IntegerField(min_value=10000, max_value=999999, label='Vale inicial')
+    vale_final = forms.IntegerField(min_value=10000, max_value=999999, label='Vale final')
 
     class Meta:
         model = Talao
@@ -30,6 +30,7 @@ class FormEntregaTalao(forms.ModelForm):
         # Redefinição dos filtros para busca de objetos nas models para exibir apenas talões aptos para entrega
         super(FormEntregaTalao, self).__init__(*args, **kwargs)
         self.fields['talao'].queryset = Talao.objects.filter(status=0)
+        users = User.objects.filter(is_active=True)
         self.fields['user_to'].queryset = User.objects.filter(is_active=True)
 
 

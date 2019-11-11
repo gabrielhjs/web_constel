@@ -9,7 +9,7 @@ class Talao(models.Model):
     """
 
     STATUS_CHOISES = [
-        (0, 'Disponível para uso'),
+        (0, 'Disponível'),
         (1, 'Em uso'),
         (2, 'Usado'),
     ]
@@ -20,6 +20,7 @@ class Talao(models.Model):
             MinValueValidator(100, 'Talão inválido'),
             MaxValueValidator(999999, 'Talão inválido'),
         ],
+        verbose_name='Talao',
     )
     status = models.IntegerField(choices=STATUS_CHOISES, default=0, editable=True)
 
@@ -36,7 +37,7 @@ class Vale(models.Model):
     """
 
     STATUS_CHOISES = [
-        (0, 'Indisponível para uso'),
+        (0, 'Indisponível'),
         (1, 'Disponível'),
         (2, 'Usado'),
     ]
@@ -97,7 +98,12 @@ class EntregaTalao(models.Model):
     talao = models.ForeignKey(Talao, on_delete=models.CASCADE, related_name='talao_entrega')
     data = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='talao_user')
-    user_to = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='talao_user_to')
+    user_to = models.ForeignKey(
+        User, default=None,
+        on_delete=models.PROTECT,
+        related_name='talao_user_to',
+        verbose_name='Para'
+    )
 
     def __str__(self):
         return '%s - %.19s' % (self.talao, self.data)
@@ -118,7 +124,12 @@ class EntregaVale(models.Model):
     valor = models.FloatField(null=True)
     observacao = models.TextField('Observações', blank=True, max_length=255)
     user = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='vale_user')
-    user_to = models.ForeignKey(User, default=None, on_delete=models.PROTECT, related_name='vale_user_to')
+    user_to = models.ForeignKey(
+        User, default=None,
+        on_delete=models.PROTECT,
+        related_name='vale_user_to',
+        verbose_name='Para'
+    )
 
     def __str__(self):
         return '%s - %.19s' % (self.vale, self.data)

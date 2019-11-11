@@ -9,5 +9,6 @@ urlpatterns = [
     path('gc/entvale', views.view_entrega_vale, name='entrega_vale'),
     path('gc', views.view_index, name='gc_index'),
     path('gc/contalao', views.view_taloes, name='consulta_talao'),
+    path('gc/convales', views.view_vales, name='consulta_vales'),
     path('gc/contalao/<int:talao_id>', views.view_talao, name='detalhes_talao'),
 ]

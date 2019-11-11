@@ -217,8 +217,28 @@ def view_talao(request, **kwargs):
     """
 
     talao = get_object_or_404(Talao, talao=kwargs.get('talao_id'))
-
     context = {
         'talao': talao,
     }
     return render(request, 'web_gc/detalhes_talao.html', context)
+
+
+@login_required()
+@permission_required(
+    (
+        'web_gc.view_talao',
+        'web_gc.view_vale',
+    ),
+    raise_exception=True)
+def view_vales(request):
+    """
+
+    :param request:
+    :return:
+    """
+
+    vales = Vale.objects.all().order_by('vale_entrega__data')
+    context = {
+        'vales': vales,
+    }
+    return render(request, 'web_gc/consulta_vales.html', context)

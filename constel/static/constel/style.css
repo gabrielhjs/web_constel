@@ -1,32 +1,12 @@
-.header-content-inner {
-    max-width: none;
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 200px;
-}
-
 .header-content {
-    text-align: center;
     padding: 0;
     height: 100vh;
 }
 
-.teste {
-    text-align: center;
-    font-size: 100px;
-}
-
 .body-content {
-    height: 100vh;
-    text-align: center;
     width: 80%;
     margin: auto;
+    margin-top: 50px;
 }
 
 .body-content button {
@@ -37,16 +17,27 @@
     width: 200px;
 }
 
+.body select {
+    width: 200px;
+}
+
 .table-content {
     display: flex;
     justify-content: center;
-    background: red;
 }
 
 table {
     width: 100%;
 }
 
-.table td, th {
-    padding: 5px;
+.table-content th, td {
+    text-align: center;
+}
+
+.table-content button {
+    width: 80px;
+}
+
+.formText {
+    text-align: left;
 }

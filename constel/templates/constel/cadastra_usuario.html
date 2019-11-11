@@ -2,9 +2,12 @@
 {% block title %}Novo Usuário{% endblock %}
 {% block content %}
 <form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Cadastrar">
+{% csrf_token %}
+{% for field in form %}
+    <div class="formText">{{ field.label }}:</div>
+    <div class="formField">{{ field }}</div>
+{% endfor %}
+    <input type="submit" value="Cadastrar-se">
 </form>
 <div>
     <a href="{% url 'login' %}"><button>Voltar</button></a>

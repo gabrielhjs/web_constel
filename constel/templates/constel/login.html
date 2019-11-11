@@ -2,9 +2,12 @@
 {% block title %}Constel Login{% endblock %}
 {% block content %}
 <form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Login">
+{% csrf_token %}
+{% for field in form %}
+    <div class="formText">{{ field.label }}:</div>
+    <div class="formField">{{ field }}</div>
+{% endfor %}
+    <input type="submit" value="Logar">
 </form>
 <div>
     <a href="{% url 'cadastra_usuario' %}"><button>Cadastrar-se</button></a>

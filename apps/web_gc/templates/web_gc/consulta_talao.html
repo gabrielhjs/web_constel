@@ -6,26 +6,28 @@
         <thead>
             <tr>
                 <th>Talão</th>
-                <th>Data de cadastro</th>
-                <th>Quem cadastrou</th>
-                <th>Data de entrega</th>
-                <th>Quem entregou</th>
-                <th>Quem recebeu</th>
                 <th>Status</th>
-                <th>Vales</th>
+                <th>Data de cadastro</th>
+                <th>Cadastrado por</th>
+                <th>Data de entrega</th>
+                <th>Entregue por</th>
+                <th>Recebido por</th>
+                <th>Opções</th>
             </tr>
         </thead>
         <tbody>
         {% for talao in taloes %}
             <tr>
-                <td><p>{{ talao.talao }}</p></td>
-                <td><p>{{ talao.talao_cadastro.first.data }}</p></td>
-                <td><p>{{ talao.talao_cadastro.first.user }}</p></td>
-                <td><p>{{ talao.talao_entrega.first.data }}</p></td>
-                <td><p>{{ talao.talao_entrega.first.user }}</p></td>
-                <td><p>{{ talao.talao_entrega.first.user_to }}</p></td>
-                <td><p>{{ talao.get_status_display }}</p></td>
-                <td><div><a href="{% url 'detalhes_talao' talao.talao %}"><button>Acessar</button></a></div></td>
+                <td>{{ talao.talao }}</td>
+                <td>{{ talao.get_status_display }}</td>
+                <td>{{ talao.talao_cadastro.first.data }}</td>
+                <td>{{ talao.talao_cadastro.first.user }}</td>
+                <td>{{ talao.talao_entrega.first.data }}</td>
+                <td>{{ talao.talao_entrega.first.user }}</td>
+                <td>{{ talao.talao_entrega.first.user_to }}</td>
+                <td>
+                    <a href="{% url 'detalhes_talao' talao.talao %}"><button>Vales</button></a>
+                </td>
             </tr>
         {% endfor %}
     </table>

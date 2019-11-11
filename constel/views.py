@@ -18,7 +18,7 @@ def index(request):
 
     context = {
         'gerencia_gc': gerencia_gc(request.user),
-        'gerencia_cont': gerencia_cont(request.user),
+        'admin': request.user.is_superuser,
     }
 
     return render(request, 'constel/index.html', context)

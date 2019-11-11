@@ -2,8 +2,11 @@
 {% block title %}Cadastrar combustível{% endblock %}
 {% block content %}
 <form method="post">
-    {% csrf_token %}
-    {{ form }}
+{% csrf_token %}
+{% for field in form %}
+    <div class="formText">{{ field.label }}:</div>
+    <div class="formField">{{ field }}</div>
+{% endfor %}
     <input type="submit" value="Submit">
 </form>
 <a href="{% url 'gc_index' %}"><button>Voltar</button></a>

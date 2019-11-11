@@ -8,10 +8,10 @@
     </a>
 </div>
 <div>
-    <a href="#">
-        <button {% if gerencia_cont == 0 %} disabled="disabled" {% endif %}>Cont</button>
+    <a href="admin">
+        <button {% if not admin %} disabled="disabled" {% endif %}>Administração do sistema</button>
     </a>
-</div>
+    </div>
 <div>
     <a href="{% url 'logout' %}"><button>Logout</button></a>
 </div>
