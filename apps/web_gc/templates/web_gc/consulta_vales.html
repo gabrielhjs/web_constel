@@ -20,13 +20,15 @@
         {% for vale in vales %}
             <tr>
                 <td>{{ vale.vale }}</td>
-                <td>{{ vale.talao }}</td>
+                <td>
+                    <a href="{% url 'detalhes_talao' vale.talao %}"><button>{{ vale.talao }}</button></a>
+                </td>
                 <td>{{ vale.get_status_display }}</td>
                 <td>{{ vale.vale_entrega.first.data }}</td>
                 <td>{{ vale.vale_entrega.first.user_to }}</td>
                 <td>{{ vale.vale_entrega.first.user_to.get_full_name.upper }}</td>
                 <td>{{ vale.vale_entrega.first.combustivel.combustivel }}</td>
-                <td>R$ {{ vale.vale_entrega.first.valor }}</td>
+                <td>{{ vale.vale_entrega.first.valor }}</td>
                 <td>{{ vale.vale_entrega.first.observacao }}</td>
             </tr>
         {% endfor %}
@@ -34,6 +36,6 @@
     </table>
 </div>
 <div>
-    <a href="{% url 'consulta_talao' %}"><button>Voltar</button></a>
+    <a href="{% url 'gc_index' %}"><button>Voltar</button></a>
 </div>
 {% endblock %}
