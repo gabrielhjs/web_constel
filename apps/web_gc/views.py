@@ -241,4 +241,6 @@ def view_vales(request):
     context = {
         'vales': vales,
     }
+    print(vales)
+
     return render(request, 'web_gc/consulta_vales.html', context)

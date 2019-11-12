@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
+import locale
 
 
 class Talao(models.Model):
@@ -133,6 +134,9 @@ class EntregaVale(models.Model):
 
     def __str__(self):
         return '%s - %.19s' % (self.vale, self.data)
+
+    def valor_moeda(self):
+        return 'R$ {:8.2f}'.format(self.valor)
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
