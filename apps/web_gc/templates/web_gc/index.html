@@ -3,13 +3,13 @@
 {% block content %}
 <div><h1>Gas Control</h1></div>
 <div>
-    <a href="{% url 'cadastro_talao' %}">
-        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Cadastrar talão</button>
+    <a href="{% url 'cadastro_combustivel' %}">
+        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Cadastrar combustível</button>
     </a>
 </div>
 <div>
-    <a href="{% url 'cadastro_combustivel' %}">
-        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Cadastrar combustível</button>
+    <a href="{% url 'cadastro_talao' %}">
+        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Cadastrar talão</button>
     </a>
 </div>
 <div>
