@@ -26,13 +26,13 @@
                 <td>{{ talao.talao_entrega.first.user }}</td>
                 <td>{{ talao.talao_entrega.first.user_to }}</td>
                 <td>
-                    <a href="{% url 'detalhes_talao' talao.talao %}"><button>Vales</button></a>
+                    <a href="{% url 'gc_consulta_talao' talao.talao %}"><button>Vales</button></a>
                 </td>
             </tr>
         {% endfor %}
     </table>
 </div>
 <div>
-    <a href="{% url 'gc_index' %}"><button>Voltar</button></a>
+    <a href="{% url 'gc_menu_consultas' %}"><button>Voltar</button></a>
 </div>
 {% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'constel/base.html' %}
+{% block title %}Gas Control{% endblock %}
+{% block content %}
+<div><h1>Gas Control</h1></div>
+<div>
+    <a href="{% url 'gc_menu_cadastros' %}">
+        <button>Cadastros</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'gc_menu_taloes' %}">
+        <button>Gerenciamento de talões</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'gc_menu_vales' %}">
+        <button>Gerenciamento de vales</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'gc_menu_consultas' %}">
+        <button>Consultas</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'gc_menu_relatorios' %}">
+        <button>Relatórios</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'index' %}"><button>Sair</button></a>
+</div>
+<div>
+    <a href="{% url 'logout' %}"><button>Logout</button></a>
+</div>
+{% endblock %}

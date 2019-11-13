@@ -7,7 +7,7 @@
     <div class="formText">{{ field.label }}:</div>
     <div class="formField">{{ field }}</div>
 {% endfor %}
-    <input type="submit" value="Submit">
+    <input type="submit" value="Entregar talão">
 </form>
-<a href="{% url 'gc_index' %}"><button>Voltar</button></a>
+<a href="{% url 'gc_menu_taloes' %}"><button>Cancelar</button></a>
 {% endblock %}

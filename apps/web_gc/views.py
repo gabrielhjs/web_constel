@@ -42,10 +42,10 @@ def view_cadastrar_talao(request):
             except IntegrityError:
                 talao.delete()
                 cadastro_talao.delete()
-                return HttpResponseRedirect('/gc/cadtalao')
+                return HttpResponseRedirect('/gc/menu-cadastros/cadastro-talao')
 
             cadastro_talao.save()
-            return HttpResponseRedirect('/gc')
+            return HttpResponseRedirect('/gc/menu-cadastros')
 
     else:
         form = FormTalao()
@@ -73,7 +73,7 @@ def view_cadastrar_combustivel(request):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/gc')
+            return HttpResponseRedirect('/gc/menu-cadastros')
     else:
         form = FormCadastraCombustivel()
 
@@ -110,7 +110,7 @@ def view_entrega_talao(request):
             )
             entrega_talao.save()
             talao.save()
-            return HttpResponseRedirect('/gc')
+            return HttpResponseRedirect('/gc/menu-taloes')
     else:
         form = FormEntregaTalao()
 
@@ -150,7 +150,7 @@ def view_entrega_vale(request):
             )
             entrega_vale.save()
             vale.save()
-            return HttpResponseRedirect('/gc')
+            return HttpResponseRedirect('/gc/menu-vales')
 
     else:
         form = FormEntregaVale(request.user)
@@ -159,12 +159,7 @@ def view_entrega_vale(request):
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.view_vale',
-    ),
-    raise_exception=True)
-def view_index(request):
+def view_menu_principal(request):
     """
     View de carregamento da página inicial do GC
     :param request: informações gerais
@@ -177,7 +172,92 @@ def view_index(request):
         'beneficiario': combustivel_beneficiario(request.user),
     }
 
-    return render(request, 'web_gc/index.html', context)
+    return render(request, 'web_gc/menu_principal.html', context)
+
+
+@login_required()
+def view_menu_cadastros(request):
+    """
+    View de carregamento da página de cadastros do GC
+    :param request: informações gerais
+    :return: carregamento da página de cadastro
+    """
+
+    context = {
+        'gerencia_talao': combustivel_gerencia_talao(request.user),
+        'gerencia_vale': combustivel_gerencia_vale(request.user),
+        'beneficiario': combustivel_beneficiario(request.user),
+    }
+
+    return render(request, 'web_gc/menu_cadastros.html', context)
+
+
+@login_required()
+def view_menu_consultas(request):
+    """
+    View de carregamento da página de consultas do GC
+    :param request: informações gerais
+    :return: carregamento da página de consultas
+    """
+
+    context = {
+        'gerencia_talao': combustivel_gerencia_talao(request.user),
+        'gerencia_vale': combustivel_gerencia_vale(request.user),
+        'beneficiario': combustivel_beneficiario(request.user),
+    }
+
+    return render(request, 'web_gc/menu_consultas.html', context)
+
+
+@login_required()
+def view_menu_relatorios(request):
+    """
+    View de carregamento da página de relatórios do GC
+    :param request: informações gerais
+    :return: carregamento da página de relatórios
+    """
+
+    context = {
+        'gerencia_talao': combustivel_gerencia_talao(request.user),
+        'gerencia_vale': combustivel_gerencia_vale(request.user),
+        'beneficiario': combustivel_beneficiario(request.user),
+    }
+
+    return render(request, 'web_gc/menu_relatorios.html', context)
+
+
+@login_required()
+def view_menu_taloes(request):
+    """
+    View de carregamento da página de gerenciamento de talões do GC
+    :param request: informações gerais
+    :return: carregamento da página de gerenciamento de talões
+    """
+
+    context = {
+        'gerencia_talao': combustivel_gerencia_talao(request.user),
+        'gerencia_vale': combustivel_gerencia_vale(request.user),
+        'beneficiario': combustivel_beneficiario(request.user),
+    }
+
+    return render(request, 'web_gc/menu_taloes.html', context)
+
+
+@login_required()
+def view_menu_vales(request):
+    """
+    View de carregamento da página de gerenciamento de vales do GC
+    :param request: informações gerais
+    :return: carregamento da página de gerenciamento de vales
+    """
+
+    context = {
+        'gerencia_talao': combustivel_gerencia_talao(request.user),
+        'gerencia_vale': combustivel_gerencia_vale(request.user),
+        'beneficiario': combustivel_beneficiario(request.user),
+    }
+
+    return render(request, 'web_gc/menu_vales.html', context)
 
 
 @login_required()

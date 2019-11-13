@@ -21,7 +21,7 @@
             <tr>
                 <td>{{ vale.vale }}</td>
                 <td>
-                    <a href="{% url 'detalhes_talao' vale.talao %}"><button>{{ vale.talao }}</button></a>
+                    <a href="{% url 'gc_consulta_talao' vale.talao %}"><button>{{ vale.talao }}</button></a>
                 </td>
                 <td>{{ vale.get_status_display }}</td>
                 <td>{{ vale.vale_entrega.first.data }}</td>
@@ -36,6 +36,6 @@
     </table>
 </div>
 <div>
-    <a href="{% url 'gc_index' %}"><button>Voltar</button></a>
+    <a href="{% url 'gc_menu_consultas' %}"><button>Voltar</button></a>
 </div>
 {% endblock %}
