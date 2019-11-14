@@ -32,30 +32,18 @@ def view_cadastrar_usuario(request):
     """
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = FormCadastraUsuario(request.POST)
 
         if form.is_valid():
-            username = form.cleaned_data['username']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            is_active = False
-
-            user = User(
-                username=username,
-                first_name=first_name,
-                last_name=last_name,
-                email=email,
-                is_active=is_active,
-                password=password,
-            )
-            user.save()
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
 
             return HttpResponseRedirect('/')
-
     else:
-        form = UserCreationForm()
+        form = FormCadastraUsuario()
 
     return render(request, 'constel/cadastra_usuario.html', {'form': form})
 
