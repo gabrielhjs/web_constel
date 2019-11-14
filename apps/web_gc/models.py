@@ -23,7 +23,7 @@ class Talao(models.Model):
         ],
         verbose_name='Talao',
     )
-    status = models.IntegerField(choices=STATUS_CHOISES, default=0, editable=True)
+    status = models.IntegerField(choices=STATUS_CHOISES, default=0)
 
     def __str__(self):
         return '%s' % self.talao
