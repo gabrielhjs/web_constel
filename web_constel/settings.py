@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['constel.herokuapp.com', ]
+ALLOWED_HOSTS = ['constel.herokuapp.com', 'http://192.168.1.114:8080']
 
 
 # Application definition
