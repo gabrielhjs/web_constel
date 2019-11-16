@@ -324,3 +324,25 @@ def view_vales(request):
     print(vales)
 
     return render(request, 'web_gc/consulta_vales.html', context)
+
+
+@login_required()
+@permission_required(
+    (
+        'web_gc.view_vale',
+    ),
+    raise_exception=True)
+def view_meus_vales(request):
+    """
+
+    :param request:
+    :return:
+    """
+
+    vales = Vale.objects.filter(vale_entrega__user_to=request.user).order_by('vale_entrega__data')
+    context = {
+        'vales': vales,
+    }
+    print(vales)
+
+    return render(request, 'web_gc/consulta_meus_vales.html', context)

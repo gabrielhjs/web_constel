@@ -11,6 +11,7 @@ urlpatterns = [
     path('gc/menu-consultas/consulta-taloes/', views.view_taloes, name='gc_consulta_taloes'),
     path('gc/menu-consultas/consulta-taloes/talao=<int:talao_id>/', views.view_talao, name='gc_consulta_talao'),
     path('gc/menu-consultas/consulta-vales/', views.view_vales, name='gc_consulta_vales'),
+    path('gc/menu-consultas/consulta-meus-vales/', views.view_meus_vales, name='gc_consulta_meus_vales'),
     path('gc/menu-relatorios/', views.view_menu_relatorios, name='gc_menu_relatorios'),
     path('gc/menu-taloes/', views.view_menu_taloes, name='gc_menu_taloes'),
     path('gc/menu-taloes/entrega-talao/', views.view_entrega_talao, name='gc_entrega_talao'),

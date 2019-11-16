@@ -1,7 +1,7 @@
 {% extends 'constel/base.html' %}
 {% block title %}Gas Control{% endblock %}
 {% block content %}
-<div><h1>Gas Control</h1></div>
+<div><h1>Consultas</h1></div>
 <div>
     <a href="{% url 'gc_consulta_taloes' %}">
         <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Consultar talões</button>
@@ -10,6 +10,11 @@
 <div>
     <a href="{% url 'gc_consulta_vales' %}">
         <button {% if gerencia_vale == 0 %} disabled="disabled" {% endif %}>Consultar vales</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'gc_consulta_meus_vales' %}">
+        <button {% if beneficiario == 0 %} disabled="disabled" {% endif %}>Consultar meus vales</button>
     </a>
 </div>
 <div>

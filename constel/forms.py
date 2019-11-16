@@ -28,7 +28,7 @@ class FormLogin(forms.Form):
     Formulário de login de usuário
     """
 
-    username = forms.CharField(max_length=150)
+    username = forms.CharField(max_length=150, label='Matrícula')
     password = forms.CharField(widget=forms.PasswordInput)
 
     widgets = {
