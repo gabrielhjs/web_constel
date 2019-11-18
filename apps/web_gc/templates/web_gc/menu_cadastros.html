@@ -1,7 +1,12 @@
 {% extends 'constel/base.html' %}
-{% block title %}Gas Control{% endblock %}
+{% block title %}Constel | Combustível{% endblock %}
 {% block content %}
 <div><h1>Cadastros</h1></div>
+<div>
+    <a href="{% url 'cadastra_usuario_passivo' %}">
+        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Cadastrar beneficiário</button>
+    </a>
+</div>
 <div>
     <a href="{% url 'gc_cadastro_combustivel' %}">
         <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Cadastrar combustível</button>

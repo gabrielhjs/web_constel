@@ -2,8 +2,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
-from .forms import FormCadastraUsuario, FormLogin
+from .forms import FormCadastraUsuario, FormLogin, FormCadastraUsuarioPassivo
+from .models import UserType
 
 
 @login_required()
@@ -24,7 +26,6 @@ def index(request):
 def view_cadastrar_usuario(request):
     """
     View de cadastro de novos usuários.
-    Cadastra usuários inativos, o adm deve validar os usuários!
     :param request: POST form
     :return:
     """
@@ -34,16 +35,38 @@ def view_cadastrar_usuario(request):
 
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
+            user = User.objects.get(username=form.cleaned_data['username'])
+            user_type = UserType(user=user, type=False)
+            user_type.save()
 
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/login')
     else:
         form = FormCadastraUsuario()
 
     return render(request, 'constel/cadastra_usuario.html', {'form': form})
+
+
+def view_cadastrar_usuario_passivo(request):
+    """
+    View de cadastro de novos usuários passivos.
+    :param request: POST form
+    :return:
+    """
+
+    if request.method == 'POST':
+        form = FormCadastraUsuarioPassivo(request.POST)
+
+        if form.is_valid():
+            form.save()
+            user = User.objects.get(username=form.cleaned_data['username'])
+            user_type = UserType(user=user)
+            user_type.save()
+
+            return HttpResponseRedirect('/gc/menu-cadastros/')
+    else:
+        form = FormCadastraUsuarioPassivo()
+
+    return render(request, 'constel/cadastra_usuario_passivo.html', {'form': form})
 
 
 def view_login(request):

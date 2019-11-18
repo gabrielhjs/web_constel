@@ -1,5 +1,5 @@
 {% extends 'constel/base.html' %}
-{% block title %} Talão {{ talao.talao }} {% endblock %}
+{% block title %}Constel | Combustível | {{ talao.talao }}{% endblock %}
 {% block content %}
 <h1>Talão</h1>
 <div class="table-content">
@@ -52,7 +52,7 @@
                 <td>{{ vale.vale_entrega.first.user_to }}</td>
                 <td>{{ vale.vale_entrega.first.user_to.get_full_name.upper }}</td>
                 <td>{{ vale.vale_entrega.first.combustivel.combustivel }}</td>
-                <td>R$ {{ vale.vale_entrega.first.valor }}</td>
+                <td>{{ vale.vale_entrega.first.valor }}</td>
                 <td>{{ vale.vale_entrega.first.observacao }}</td>
             </tr>
         {% endfor %}

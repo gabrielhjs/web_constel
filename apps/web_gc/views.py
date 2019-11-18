@@ -2,10 +2,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import IntegrityError
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
 from .forms import FormTalao, FormEntregaTalao, FormEntregaVale, FormCadastraCombustivel
-from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale
+from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
 from .permissions import *
 
 
@@ -77,7 +78,12 @@ def view_cadastrar_combustivel(request):
     else:
         form = FormCadastraCombustivel()
 
-    return render(request, 'web_gc/cadastro_combustivel.html', {'form': form})
+    context = {
+        'combustiveis': Combustivel.objects.all(),
+        'form': form,
+    }
+
+    return render(request, 'web_gc/cadastro_combustivel.html', context)
 
 
 @login_required()
@@ -321,7 +327,6 @@ def view_vales(request):
     context = {
         'vales': vales,
     }
-    print(vales)
 
     return render(request, 'web_gc/consulta_vales.html', context)
 
@@ -346,3 +351,20 @@ def view_meus_vales(request):
     print(vales)
 
     return render(request, 'web_gc/consulta_meus_vales.html', context)
+
+
+def view_relatorio_mensal(request):
+    """
+
+    :param request:
+    :return:
+    """
+
+    vales = Vale.objects.values('vale_entrega__user_to__username').annotate(total=Sum('vale_entrega__valor'))
+    context = {
+        'vales': vales,
+    }
+    for vale in vales:
+        print(vale)
+
+    return render(request, 'web_gc/relatorio_mensal.html', context)

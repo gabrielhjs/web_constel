@@ -13,6 +13,7 @@ urlpatterns = [
     path('gc/menu-consultas/consulta-vales/', views.view_vales, name='gc_consulta_vales'),
     path('gc/menu-consultas/consulta-meus-vales/', views.view_meus_vales, name='gc_consulta_meus_vales'),
     path('gc/menu-relatorios/', views.view_menu_relatorios, name='gc_menu_relatorios'),
+    path('gc/menu-relatorios/mensal', views.view_relatorio_mensal, name='gc_relatorio_mensal'),
     path('gc/menu-taloes/', views.view_menu_taloes, name='gc_menu_taloes'),
     path('gc/menu-taloes/entrega-talao/', views.view_entrega_talao, name='gc_entrega_talao'),
     path('gc/menu-vales/', views.view_menu_vales, name='gc_menu_vales'),

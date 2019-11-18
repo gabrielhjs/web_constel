@@ -6,12 +6,12 @@
     {% for field in form %}
     <div>
         <p>{{ field.label_tag }}</p>
-        <p>{{ field }}
         {% if field.help_text %}
-            <small style="color: grey">{{ field.help_text }}</small></p>
+            <p><small style="color: grey">{{ field.help_text }}</small></p>
         {% endif %}
+        <p>{{ field }}</p>
         {% for error in field.errors %}
-        <p style="color: red">{{ error }}</p>
+            <p style="color: red">{{ error }}</p>
         {% endfor %}
     </div>
     {% endfor %}

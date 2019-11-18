@@ -1,13 +1,21 @@
 {% extends 'constel/base.html' %}
-{% block title %}Entrega Vale{% endblock %}
+{% block title %}Constel | Combustível{% endblock %}
 {% block content %}
 <form method="post">
-{% csrf_token %}
-{% for field in form %}
-    <div class="formText">{{ field.label }}:</div>
-    <div class="formField">{{ field }}</div>
-{% endfor %}
-    <input type="submit" value="Entregar vale">
+    {% csrf_token %}
+    {% for field in form %}
+    <div>
+        <p>{{ field.label_tag }}</p>
+        {% if field.help_text %}
+            <p><small style="color: grey">{{ field.help_text }}</small></p>
+        {% endif %}
+        <p>{{ field }}</p>
+        {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <button type="submit">Entregar vale</button>
 </form>
 <a href="{% url 'gc_menu_vales' %}"><button>Cancelar</button></a>
 {% endblock %}

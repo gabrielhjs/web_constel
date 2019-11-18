@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
-import locale
 
 
 class Talao(models.Model):
@@ -15,6 +14,8 @@ class Talao(models.Model):
         (2, 'Usado'),
     ]
 
+    HELP_TEXT = 'Insira um valor válido de talão'
+
     talao = models.IntegerField(
         unique=True,
         validators=[
@@ -22,6 +23,7 @@ class Talao(models.Model):
             MaxValueValidator(999999, 'Talão inválido'),
         ],
         verbose_name='Talao',
+        help_text=HELP_TEXT,
     )
     status = models.IntegerField(choices=STATUS_CHOISES, default=0)
 
@@ -65,7 +67,8 @@ class Combustivel(models.Model):
     Classe que contém os caombustíveis que podem ser utilizados nos vales
     """
 
-    combustivel = models.CharField(unique=True, max_length=10)
+    HELP_TEXT = 'Insira um combustível'
+    combustivel = models.CharField(unique=True, max_length=30, help_text=HELP_TEXT)
 
     def __str__(self):
         return '%s' % self.combustivel
@@ -103,7 +106,8 @@ class EntregaTalao(models.Model):
         User, default=None,
         on_delete=models.PROTECT,
         related_name='talao_user_to',
-        verbose_name='Para'
+        verbose_name='Para',
+        help_text='Usuário que irá receber o talão'
     )
 
     def __str__(self):
@@ -129,7 +133,8 @@ class EntregaVale(models.Model):
         User, default=None,
         on_delete=models.PROTECT,
         related_name='vale_user_to',
-        verbose_name='Para'
+        verbose_name='Para',
+        help_text='Usuário que irá receber o vale combustível'
     )
 
     def __str__(self):

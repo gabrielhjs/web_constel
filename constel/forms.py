@@ -5,8 +5,7 @@ from django.contrib.auth.models import User
 
 class FormCadastraUsuario(UserCreationForm):
     """
-    Formulário de cadastro de novo usuário.
-    Cadastra usuários inativos, o adm deve validar os usuários!
+    Formulário de cadastro de novo usuário ativo, exige senha.
     """
 
     username = forms.IntegerField(
@@ -21,6 +20,26 @@ class FormCadastraUsuario(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+
+
+class FormCadastraUsuarioPassivo(forms.ModelForm):
+    """
+    Formulário de cadastro de novo usuário passivo. Não exige senha,
+    serve para cadastrar usuários que não necesstam logar no sistema.
+    """
+
+    username = forms.IntegerField(
+        required=True,
+        label='Matrícula',
+        help_text='Insira o número da sua matrícula (crachá)'
+    )
+    first_name = forms.CharField(max_length=30, help_text='Obrigatório.', label='Nome')
+    last_name = forms.CharField(max_length=100, help_text='Obrigatório.', label='Sobrenome')
+    email = forms.EmailField(max_length=254, help_text='Obrigatório. Informe um endereço válido de email.')
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email',)
 
 
 class FormLogin(forms.Form):

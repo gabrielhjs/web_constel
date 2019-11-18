@@ -1,5 +1,5 @@
 {% extends 'constel/base.html' %}
-{% block title %}Constel | Combustível{% endblock %}
+{% block title %}Novo Usuário{% endblock %}
 {% block content %}
 <form method="post">
     {% csrf_token %}
@@ -15,7 +15,9 @@
         {% endfor %}
     </div>
     {% endfor %}
-    <button type="submit">Entregar talão</button>
+    <button type="submit">Cadastrar beneficiário</button>
 </form>
-<a href="{% url 'gc_menu_taloes' %}"><button>Cancelar</button></a>
+<div>
+    <a href="{% url 'gc_menu_cadastros' %}"><button>Voltar</button></a>
+</div>
 {% endblock %}
