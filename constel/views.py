@@ -36,7 +36,7 @@ def view_cadastrar_usuario(request):
         if form.is_valid():
             form.save()
             user = User.objects.get(username=form.cleaned_data['username'])
-            user_type = UserType(user=user, type=False)
+            user_type = UserType(user=user)
             user_type.save()
 
             return HttpResponseRedirect('/login')
