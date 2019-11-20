@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 from .forms import FormCadastraUsuario, FormLogin, FormCadastraUsuarioPassivo
 from .models import UserType
@@ -85,9 +86,14 @@ def view_login(request):
                 user = authenticate(request, username=username, password=password)
 
                 if user is not None:
-                    login(request, user)
 
-                    return HttpResponseRedirect('/')
+                    if user.user_type.is_passive:
+                        messages.error(request, 'Usuário não autenticado, contate o administrador!')
+                        return HttpResponseRedirect('/login')
+
+                    else:
+                        login(request, user)
+                        return HttpResponseRedirect('/')
 
         else:
             form = FormLogin()

@@ -3,11 +3,25 @@
 {% block content %}
 <form method="post">
 {% csrf_token %}
-{% for field in form %}
-    <div class="formText">{{ field.label }}:</div>
-    <div class="formField">{{ field }}</div>
+{% for message in messages %}
+    <div class="alert alert-success">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+        {{ message }}
+    </div>
 {% endfor %}
-    <button type="submit">Login</button>
+{% for field in form %}
+    <div>
+        <p>{{ field.label_tag }}</p>
+        {% if field.help_text %}
+            <p><small style="color: grey">{{ field.help_text }}</small></p>
+        {% endif %}
+        <p>{{ field }}</p>
+        {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endfor %}
+    <button type="submit">Cadastrar combustível</button>
 </form>
 <div>
     <a href="{% url 'cadastra_usuario' %}"><button>Cadastrar-se</button></a>
