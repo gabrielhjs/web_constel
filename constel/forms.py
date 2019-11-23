@@ -16,10 +16,13 @@ class FormCadastraUsuario(UserCreationForm):
     first_name = forms.CharField(max_length=30, help_text='Obrigatório.', label='Nome')
     last_name = forms.CharField(max_length=100, help_text='Obrigatório.', label='Sobrenome')
     email = forms.EmailField(max_length=254, help_text='Obrigatório. Informe um endereço válido de email.')
+    modelo = forms.CharField(max_length=30, help_text='Modelo do veículo')
+    placa = forms.CharField(max_length=8, help_text='Placa do veículo')
+    cor = forms.CharField(max_length=100, help_text='Cor do veículo')
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
 
 
 class FormCadastraUsuarioPassivo(forms.ModelForm):
@@ -36,6 +39,9 @@ class FormCadastraUsuarioPassivo(forms.ModelForm):
     first_name = forms.CharField(max_length=30, help_text='Obrigatório.', label='Nome')
     last_name = forms.CharField(max_length=100, help_text='Obrigatório.', label='Sobrenome')
     email = forms.EmailField(max_length=254, help_text='Obrigatório. Informe um endereço válido de email.')
+    modelo = forms.CharField(max_length=30, help_text='Modelo do veículo')
+    placa = forms.CharField(max_length=8, help_text='Placa do veículo')
+    cor = forms.CharField(max_length=100, help_text='Cor do veículo')
 
     class Meta:
         model = User

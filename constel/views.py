@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 
 from .forms import FormCadastraUsuario, FormLogin, FormCadastraUsuarioPassivo
-from .models import UserType
+from .models import UserType, Veiculo
 
 
 @login_required()
@@ -37,8 +37,13 @@ def view_cadastrar_usuario(request):
         if form.is_valid():
             form.save()
             user = User.objects.get(username=form.cleaned_data['username'])
+            modelo = form.cleaned_data['modelo']
+            placa = form.cleaned_data['placa']
+            cor = form.cleaned_data['cor']
             user_type = UserType(user=user)
             user_type.save()
+            veiculo = Veiculo(user=user, modelo=modelo, placa=placa, cor=cor)
+            veiculo.save()
 
             return HttpResponseRedirect('/login')
     else:
@@ -60,8 +65,13 @@ def view_cadastrar_usuario_passivo(request):
         if form.is_valid():
             form.save()
             user = User.objects.get(username=form.cleaned_data['username'])
+            modelo = form.cleaned_data['modelo']
+            placa = form.cleaned_data['placa']
+            cor = form.cleaned_data['cor']
             user_type = UserType(user=user)
             user_type.save()
+            veiculo = Veiculo(user=user, modelo=modelo, placa=placa, cor=cor)
+            veiculo.save()
 
             return HttpResponseRedirect('/gc/menu-cadastros/')
     else:
