@@ -19,7 +19,7 @@ class Talao(models.Model):
     talao = models.IntegerField(
         unique=True,
         validators=[
-            MinValueValidator(100, 'Talão inválido'),
+            MinValueValidator(1, 'Talão inválido'),
             MaxValueValidator(999999, 'Talão inválido'),
         ],
         verbose_name='Talao',
@@ -49,7 +49,7 @@ class Vale(models.Model):
         unique=True,
         validators=[
             MinValueValidator(10000, 'Vale inválido'),
-            MaxValueValidator(999999, 'Vale inválido'),
+            MaxValueValidator(9999999, 'Vale inválido'),
         ],
     )
     status = models.IntegerField(choices=STATUS_CHOISES, default=0)

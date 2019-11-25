@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from .forms import FormCadastraUsuario, FormLogin, FormCadastraUsuarioPassivo
+from .forms import FormCadastraUsuario, FormLogin, FormCadastraUsuarioPassivo, FormCadastrarVeiculo
 from .models import UserType, Veiculo
 
 
@@ -52,6 +52,7 @@ def view_cadastrar_usuario(request):
     return render(request, 'constel/cadastra_usuario.html', {'form': form})
 
 
+@login_required()
 def view_cadastrar_usuario_passivo(request):
     """
     View de cadastro de novos usuários passivos.
@@ -78,6 +79,27 @@ def view_cadastrar_usuario_passivo(request):
         form = FormCadastraUsuarioPassivo()
 
     return render(request, 'constel/cadastra_usuario_passivo.html', {'form': form})
+
+
+@login_required()
+def view_cadastrar_veiculo(request):
+    """
+    View de cadastro de veículos de funcionários existentes
+    :param request:
+    :return: formulário de cadastro
+    """
+
+    if request.method == 'POST':
+        form = FormCadastrarVeiculo(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            return HttpResponseRedirect('/gc/menu-cadastros/')
+    else:
+        form = FormCadastrarVeiculo()
+
+    return render(request, 'constel/cadastra_veiculo.html', {'form': form})
 
 
 def view_login(request):

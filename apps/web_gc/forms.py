@@ -40,7 +40,6 @@ class FormEntregaTalao(forms.ModelForm):
         # Redefinição dos filtros para busca de objetos nas models para exibir apenas talões aptos para entrega
         super(FormEntregaTalao, self).__init__(*args, **kwargs)
         self.fields['talao'].queryset = Talao.objects.filter(status=0)
-        users = User.objects.filter(is_active=True)
         self.fields['user_to'].queryset = User.objects.filter(is_active=True)
 
 
