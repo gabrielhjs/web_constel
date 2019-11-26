@@ -21,7 +21,7 @@
             <tr>
                 <td>{{ vale.vale }}</td>
                 <td>
-                    <a href="{% url 'gc_consulta_talao' vale.talao %}"><button>{{ vale.talao }}</button></a>
+                    <a href="{% url 'gc_consulta_talao' vale.talao %}">{{ vale.talao }}</a>
                 </td>
                 <td>{{ vale.get_status_display }}</td>
                 <td>{{ vale.vale_entrega.first.data }}</td>

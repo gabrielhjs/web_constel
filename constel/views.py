@@ -134,7 +134,29 @@ def view_login(request):
 
 
 @login_required()
+def view_consulta_funcionarios(request):
+
+    users = User.objects.all().order_by('first_name')
+    context = {
+        'users': users,
+    }
+
+    return render(request, 'constel/consulta_funcionarios.html', context)
+
+
+@login_required()
+def view_consulta_veiculos(request):
+
+    veiculos = Veiculo.objects.filter(user__is_active=True).order_by('user__first_name', 'user__last_name')
+    context = {
+        'veiculos': veiculos,
+    }
+
+    return render(request, 'constel/consulta_veiculos.html', context)
+
+
+@login_required()
 def view_logout(request):
 
     logout(request)
-    return HttpResponseRedirect('login')
+    return HttpResponseRedirect('/login/')

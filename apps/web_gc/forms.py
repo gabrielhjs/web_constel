@@ -40,7 +40,15 @@ class FormEntregaTalao(forms.ModelForm):
         # Redefinição dos filtros para busca de objetos nas models para exibir apenas talões aptos para entrega
         super(FormEntregaTalao, self).__init__(*args, **kwargs)
         self.fields['talao'].queryset = Talao.objects.filter(status=0)
-        self.fields['user_to'].queryset = User.objects.filter(is_active=True)
+        users = User.objects.filter(is_active=True)
+        users_name = [(i.id, '%s - %s %s' % (i.username, i.first_name, i.last_name)) for i in users]
+        self.fields['user_to'] = forms.ChoiceField(
+            choices=users_name,
+            label='Funcionário',
+            help_text='Funcionário que solicitou o talão de combustível.')
+
+    def clean(self):
+        self.cleaned_data['user_to'] = User.objects.get(id=int(self.cleaned_data['user_to']))
 
 
 class FormEntregaVale(forms.ModelForm):
@@ -59,7 +67,15 @@ class FormEntregaVale(forms.ModelForm):
         # Filtrando apenas vales que estao com o usuário logado
         self.fields['vale'].queryset = Vale.objects.filter(talao__talao_entrega__user_to=self.user, status=1)
         # Filtrando para permitir entrega apenas para funcionários que estão ativos nos sistema
-        self.fields['user_to'].queryset = User.objects.filter(is_active=True)
+        users = User.objects.filter(is_active=True)
+        users_name = [(i.id, '%s - %s %s' % (i.username, i.first_name, i.last_name)) for i in users]
+        self.fields['user_to'] = forms.ChoiceField(
+            choices=users_name,
+            label='Funcionário',
+            help_text='Funcionário que solicitou o vale de combustível.')
+
+    def clean(self):
+        self.cleaned_data['user_to'] = User.objects.get(id=int(self.cleaned_data['user_to']))
 
 
 class FormCadastraCombustivel(forms.ModelForm):

@@ -1,0 +1,30 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel{% endblock %}
+{% block content %}
+<div><h1>Veículos</h1></div>
+<div class="table-content">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Funcionário</th>
+                <th>Modelo</th>
+                <th>Placa</th>
+                <th>Cor</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for veiculo in veiculos %}
+            <tr>
+                <td>{{ veiculo.user.first_name|title }} {{ veiculo.user.last_name|title }}</td>
+                <td>{{ veiculo.modelo|title }}</td>
+                <td>{{ veiculo.placa|title }}</td>
+                <td>{{ veiculo.cor|title }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <a href="{% firstof request.GET.next '/' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel{% endblock %}
+{% block content %}
+<div><h1>Funcionários</h1></div>
+<div class="table-content">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Nome</th>
+                <th>Status Sistema</th>
+                <th>Tipo de acesso</th>
+                <th>Status Empresa</th>
+                <th>Qde Veículos</th>
+                <th>Último acesso</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.username|title }}</td>
+                <td>{{ user.first_name|title }} {{ user.last_name|title }}</td>
+                <td>
+                    {% if user.user_type.is_passive %}
+                        Inativo
+                    {% else %}
+                        Ativo
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.is_superuser %}
+                        Adminstrador
+                    {% elif user.is_staff %}
+                        Staff
+                    {% elif user.is_active %}
+                        Normal
+                    {% else %}
+                        Desativado
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.is_active %}
+                        Ativo
+                    {% else %}
+                        Inativo
+                    {% endif %}
+                </td>
+                <td>{{ user.veiculos.count }}
+                <td>{{ user.last_login|default:"" }}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <a href="{% firstof request.GET.next '/' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

@@ -62,9 +62,9 @@ class FormCadastrarVeiculo(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FormCadastrarVeiculo, self).__init__(*args, **kwargs)
 
-        usuarios = User.objects.all()
-        nomes = [(i.id, '%s %s' % (i.first_name, i.last_name)) for i in usuarios]
-        self.fields['user'] = forms.ChoiceField(choices=nomes, label='Funcionário')
+        users = User.objects.filter(is_active=True)
+        users_name = [(i.id, '%s - %s %s' % (i.username, i.first_name, i.last_name)) for i in users]
+        self.fields['user'] = forms.ChoiceField(choices=users_name, label='Funcionário')
 
     def clean(self):
         self.cleaned_data['user'] = User.objects.get(id=int(self.cleaned_data['user']))
