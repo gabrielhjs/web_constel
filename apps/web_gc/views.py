@@ -1,11 +1,12 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
-from .forms import FormTalao, FormEntregaTalao, FormEntregaVale, FormCadastraCombustivel
+from .forms import FormTalao, FormEntregaTalao, FormEntregaVale, FormCadastraCombustivel, FormTest
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
 from .permissions import *
 
@@ -364,7 +365,25 @@ def view_relatorio_mensal(request):
     context = {
         'vales': vales,
     }
-    for vale in vales:
-        print(vale)
 
     return render(request, 'web_gc/relatorio_mensal.html', context)
+
+
+def view_form_teste(request):
+
+    if request.method == 'POST':
+        form = FormTest(request.POST)
+
+        if form.is_valid():
+            data = User.objects.all()
+            print(data)
+            context = {
+                'users': data,
+            }
+
+            return render(request, 'web_gc/teste1.html', context)
+
+    else:
+        form = FormTest()
+
+        return render(request, 'web_gc/teste.html', {'form': form})

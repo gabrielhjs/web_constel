@@ -86,3 +86,9 @@ class FormCadastraCombustivel(forms.ModelForm):
     class Meta:
         model = Combustivel
         fields = '__all__'
+
+
+class FormTest(forms.Form):
+
+    name = forms.CharField(label='Nome', max_length=255)
+    age = forms.IntegerField()

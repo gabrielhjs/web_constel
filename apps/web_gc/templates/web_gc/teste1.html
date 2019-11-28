@@ -1,0 +1,12 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel|Combustível{% endblock %}
+{% block content %}
+{% for data in users %}
+    <p>{{ data.username }}</p>
+    <p>{{ data.first_name }} {{ data.last_name }}</p>
+    <p>{{ data.email }}</p>
+    <p>{{ data.last_login }}</p>
+    <p>{{ data.is_superuser }}</p>
+    <p>{{ data.is_staff }}</p>
+{% endfor %}
+{% endblock %}

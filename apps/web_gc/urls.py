@@ -18,4 +18,5 @@ urlpatterns = [
     path('gc/menu-taloes/entrega-talao/', views.view_entrega_talao, name='gc_entrega_talao'),
     path('gc/menu-vales/', views.view_menu_vales, name='gc_menu_vales'),
     path('gc/menu-vales/entrega-vale/', views.view_entrega_vale, name='gc_entrega_vale'),
+    path('gc/teste/', views.view_form_teste, name='gc_teste'),
 ]
