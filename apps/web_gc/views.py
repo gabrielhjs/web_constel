@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
-from .forms import FormTalao, FormEntregaTalao, FormEntregaVale, FormCadastraCombustivel, FormTest
+from .forms import FormTalao, FormEntregaTalao, FormEntregaVale1, FormEntregaVale2, FormCadastraCombustivel, FormTest
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
 from .permissions import *
 
@@ -131,7 +131,7 @@ def view_entrega_talao(request):
         'web_gc.add_entregavale',
     ),
     raise_exception=True)
-def view_entrega_vale(request):
+def view_entrega_vale_1(request):
     """
     View de carregamento e gestão de entrega de vales cadastrados no sistema,
     deve ser acessado apenas pelo adm e funcionãrios autorizados
@@ -140,29 +140,44 @@ def view_entrega_vale(request):
     """
 
     if request.method == 'POST':
-        form = FormEntregaVale(request.user, request.POST)
+        form = FormEntregaVale1(request.user, request.POST)
 
         if form.is_valid():
             # Registro da entrega do vale
+            request.user_to = form.cleaned_data['user_to']
+            request.vale = form.cleaned_data['vale']
+            context = {
+                'user_to': request.user_to,
+                'vale': request.vale,
+            }
+            return HttpResponseRedirect('/gc/menu-vales/entrega-vale-2/', request, context)
 
-            vale = form.cleaned_data['vale']
-            vale.status = 2
-            entrega_vale = EntregaVale(
-                vale=vale,
-                user=request.user,
-                user_to=form.cleaned_data['user_to'],
-                combustivel=form.cleaned_data['combustivel'],
-                valor=form.cleaned_data['valor'],
-                observacao=form.cleaned_data['observacao'],
-            )
-            entrega_vale.save()
-            vale.save()
+    else:
+        form = FormEntregaVale1(request.user)
+
+    return render(request, 'web_gc/entrega_vale1.html', {'form': form})
+
+
+def view_entrega_vale_2(request, context):
+
+    if request.user_to is None or request.vale is None:
+
+        return HttpResponseRedirect('/gc/menu-vales/entrega-vale-1/')
+
+    if request.method == 'POST':
+        form = FormEntregaVale2(context['user_to'], request.POST)
+
+        if form.is_valid():
+            print('DEU CERTO')
+
             return HttpResponseRedirect('/gc/menu-vales')
 
     else:
-        form = FormEntregaVale(request.user)
+        form = FormEntregaVale2(context['user_to'])
 
-    return render(request, 'web_gc/entrega_vale.html', {'form': form})
+    context.update({'form': form})
+
+    return render(request, 'web_gc/entrega_vale2.html', context)
 
 
 @login_required()

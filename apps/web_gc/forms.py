@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 from apps.web_gc.models import Talao, Vale, EntregaTalao, EntregaVale, Combustivel
+from constel.models import Veiculo
 
 
 class FormTalao(forms.ModelForm):
@@ -51,7 +52,7 @@ class FormEntregaTalao(forms.ModelForm):
         self.cleaned_data['user_to'] = User.objects.get(id=int(self.cleaned_data['user_to']))
 
 
-class FormEntregaVale(forms.ModelForm):
+'''class FormEntregaVale(forms.ModelForm):
     """
     Formulário de entrega de vales cadastrados
     """
@@ -76,6 +77,52 @@ class FormEntregaVale(forms.ModelForm):
 
     def clean(self):
         self.cleaned_data['user_to'] = User.objects.get(id=int(self.cleaned_data['user_to']))
+'''
+
+
+class FormEntregaVale1(forms.ModelForm):
+    """
+    Formulário de entrega de vales cadastrados
+    """
+
+    class Meta:
+        model = EntregaVale
+        fields = ['vale', 'user_to', ]
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        # Redefinição dos filtros para busca de objetos nas models para exibir apenas vales aptos para entrega
+        super(FormEntregaVale1, self).__init__(*args, **kwargs)
+        # Filtrando apenas vales que estao com o usuário logado
+        self.fields['vale'].queryset = Vale.objects.filter(talao__talao_entrega__user_to=self.user, status=1)
+        # Filtrando para permitir entrega apenas para funcionários que estão ativos nos sistema
+        users = User.objects.filter(is_active=True)
+        users_name = [(i.id, '%s - %s %s' % (i.username, i.first_name, i.last_name)) for i in users]
+        self.fields['user_to'] = forms.ChoiceField(
+            choices=users_name,
+            label='Funcionário',
+            help_text='Funcionário que solicitou o vale de combustível.')
+
+    def clean(self):
+        self.cleaned_data['user_to'] = User.objects.get(id=int(self.cleaned_data['user_to']))
+
+
+class FormEntregaVale2(forms.ModelForm):
+
+    class Meta:
+        model = EntregaVale
+        fields = ['combustivel', 'valor', 'observacao', ]
+
+    def __init__(self, user_to, *args, **kwargs):
+        self.user_to = user_to
+        super(FormEntregaVale2, self).__init__(*args, **kwargs)
+        veiculos = Veiculo.objects.filter(user=self.user_to)
+        veiculos_name = [(i.id, '%s - %s - %s' % (i.modelo, i.placa, i.cor)) for i in veiculos]
+        self.fields['veiculo'] = forms.ChoiceField(
+            choices=veiculos_name,
+            label='Veículo',
+            help_text='Veículo que será abastecido',
+        )
 
 
 class FormCadastraCombustivel(forms.ModelForm):

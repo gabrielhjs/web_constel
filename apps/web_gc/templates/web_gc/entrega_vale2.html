@@ -1,6 +1,8 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Combustível{% endblock %}
 {% block content %}
+<p>Para: {{ user_to.username }}</p>
+<p>Vale: {{ vale }}</p>
 <form method="post">
     {% csrf_token %}
     {% for field in form %}
@@ -15,7 +17,7 @@
         {% endfor %}
     </div>
     {% endfor %}
-    <button type="submit">Entregar vale</button>
+    <button type="submit">Entrega vale</button>
 </form>
 <a href="{% url 'gc_menu_vales' %}"><button>Cancelar</button></a>
 {% endblock %}
