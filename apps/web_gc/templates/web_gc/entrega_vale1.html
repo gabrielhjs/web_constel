@@ -1,18 +1,19 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Combustível{% endblock %}
 {% block content %}
+<h1>Passo 1:</h1>
 <form method="post">
     {% csrf_token %}
     {% for field in form %}
     <div>
         <p>{{ field.label_tag }}</p>
+        {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+        {% endfor %}
         <p>{{ field }}</p>
         {% if field.help_text %}
             <p><small style="color: grey">{{ field.help_text }}</small></p>
         {% endif %}
-        {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
-        {% endfor %}
     </div>
     {% endfor %}
     <button type="submit">Avançar</button>

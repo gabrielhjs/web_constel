@@ -140,42 +140,69 @@ def view_entrega_vale_1(request):
     """
 
     if request.method == 'POST':
-        form = FormEntregaVale1(request.user, request.POST)
+        initial = {
+            'user_to': request.session.get('user_to', None),
+            'vale': request.session.get('vale', None),
+        }
+        form = FormEntregaVale1(data=request.POST, user=request.user, initial=initial)
 
         if form.is_valid():
             # Registro da entrega do vale
-            request.user_to = form.cleaned_data['user_to']
-            request.vale = form.cleaned_data['vale']
-            context = {
-                'user_to': request.user_to,
-                'vale': request.vale,
-            }
-            return HttpResponseRedirect('/gc/menu-vales/entrega-vale-2/', request, context)
+            request.session['user_to'] = form.cleaned_data['user_to']
+            request.session['vale'] = form.cleaned_data['vale']
+
+            return HttpResponseRedirect('/gc/menu-vales/entrega-vale-2/')
 
     else:
-        form = FormEntregaVale1(request.user)
+        form = FormEntregaVale1(user=request.user)
 
     return render(request, 'web_gc/entrega_vale1.html', {'form': form})
 
 
-def view_entrega_vale_2(request, context):
+@login_required()
+@permission_required(
+    (
+        'web_gc.change_vale',
+        'web_gc.add_entregavale',
+    ),
+    raise_exception=True)
+def view_entrega_vale_2(request):
 
-    if request.user_to is None or request.vale is None:
-
+    if request.session.get('user_to') is None:
         return HttpResponseRedirect('/gc/menu-vales/entrega-vale-1/')
 
+    vale = Vale.objects.get(id=request.session['vale'])
+    user_to = User.objects.get(id=request.session['user_to'])
+
     if request.method == 'POST':
-        form = FormEntregaVale2(context['user_to'], request.POST)
+        form = FormEntregaVale2(user_to, request.POST)
 
         if form.is_valid():
-            print('DEU CERTO')
+            request.session.pop('vale')
+            request.session.pop('user_to')
 
-            return HttpResponseRedirect('/gc/menu-vales')
+            vale.status = 2
+            vale.save()
+
+            EntregaVale(
+                user=request.user,
+                user_to=user_to,
+                vale=vale,
+                combustivel=form.cleaned_data['combustivel'],
+                valor=form.cleaned_data['valor'],
+                observacao=form.cleaned_data['observacao'],
+            ).save()
+
+            return HttpResponseRedirect('/gc/menu-vales/')
 
     else:
-        form = FormEntregaVale2(context['user_to'])
+        form = FormEntregaVale2(user_to)
 
-    context.update({'form': form})
+    context = {
+        'user_to': user_to,
+        'vale': vale,
+        'form': form,
+    }
 
     return render(request, 'web_gc/entrega_vale2.html', context)
 
