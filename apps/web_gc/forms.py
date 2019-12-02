@@ -11,14 +11,10 @@ class FormTalao(forms.ModelForm):
     """
 
     vale_inicial = forms.IntegerField(
-        min_value=10000,
-        max_value=999999,
         label='Vale inicial',
         help_text='Número do primeiro vale do talão'
     )
     vale_final = forms.IntegerField(
-        min_value=10000,
-        max_value=999999,
         label='Vale final',
         help_text='Número do último vale do talão'
     )
