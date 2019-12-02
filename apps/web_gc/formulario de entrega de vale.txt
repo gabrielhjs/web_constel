@@ -1,8 +1,0 @@
-
-
-Requerir inicialmente somente o usuário que irá receber o vale (este formulário deve validar se o vale selecionado está
-na posse do usuário que está entregando, mas não realiza nenhuma alteração no sistema)
-após isso renderizar o novo formulário com o nome do usuário já setado
-mostrando as opções de veículos somente deste usuário
-daí pra frente é só pegar os dados e salvar o formulário assim como já funciona atuamente
-SE BASEAR NOS ARQUIVOS DE TESTES e posteriormente apagá-los

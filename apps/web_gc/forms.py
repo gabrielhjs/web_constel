@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from apps.web_gc.models import Talao, Vale, EntregaTalao, EntregaVale, Combustivel
+from apps.web_gc.models import Talao, Vale, EntregaTalao, EntregaVale, Combustivel, Posto
 from constel.models import Veiculo
 
 
@@ -23,9 +23,20 @@ class FormTalao(forms.ModelForm):
         help_text='Número do último vale do talão'
     )
 
+    posto = forms.ChoiceField()
+
     class Meta:
         model = Talao
         fields = ['talao', ]
+
+    def __init__(self, *args, **kwargs):
+        super(FormTalao, self).__init__(*args, **kwargs)
+        postos = Posto.objects.all()
+        postos_name = [(i.id, '%s' % i.posto) for i in postos]
+        self.fields['posto'] = forms.ChoiceField(
+            choices=postos_name,
+            label='Posto',
+        )
 
 
 class FormEntregaTalao(forms.ModelForm):
@@ -140,7 +151,11 @@ class FormCadastraCombustivel(forms.ModelForm):
         fields = '__all__'
 
 
-class FormTest(forms.Form):
+class FormCadastraPosto(forms.ModelForm):
+    """
+    Formulário de cadastro de novos combustíveis
+    """
 
-    name = forms.CharField(label='Nome', max_length=255)
-    age = forms.IntegerField()
+    class Meta:
+        model = Posto
+        fields = '__all__'

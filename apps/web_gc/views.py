@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
-from .forms import FormTalao, FormEntregaTalao, FormEntregaVale1, FormEntregaVale2, FormCadastraCombustivel, FormTest
+from .forms import *
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
 from .permissions import *
 
@@ -34,7 +34,8 @@ def view_cadastrar_talao(request):
             # Registro do cadastro do novo talão
             form.save()
             talao = Talao.objects.get(talao=form.cleaned_data['talao'])
-            cadastro_talao = CadastroTalao(talao=talao, user=request.user)
+            posto = Posto.objects.get(id=form.cleaned_data['posto'])
+            cadastro_talao = CadastroTalao(talao=talao, user=request.user, posto=posto)
 
             try:
                 for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_final'] + 1):
@@ -85,6 +86,38 @@ def view_cadastrar_combustivel(request):
     }
 
     return render(request, 'web_gc/cadastro_combustivel.html', context)
+
+
+@login_required()
+@permission_required(
+    (
+        'web_gc.add_combustivel',
+    ),
+    raise_exception=True)
+def view_cadastrar_posto(request):
+    """
+    View de carregamento e gestão de combustível novos cadastrados no sistema,
+    deve ser acessado apenas pelo adm e funcionãrios autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
+
+    if request.method == 'POST':
+        # Registro do cadastro do posto
+        form = FormCadastraPosto(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/gc/menu-cadastros')
+    else:
+        form = FormCadastraPosto()
+
+    context = {
+        'postos': Posto.objects.all(),
+        'form': form,
+    }
+
+    return render(request, 'web_gc/cadastro_posto.html', context)
 
 
 @login_required()
@@ -366,7 +399,7 @@ def view_vales(request):
     :return:
     """
 
-    vales = Vale.objects.all().order_by('vale_entrega__data')
+    vales = Vale.objects.all().order_by('vale')
     context = {
         'vales': vales,
     }
@@ -409,23 +442,3 @@ def view_relatorio_mensal(request):
     }
 
     return render(request, 'web_gc/relatorio_mensal.html', context)
-
-
-def view_form_teste(request):
-
-    if request.method == 'POST':
-        form = FormTest(request.POST)
-
-        if form.is_valid():
-            data = User.objects.all()
-            print(data)
-            context = {
-                'users': data,
-            }
-
-            return render(request, 'web_gc/teste1.html', context)
-
-    else:
-        form = FormTest()
-
-        return render(request, 'web_gc/teste.html', {'form': form})

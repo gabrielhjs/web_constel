@@ -18,6 +18,11 @@
     </a>
 </div>
 <div>
+    <a href="{% url 'gc_cadastro_posto' %}">
+        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Cadastrar posto</button>
+    </a>
+</div>
+<div>
     <a href="{% url 'gc_cadastro_talao' %}">
         <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Cadastrar talão</button>
     </a>

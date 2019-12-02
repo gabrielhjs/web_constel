@@ -77,6 +77,22 @@ class Combustivel(models.Model):
     objects = None
 
 
+class Posto(models.Model):
+    posto = models.CharField(max_length=100, verbose_name='Posto')
+    rua = models.CharField(max_length=255)
+    numero = models.IntegerField(null=False, verbose_name='N°')
+    cidade = models.CharField(max_length=255, default='Curitiba')
+    estado = models.CharField(max_length=255, default='Paraná')
+    pais = models.CharField(max_length=255, default='Brasil')
+
+    def __str__(self):
+        return '%s' % self.posto
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+    DoesNotExist = None
+
+
 class CadastroTalao(models.Model):
     """
     Classe que registra o cadastro de talões no sistema
@@ -85,6 +101,7 @@ class CadastroTalao(models.Model):
     talao = models.ForeignKey(Talao, on_delete=models.CASCADE, related_name='talao_cadastro')
     data = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, default=None, on_delete=models.PROTECT)
+    posto = models.ForeignKey(Posto, on_delete=models.PROTECT, blank=True, null=True)
 
     def __str__(self):
         return '%s - %.19s' % (self.talao, self.data)
