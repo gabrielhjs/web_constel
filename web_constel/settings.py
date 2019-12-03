@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['constel.herokuapp.com', 'http://192.168.1.114:8080', 'constel.
 INSTALLED_APPS = [
     'constel',
     'apps.web_gc',
+    'apps.almoxarifado',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
