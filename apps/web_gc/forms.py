@@ -19,20 +19,9 @@ class FormTalao(forms.ModelForm):
         help_text='Número do último vale do talão'
     )
 
-    posto = forms.ChoiceField()
-
     class Meta:
         model = Talao
         fields = ['talao', ]
-
-    def __init__(self, *args, **kwargs):
-        super(FormTalao, self).__init__(*args, **kwargs)
-        postos = Posto.objects.all()
-        postos_name = [(i.id, '%s' % i.posto) for i in postos]
-        self.fields['posto'] = forms.ChoiceField(
-            choices=postos_name,
-            label='Posto',
-        )
 
 
 class FormEntregaTalao(forms.ModelForm):
@@ -123,6 +112,8 @@ class FormEntregaVale2(forms.ModelForm):
         model = EntregaVale
         fields = ['combustivel', 'valor', 'observacao', ]
 
+    posto = forms.ChoiceField()
+
     def __init__(self, user_to, *args, **kwargs):
         self.user_to = user_to
         super(FormEntregaVale2, self).__init__(*args, **kwargs)
@@ -134,6 +125,12 @@ class FormEntregaVale2(forms.ModelForm):
             help_text='Veículo que será abastecido',
             error_messages={'required': 'Campo obrigatório. Caso não haja nenhuma opção deve ser cadastrado o veículo\
                                          no menu de cadastros.'}
+        )
+        postos = Posto.objects.all()
+        postos_name = [(i.id, '%s' % i.posto) for i in postos]
+        self.fields['posto'] = forms.ChoiceField(
+            choices=postos_name,
+            label='Posto',
         )
 
 

@@ -34,8 +34,7 @@ def view_cadastrar_talao(request):
             # Registro do cadastro do novo talão
             form.save()
             talao = Talao.objects.get(talao=form.cleaned_data['talao'])
-            posto = Posto.objects.get(id=form.cleaned_data['posto'])
-            cadastro_talao = CadastroTalao(talao=talao, user=request.user, posto=posto)
+            cadastro_talao = CadastroTalao(talao=talao, user=request.user)
 
             try:
                 for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_final'] + 1):
@@ -224,6 +223,7 @@ def view_entrega_vale_2(request):
                 combustivel=form.cleaned_data['combustivel'],
                 valor=form.cleaned_data['valor'],
                 observacao=form.cleaned_data['observacao'],
+                posto=Posto.objects.get(id=form.cleaned_data['posto']),
             ).save()
 
             return HttpResponseRedirect('/gc/menu-vales/')
