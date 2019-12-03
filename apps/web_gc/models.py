@@ -101,7 +101,7 @@ class CadastroTalao(models.Model):
     talao = models.ForeignKey(Talao, on_delete=models.CASCADE, related_name='talao_cadastro')
     data = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, default=None, on_delete=models.PROTECT)
-    posto = models.ForeignKey(Posto, on_delete=models.PROTECT, blank=True, null=True)
+    posto = models.ForeignKey(Posto, on_delete=models.PROTECT, blank=True, null=True, default=None)
 
     def __str__(self):
         return '%s - %.19s' % (self.talao, self.data)
