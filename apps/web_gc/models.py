@@ -107,7 +107,6 @@ class CadastroTalao(models.Model):
         blank=True,
         null=True,
         default=None,
-        related_name='talao_posto',
     )
 
     def __str__(self):
