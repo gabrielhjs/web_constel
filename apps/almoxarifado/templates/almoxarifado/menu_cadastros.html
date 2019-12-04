@@ -1,0 +1,20 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Almoxarifado{% endblock %}
+{% block content %}
+<div><h1>Almoxarifado</h1></div>
+<div>
+    <a href="{% url 'almoxarifado_cadastrar_material' %}">
+        <button>Cadastrar material</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'almoxarifado_menu_consultas' %}">
+        <button disabled="disabled">Cadastrar fornecedor</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'almoxarifado_menu_principal' %}">
+        <button>Voltar</button>
+    </a>
+</div>
+{% endblock %}

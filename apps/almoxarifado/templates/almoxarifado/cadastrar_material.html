@@ -1,0 +1,45 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Almoxarifado{% endblock %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div>
+        <p>{{ field.label_tag }}</p>
+        {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+        {% endfor %}
+        <p>{{ field }}</p>
+        {% if field.help_text %}
+            <p><small style="color: grey">{{ field.help_text }}</small></p>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit">Cadastrar material</button>
+</form>
+<a href="{% url 'almoxarifado_menu_cadastros' %}"><button>Voltar</button></a>
+<h1>Materiais cadastrados</h1>
+<div class="table-content">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Data de cadastro</th>
+                <th>Cadastrado por</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for material in materiais %}
+            <tr>
+                <td>{{ material.codigo }}</td>
+                <td>{{ material.material }}</td>
+                <td>{{ material.descricao }}</td>
+                <td>{{ material.data|date:'d/m/Y' }}</td>
+                <td>{{ material.user.first_name|title }} {{ material.user.last_name|title }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

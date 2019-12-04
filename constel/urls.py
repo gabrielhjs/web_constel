@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     # Includes
     path('', include('apps.web_gc.urls')),
+    path('', include('apps.almoxarifado.urls')),
 
     # Constel urls
     path('cadusuario/', views.view_cadastrar_usuario, name='cadastra_usuario'),

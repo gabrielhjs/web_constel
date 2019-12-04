@@ -1,0 +1,31 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Almoxarifado{% endblock %}
+{% block content %}
+<h1>Materiais</h1>
+<div class="table-content">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Data de cadastro</th>
+                <th>Cadastrado por</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for material in materiais %}
+            <tr>
+                <td>{{ material.codigo }}</td>
+                <td>{{ material.material }}</td>
+                <td>{{ material.descricao }}</td>
+                <td>{{ material.data|date:'d/m/Y' }}</td>
+                <td>{{ material.user.first_name|title }} {{ material.user.last_name|title }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div>
+    <a href="{% url 'almoxarifado_menu_consultas' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}
