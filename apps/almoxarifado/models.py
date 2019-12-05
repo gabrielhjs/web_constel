@@ -14,11 +14,19 @@ class Material(models.Model):
     """
     Model que gerencia a tabela de materiais cadastrados
     """
+    TIPOS = [
+        (0, 'peça'),
+        (1, 'unidade'),
+        (2, 'metro'),
+        (3, 'quilo'),
+        (4, 'jogo'),
+    ]
     codigo = models.IntegerField(verbose_name='Código', null=False, blank=False, unique=True)
     material = models.CharField(max_length=255, verbose_name='Nome')
     descricao = models.CharField(verbose_name='Descrição', max_length=500)
     data = models.DateTimeField(auto_now=True, verbose_name='Data de cadastro')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='materiais_cadastrados', default=None)
+    tipo = models.IntegerField(choices=TIPOS, default=1)
 
     def __str__(self):
 
@@ -59,7 +67,8 @@ class MaterialSaida(models.Model):
     material = models.ForeignKey(Material, on_delete=models.PROTECT, related_name='saidas')
     quantidade = models.IntegerField(verbose_name='Quantidade', null=True, blank=True)
     data = models.DateTimeField(auto_now=True, verbose_name='Data de saída')
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='retiradas')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='saidas')
+    user_to = models.ForeignKey(User, on_delete=models.PROTECT, related_name='retiradas')
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None

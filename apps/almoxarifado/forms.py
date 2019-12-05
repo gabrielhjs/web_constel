@@ -7,4 +7,4 @@ class FormCadastraMaterial(forms.ModelForm):
 
     class Meta:
         model = Material
-        fields = ['codigo', 'material', 'descricao', ]
+        fields = ['codigo', 'material', 'descricao', 'tipo', ]
