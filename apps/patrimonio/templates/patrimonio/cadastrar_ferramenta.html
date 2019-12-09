@@ -1,0 +1,43 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Almoxarifado{% endblock %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div>
+        <p>{{ field.label_tag }}</p>
+        {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+        {% endfor %}
+        <p>{{ field }}</p>
+        {% if field.help_text %}
+            <p><small style="color: grey">{{ field.help_text }}</small></p>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit">Cadastrar ferramenta</button>
+</form>
+<a href="{% url 'patrimonio_menu_cadastros' %}"><button>Voltar</button></a>
+<h1>Ferramentas cadastradas</h1>
+<div class="table-content">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Cadastrado por</th>
+                <th>Data de cadastro</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ferramenta in ferramentas %}
+            <tr>
+                <td>{{ ferramenta.nome }}</td>
+                <td>{{ ferramenta.descricao }}</td>
+                <td>{{ ferramenta.user.first_name|title }} {{ ferramenta.user.last_name|title }}</td>
+                <td>{{ ferramenta.data|date:'d/m/Y' }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

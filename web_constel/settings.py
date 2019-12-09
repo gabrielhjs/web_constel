@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'constel',
     'apps.web_gc',
     'apps.almoxarifado',
+    'apps.patrimonio',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

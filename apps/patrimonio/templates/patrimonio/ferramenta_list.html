@@ -1,0 +1,29 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Patrimônio{% endblock %}
+{% block content %}
+<h1>Ferramentas</h1>
+<div class="table-content">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Cadastrado por</th>
+                <th>Data de cadastro</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ferramenta in ferramentas %}
+            <tr>
+                <td>{{ ferramenta.material }}</td>
+                <td>{{ ferramenta.descricao }}</td>
+                <td>{{ ferramenta.user.first_name|title }} {{ ferramenta.user.last_name|title }}</td>
+                <td>{{ ferramenta.data|date:'d/m/Y' }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div>
+    <a href="{% url 'patrimonio_menu_consultas' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

@@ -67,8 +67,8 @@ class MaterialSaida(models.Model):
     material = models.ForeignKey(Material, on_delete=models.PROTECT, related_name='saidas')
     quantidade = models.IntegerField(verbose_name='Quantidade', null=True, blank=True)
     data = models.DateTimeField(auto_now=True, verbose_name='Data de saída')
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='saidas')
-    user_to = models.ForeignKey(User, on_delete=models.PROTECT, related_name='retiradas')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='almoxarifado_saidas')
+    user_to = models.ForeignKey(User, on_delete=models.PROTECT, related_name='almoxarifado_retiradas')
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None

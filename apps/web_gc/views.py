@@ -1,7 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
@@ -44,10 +43,10 @@ def view_cadastrar_talao(request):
             except IntegrityError:
                 talao.delete()
                 cadastro_talao.delete()
-                return HttpResponseRedirect('/gc/menu-cadastros/cadastro-talao')
+                return HttpResponseRedirect('/patrimonio/gc/menu-cadastros/cadastro-talao')
 
             cadastro_talao.save()
-            return HttpResponseRedirect('/gc/menu-cadastros')
+            return HttpResponseRedirect('/patrimonio/gc/menu-cadastros')
 
     else:
         form = FormTalao()
@@ -75,7 +74,7 @@ def view_cadastrar_combustivel(request):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/gc/menu-cadastros')
+            return HttpResponseRedirect('/patrimonio/gc/menu-cadastros')
     else:
         form = FormCadastraCombustivel()
 
@@ -107,7 +106,7 @@ def view_cadastrar_posto(request):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/gc/menu-cadastros')
+            return HttpResponseRedirect('/patrimonio/gc/menu-cadastros')
     else:
         form = FormCadastraPosto()
 
@@ -149,7 +148,7 @@ def view_entrega_talao(request):
             )
             entrega_talao.save()
             talao.save()
-            return HttpResponseRedirect('/gc/menu-taloes')
+            return HttpResponseRedirect('/patrimonio/gc/menu-taloes')
     else:
         form = FormEntregaTalao()
 
@@ -183,7 +182,7 @@ def view_entrega_vale_1(request):
             request.session['user_to'] = form.cleaned_data['user_to']
             request.session['vale'] = form.cleaned_data['vale']
 
-            return HttpResponseRedirect('/gc/menu-vales/entrega-vale-2/')
+            return HttpResponseRedirect('/patrimonio/gc/menu-vales/entrega-vale-2/')
 
     else:
         form = FormEntregaVale1(user=request.user)
@@ -201,7 +200,7 @@ def view_entrega_vale_1(request):
 def view_entrega_vale_2(request):
 
     if request.session.get('user_to') is None:
-        return HttpResponseRedirect('/gc/menu-vales/entrega-vale-1/')
+        return HttpResponseRedirect('/patrimonio/gc/menu-vales/entrega-vale-1/')
 
     vale = Vale.objects.get(id=request.session['vale'])
     user_to = User.objects.get(id=request.session['user_to'])
@@ -226,7 +225,7 @@ def view_entrega_vale_2(request):
                 posto=Posto.objects.get(id=form.cleaned_data['posto']),
             ).save()
 
-            return HttpResponseRedirect('/gc/menu-vales/')
+            return HttpResponseRedirect('/patrimonio/gc/menu-vales/')
 
     else:
         form = FormEntregaVale2(user_to)
@@ -355,7 +354,7 @@ def view_taloes(request):
     :return: lista de talões cadastrados
     """
 
-    taloes = Talao.objects.all()
+    taloes = Talao.objects.all().order_by('talao')
     context = {
         'taloes': taloes
     }
@@ -420,7 +419,7 @@ def view_meus_vales(request):
     :return:
     """
 
-    vales = Vale.objects.filter(vale_entrega__user_to=request.user).order_by('vale_entrega__data')
+    vales = Vale.objects.filter(vale_entrega__user_to=request.user).order_by('vale')
     context = {
         'vales': vales,
     }
