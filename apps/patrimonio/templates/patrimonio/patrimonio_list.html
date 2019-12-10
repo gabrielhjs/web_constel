@@ -1,7 +1,7 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Patrimônio{% endblock %}
 {% block content %}
-<h1>Ferramentas</h1>
+<h1>Lista de Patrimônio</h1>
 <div class="table-content">
     <table border="2">
         <thead>
@@ -13,12 +13,12 @@
             </tr>
         </thead>
         <tbody>
-        {% for ferramenta in ferramentas %}
+        {% for patrimonio in patrimonios %}
             <tr>
-                <td>{{ ferramenta.nome }}</td>
-                <td>{{ ferramenta.descricao }}</td>
-                <td>{{ ferramenta.user.first_name|title }} {{ ferramenta.user.last_name|title }}</td>
-                <td>{{ ferramenta.data|date:'d/m/Y' }}</td>
+                <td>{{ patrimonio.nome }}</td>
+                <td>{{ patrimonio.descricao }}</td>
+                <td>{{ patrimonio.user.first_name|title }} {{ patrimonio.user.last_name|title }}</td>
+                <td>{{ patrimonio.data|date:'d/m/Y' }}</td>
             </tr>
         {% endfor %}
     </table>
