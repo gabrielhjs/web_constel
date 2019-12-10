@@ -84,28 +84,6 @@ def view_cadastrar_patrimonio(request):
     return render(request, 'patrimonio/cadastrar_patrimonio.html', context)
 
 
-class ViewConsultaFerramentas(ListView):
-    model = Ferramenta
-    paginate_by = 2
-
-    def get_context_data(self, **kwargs):
-        context = {
-            'ferramentas': self.object_list.all(),
-        }
-        return context
-
-
-class ViewConsultaPatrimonio(ListView):
-    model = Patrimonio
-    paginate_by = 2
-
-    def get_context_data(self, **kwargs):
-        context = {
-            'patrimonios': self.object_list.all(),
-        }
-        return context
-
-
 def view_entrada_ferramenta(request):
 
     if request.method == 'POST':
@@ -129,3 +107,29 @@ def view_entrada_ferramenta(request):
         form = FormEntradaFerramenta()
 
     return render(request, 'patrimonio/entrada_ferramenta.html', {'form': form})
+
+
+class ViewConsultaFerramentas(ListView):
+    model = Ferramenta
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'ferramentas': self.object_list.all(),
+        }
+        return context
+
+
+class ViewConsultaPatrimonio(ListView):
+    model = Patrimonio
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'patrimonios': self.object_list.all(),
+        }
+        return context
+
+
+def view_consulta_estoque_ferramentas(request):
+    pass
