@@ -163,7 +163,7 @@ def view_consulta_ferramentas_estoque(request):
 def view_consulta_patrimonio(request):
 
     context = {
-        'ferramentas': Patrimonio.objects.all()
+        'patrimonios': Patrimonio.objects.all()
     }
 
     return render(request, 'patrimonio/consulta_patrimonio.html', context=context)
