@@ -30,6 +30,10 @@ class PatrimonioEntrada(models.Model):
     data = models.DateTimeField(auto_now=True, verbose_name='Data de entrada')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='entrada_patrimonio', default=None)
 
+    def __str__(self):
+
+        return '%s | %s | %.19s' % (self.patrimonio, self.codigo, self.data)
+
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
 
@@ -45,7 +49,7 @@ class PatrimonioSaida(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='patrimonio_saidas')
     user_to = models.ForeignKey(User, on_delete=models.PROTECT, related_name='patrimonio_retiradas')
 
-    # Default fields (apenas para não gerar alertas na IDE)
+    # Default fields (apenas para não gerar alertas na I    DE)
     objects = None
 
 
@@ -71,7 +75,7 @@ class FerramentaQuantidade(models.Model):
     Model que gerencia a tabela de controle da quantidade de ferramentas no patrimônio
     """
     ferramenta = models.OneToOneField(Ferramenta, on_delete=models.CASCADE, related_name='quantidade', editable=False)
-    quantidade = models.IntegerField(verbose_name='Quantidade', default=0)
+    quantidade = models.IntegerField(verbose_name='Quantidade', default=0, editable=False)
 
     def __str__(self):
 
@@ -94,7 +98,7 @@ class FerramentaEntrada(models.Model):
 
     def __str__(self):
 
-        return '%s' % self.ferramenta
+        return '%s | %s | %.19s' % (self.ferramenta, self.quantidade, self.data)
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None

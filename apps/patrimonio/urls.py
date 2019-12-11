@@ -35,18 +35,28 @@ urlpatterns = [
         name='patrimonio_entrada_ferramenta',
     ),
     path(
+        'patrimonio/menu-entradas/patrimonio/',
+        views.view_entrada_patrimonio,
+        name='patrimonio_entrada_patrimonio',
+    ),
+    path(
         'patrimonio/menu-consultas/',
         views.view_menu_consultas,
         name='patrimonio_menu_consultas',
     ),
     path(
         'patrimonio/menu-consultas/ferramenta/',
-        views.ViewConsultaFerramentas.as_view(),
+        views.view_consulta_ferramentas,
         name='patrimonio_consulta_ferramentas',
     ),
     path(
+        'patrimonio/menu-consultas/ferramenta/estoque/',
+        views.view_consulta_ferramentas_estoque,
+        name='patrimonio_consulta_ferramentas_estoque',
+    ),
+    path(
         'patrimonio/menu-consultas/patrimonio/',
-        views.ViewConsultaPatrimonio.as_view(),
+        views.view_consulta_patrimonio,
         name='patrimonio_consulta_patrimonios',
     ),
     path(

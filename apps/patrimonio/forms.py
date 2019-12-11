@@ -22,3 +22,10 @@ class FormEntradaFerramenta(forms.ModelForm):
     class Meta:
         model = FerramentaEntrada
         fields = ['ferramenta', 'quantidade', 'valor', 'observacao', ]
+
+
+class FormEntradaPatrimonio(forms.ModelForm):
+
+    class Meta:
+        model = PatrimonioEntrada
+        fields = ['patrimonio', 'codigo', 'valor', 'observacao', ]

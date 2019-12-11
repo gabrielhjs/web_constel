@@ -1,36 +1,43 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
+from django.contrib.auth.decorators import login_required
 
 from .forms import *
 from .models import Ferramenta, Patrimonio, FerramentaEntrada, FerramentaQuantidade
 
 
+@login_required()
 def view_menu_principal(request):
 
     return render(request, 'patrimonio/menu_principal.html')
 
 
+@login_required()
 def view_menu_cadastros(request):
 
     return render(request, 'patrimonio/menu_cadastros.html')
 
 
+@login_required()
 def view_menu_entradas(request):
 
     return render(request, 'patrimonio/menu_entradas.html')
 
 
+@login_required()
 def view_menu_consultas(request):
 
     return render(request, 'patrimonio/menu_consultas.html')
 
 
+@login_required()
 def view_menu_relatorios(request):
 
     return render(request, 'patrimonio/menu_relatorios.html')
 
 
+@login_required()
 def view_cadastrar_ferramenta(request):
 
     if request.method == 'POST':
@@ -60,6 +67,7 @@ def view_cadastrar_ferramenta(request):
     return render(request, 'patrimonio/cadastrar_ferramenta.html', context)
 
 
+@login_required()
 def view_cadastrar_patrimonio(request):
 
     if request.method == 'POST':
@@ -84,6 +92,7 @@ def view_cadastrar_patrimonio(request):
     return render(request, 'patrimonio/cadastrar_patrimonio.html', context)
 
 
+@login_required()
 def view_entrada_ferramenta(request):
 
     if request.method == 'POST':
@@ -101,35 +110,60 @@ def view_entrada_ferramenta(request):
             ferramenta.quantidade.quantidade += form.cleaned_data['quantidade']
             ferramenta.quantidade.save()
 
-            return HttpResponseRedirect('/patrimonio/')
+            return HttpResponseRedirect('/patrimonio/menu-entradas/')
 
     else:
         form = FormEntradaFerramenta()
 
-    return render(request, 'patrimonio/entrada_ferramenta.html', {'form': form})
+    return render(request, 'patrimonio/entrada.html', {'form': form})
 
 
-class ViewConsultaFerramentas(ListView):
-    model = Ferramenta
-    paginate_by = 2
+@login_required()
+def view_entrada_patrimonio(request):
 
-    def get_context_data(self, **kwargs):
-        context = {
-            'ferramentas': self.object_list.all(),
-        }
-        return context
+    if request.method == 'POST':
+        form = FormEntradaPatrimonio(request.POST)
+
+        if form.is_valid():
+            PatrimonioEntrada(
+                patrimonio=form.cleaned_data['patrimonio'],
+                codigo=form.cleaned_data['codigo'],
+                valor=form.cleaned_data['valor'],
+                observacao=form.cleaned_data['observacao'],
+                user=request.user,
+            ).save()
+
+            return HttpResponseRedirect('/patrimonio/menu-entradas/')
+
+    else:
+        form = FormEntradaPatrimonio()
+
+    return render(request, 'patrimonio/entrada.html', {'form': form})
 
 
-class ViewConsultaPatrimonio(ListView):
-    model = Patrimonio
-    paginate_by = 2
+def view_consulta_ferramentas(request):
 
-    def get_context_data(self, **kwargs):
-        context = {
-            'patrimonios': self.object_list.all(),
-        }
-        return context
+    context = {
+        'ferramentas': Ferramenta.objects.all()
+    }
+
+    return render(request, 'patrimonio/consulta_ferramenta.html', context=context)
 
 
-def view_consulta_estoque_ferramentas(request):
-    pass
+@login_required()
+def view_consulta_ferramentas_estoque(request):
+
+    context = {
+        'ferramentas': FerramentaQuantidade.objects.all()
+    }
+
+    return render(request, 'patrimonio/consulta_ferramenta_estoque.html', context=context)
+
+
+def view_consulta_patrimonio(request):
+
+    context = {
+        'ferramentas': Patrimonio.objects.all()
+    }
+
+    return render(request, 'patrimonio/consulta_patrimonio.html', context=context)
