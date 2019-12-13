@@ -1,0 +1,14 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Combustível{% endblock %}
+{% block content %}
+<div><h1>Relatórios</h1></div>
+<div>
+    <a href="{% url 'gc_relatorio_mensal' %}">
+        <button {% if gerencia_talao == 0 %} disabled="disabled" {% endif %}>Acumulativo do mês</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'gc_menu_principal' %}"><button>Voltar</button></a>
+</div>
+
+{% endblock %}
