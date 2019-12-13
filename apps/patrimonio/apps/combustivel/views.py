@@ -18,7 +18,7 @@ def view_menu_principal(request):
         'beneficiario': combustivel_beneficiario(request.user),
     }
 
-    return render(request, 'web_gc/menu_principal.html', context)
+    return render(request, 'combustivel/menu_principal.html', context)
 
 
 @login_required()
@@ -35,7 +35,7 @@ def view_menu_cadastros(request):
         'beneficiario': combustivel_beneficiario(request.user),
     }
 
-    return render(request, 'web_gc/menu_cadastros.html', context)
+    return render(request, 'combustivel/menu_cadastros.html', context)
 
 
 @login_required()
@@ -52,7 +52,7 @@ def view_menu_consultas(request):
         'beneficiario': combustivel_beneficiario(request.user),
     }
 
-    return render(request, 'web_gc/menu_consultas.html', context)
+    return render(request, 'combustivel/menu_consultas.html', context)
 
 
 @login_required()
@@ -69,7 +69,7 @@ def view_menu_relatorios(request):
         'beneficiario': combustivel_beneficiario(request.user),
     }
 
-    return render(request, 'web_gc/menu_relatorios.html', context)
+    return render(request, 'combustivel/menu_relatorios.html', context)
 
 
 @login_required()
@@ -86,7 +86,7 @@ def view_menu_taloes(request):
         'beneficiario': combustivel_beneficiario(request.user),
     }
 
-    return render(request, 'web_gc/menu_taloes.html', context)
+    return render(request, 'combustivel/menu_taloes.html', context)
 
 
 @login_required()
@@ -103,4 +103,4 @@ def view_menu_vales(request):
         'beneficiario': combustivel_beneficiario(request.user),
     }
 
-    return render(request, 'web_gc/menu_vales.html', context)
+    return render(request, 'combustivel/menu_vales.html', context)

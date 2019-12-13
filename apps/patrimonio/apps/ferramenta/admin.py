@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+
+admin.site.register(Ferramenta)
+admin.site.register(FerramentaQuantidade)
+admin.site.register(FerramentaEntrada)
+admin.site.register(FerramentaSaida)

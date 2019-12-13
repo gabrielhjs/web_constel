@@ -7,6 +7,7 @@ urlpatterns = [
     # Apps
     path('', include('apps.patrimonio.apps.ferramenta.urls')),
     path('', include('apps.patrimonio.apps.patrimonio1.urls')),
+    path('', include('apps.patrimonio.apps.combustivel.urls')),
 
 
     path(

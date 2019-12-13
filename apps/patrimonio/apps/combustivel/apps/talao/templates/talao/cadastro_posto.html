@@ -1,0 +1,36 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Combustível{% endblock %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div>
+        <p>{{ field.label_tag }}</p>
+        {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+        {% endfor %}
+        <p>{{ field }}</p>
+        {% if field.help_text %}
+            <p><small style="color: grey">{{ field.help_text }}</small></p>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit">Cadastrar posto</button>
+</form>
+<a href="{% url 'gc_menu_cadastros' %}"><button>Voltar</button></a>
+<div class="table-content">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Postos cadastrados</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for posto in postos %}
+            <tr>
+                <td>{{ posto.posto }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
