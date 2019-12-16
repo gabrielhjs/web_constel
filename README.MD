@@ -10,7 +10,6 @@
     1. [ADICIONAIS](#patrimonio-Adicionais)
 1. [ALMOXARIFADO](#almoxarifado)
     1. [FUNCIONALIDADES](#almoxarifado-funcionalidades)
-    1. [ADICIONAIS](#almoxarifado-adicionais)
     
 ## 1 [PATRIMÔNIO](#patrimonio)
 
@@ -39,7 +38,3 @@ como: entrada, saída, quantidade em estoque etc.</p>
 
 #### 2.1 Funcionalidades
 <li>Cadastro de materiais;</li>
-
-#### 2.2 Adicionais
-<li>Cadastro de funcionários;</li>
-<li>Entrega de talões;</li>
