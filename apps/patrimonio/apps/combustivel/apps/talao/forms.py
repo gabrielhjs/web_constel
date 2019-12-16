@@ -36,8 +36,8 @@ class FormEntregaTalao(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # Redefinição dos filtros para busca de objetos nas models para exibir apenas talões aptos para entrega
         super(FormEntregaTalao, self).__init__(*args, **kwargs)
-        self.fields['talao'].queryset = Talao.objects.filter(status=0)
-        users = User.objects.filter(is_active=True)
+        self.fields['talao'].queryset = Talao.objects.filter(status=0).order_by('talao')
+        users = User.objects.filter(is_active=True).order_by('first_name', 'last_name')
         users_name = [(i.id, '%s - %s %s' % (i.username, i.first_name.title(), i.last_name.title())) for i in users]
         self.fields['user_to'] = forms.ChoiceField(
             choices=users_name,
@@ -61,7 +61,7 @@ class FormEntregaVale1(forms.Form):
         self.user = user
 
         # Queryset Field vale
-        vales = Vale.objects.filter(talao__talao_entrega__user_to=self.user, status=1)
+        vales = Vale.objects.filter(talao__talao_entrega__user_to=self.user, status=1).order_by('talao', 'vale')
         vales_name = [(i.id, '%d' % i.vale) for i in vales]
         self.fields['vale'] = forms.ChoiceField(
             choices=vales_name,
@@ -70,7 +70,7 @@ class FormEntregaVale1(forms.Form):
 
         # Queryset Field User_to
         self.fields['vale'].queryset = Vale.objects.filter(talao__talao_entrega__user_to=self.user, status=1)
-        users = User.objects.filter(is_active=True)
+        users = User.objects.filter(is_active=True).order_by('first_name', 'last_name')
         users_name = [(i.id, '%s - %s %s' % (i.username, i.first_name.title(), i.last_name.title())) for i in users]
         self.fields['user_to'] = forms.ChoiceField(
             choices=users_name,
@@ -89,7 +89,7 @@ class FormEntregaVale2(forms.ModelForm):
     def __init__(self, user_to, *args, **kwargs):
         self.user_to = user_to
         super(FormEntregaVale2, self).__init__(*args, **kwargs)
-        veiculos = Veiculo.objects.filter(user=self.user_to)
+        veiculos = Veiculo.objects.filter(user=self.user_to).order_by('modelo')
         veiculos_name = [(i.id, '%s - %s - %s' % (i.modelo.title(), i.placa.upper(), i.cor.upper())) for i in veiculos]
         self.fields['veiculo'] = forms.ChoiceField(
             choices=veiculos_name,
@@ -98,7 +98,7 @@ class FormEntregaVale2(forms.ModelForm):
             error_messages={'required': 'Campo obrigatório. Caso não haja nenhuma opção deve ser cadastrado o veículo\
                                          no menu de cadastros.'}
         )
-        postos = Posto.objects.all()
+        postos = Posto.objects.all().order_by('posto')
         postos_name = [(i.id, '%s' % i.posto) for i in postos]
         self.fields['posto'] = forms.ChoiceField(
             choices=postos_name,
