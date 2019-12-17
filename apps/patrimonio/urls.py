@@ -26,6 +26,11 @@ urlpatterns = [
         name='patrimonio_menu_entradas',
     ),
     path(
+        'patrimonio/menu-saidas/',
+        views.view_menu_saidas,
+        name='patrimonio_menu_saidas',
+    ),
+    path(
         'patrimonio/menu-consultas/',
         views.view_menu_consultas,
         name='patrimonio_menu_consultas',

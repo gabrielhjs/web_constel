@@ -21,6 +21,12 @@ def view_menu_entradas(request):
 
 
 @login_required()
+def view_menu_saidas(request):
+
+    return render(request, 'patrimonio/menu_saidas.html')
+
+
+@login_required()
 def view_menu_consultas(request):
 
     return render(request, 'patrimonio/menu_consultas.html')

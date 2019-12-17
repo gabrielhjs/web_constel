@@ -23,12 +23,17 @@ class PatrimonioEntrada(models.Model):
     """
     Model que gerencia a tabela de entradas de materiais do patrimônio
     """
+    STATUS = [
+        (0, 'Estoque'),
+        (1, 'Em uso'),
+    ]
     patrimonio = models.ForeignKey(Patrimonio, on_delete=models.CASCADE, related_name='patrimonio_entrada')
-    codigo = models.IntegerField(verbose_name='Código', null=False, blank=False, unique=True, default=0)
+    codigo = models.IntegerField(verbose_name='Código', null=False, blank=False, default=0)
     observacao = models.TextField(verbose_name='Observação', max_length=500, null=True, blank=True)
     valor = models.FloatField(null=False, blank=False, default=0)
     data = models.DateTimeField(auto_now=True, verbose_name='Data de entrada')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='entrada_patrimonio', default=None)
+    status = models.IntegerField(choices=STATUS, default=0)
 
     def __str__(self):
 
@@ -49,5 +54,5 @@ class PatrimonioSaida(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='patrimonio_saidas')
     user_to = models.ForeignKey(User, on_delete=models.PROTECT, related_name='patrimonio_retiradas')
 
-    # Default fields (apenas para não gerar alertas na I    DE)
+    # Default fields (apenas para não gerar alertas na IDE)
     objects = None

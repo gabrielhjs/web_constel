@@ -15,8 +15,18 @@ urlpatterns = [
         name='patrimonio_entrada_patrimonio',
     ),
     path(
+        'patrimonio/menu-saidas/patrimonio/',
+        views.view_saida_patrimonio,
+        name='patrimonio_saida_patrimonio',
+    ),
+    path(
+        'patrimonio/menu-consultas/patrimonio-modelo/',
+        views.view_consulta_patrimonios_modelos,
+        name='patrimonio_consulta_patrimonios_modelos',
+    ),
+    path(
         'patrimonio/menu-consultas/patrimonio/',
-        views.view_consulta_patrimonio,
+        views.view_consulta_patrimonios,
         name='patrimonio_consulta_patrimonios',
     ),
 ]

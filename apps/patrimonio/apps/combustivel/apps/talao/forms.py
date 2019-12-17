@@ -42,7 +42,8 @@ class FormEntregaTalao(forms.ModelForm):
         self.fields['user_to'] = forms.ChoiceField(
             choices=users_name,
             label='Funcionário',
-            help_text='Funcionário que solicitou o talão de combustível.')
+            help_text='Funcionário que solicitou o talão de combustível.'
+        )
 
     def clean(self):
         self.cleaned_data['user_to'] = User.objects.get(id=int(self.cleaned_data['user_to']))

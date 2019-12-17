@@ -54,10 +54,45 @@ def view_entrada_patrimonio(request):
     return render(request, 'patrimonio/entrada.html', {'form': form})
 
 
-def view_consulta_patrimonio(request):
+@login_required()
+def view_saida_patrimonio(request):
+
+    if request.method == 'POST':
+        form = FormSaidaPatrimonio(request.POST)
+
+        if form.is_valid():
+            entrada = form.cleaned_data['entrada']
+            PatrimonioSaida(
+                entrada=entrada,
+                patrimonio=entrada.patrimonio,
+                observacao=form.cleaned_data['observacao'],
+                user=request.user,
+                user_to=form.cleaned_data['user_to'],
+            ).save()
+            entrada.status = 1
+            entrada.save()
+
+            return HttpResponseRedirect('/patrimonio/menu-saidas/')
+
+    else:
+        form = FormSaidaPatrimonio()
+
+    return render(request, 'patrimonio/saida.html', {'form': form})
+
+
+def view_consulta_patrimonios_modelos(request):
 
     context = {
         'patrimonios': Patrimonio.objects.all()
     }
 
-    return render(request, 'patrimonio1/consulta_patrimonio.html', context=context)
+    return render(request, 'patrimonio1/consulta_patrimonios_modelos.html', context=context)
+
+
+def view_consulta_patrimonios(request):
+
+    context = {
+        'patrimonios': PatrimonioEntrada.objects.all()
+    }
+
+    return render(request, 'patrimonio1/consulta_patrimonios.html', context=context)
