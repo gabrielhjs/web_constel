@@ -11,12 +11,13 @@ class Ferramenta(models.Model):
     data = models.DateTimeField(auto_now=True, verbose_name='Data de cadastro')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='ferramentas_cadastradas', default=None)
 
-    def __str__(self):
-
-        return '%s' % self.nome
-
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
+    quantidade = None
+
+    def __str__(self):
+
+        return '%s | Estoque: %d' % (self.nome, self.quantidade.quantidade)
 
 
 class FerramentaQuantidade(models.Model):

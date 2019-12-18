@@ -47,7 +47,12 @@ class PatrimonioSaida(models.Model):
     """
     Model qeu gerencia a tabela de saídas de materiais do patrimônio
     """
-    entrada = models.OneToOneField(PatrimonioEntrada, on_delete=models.CASCADE, related_name='entrada_saida')
+    entrada = models.OneToOneField(
+        PatrimonioEntrada,
+        on_delete=models.CASCADE,
+        related_name='entrada_saida',
+        verbose_name='Patrimônio',
+    )
     patrimonio = models.ForeignKey(Patrimonio, on_delete=models.CASCADE, related_name='patrimonio_saida')
     observacao = models.TextField(verbose_name='Observação', max_length=500, null=True, blank=True)
     data = models.DateTimeField(auto_now=True, verbose_name='Data de saída')

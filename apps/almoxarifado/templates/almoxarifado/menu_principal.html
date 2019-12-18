@@ -2,6 +2,13 @@
 {% block title %}Constel | Almoxarifado{% endblock %}
 {% block content %}
 <div><h1>Almoxarifado</h1></div>
+<div style="margin-top: 30px;"><h2>Aplicativos</h2></div>
+<div>
+    <a href="#">
+        <button disabled="disabled">Cont</button>
+    </a>
+</div>
+<div style="margin-top: 30px;"><h2>Materiais</h2></div>
 <div>
     <a href="{% url 'almoxarifado_menu_cadastros' %}">
         <button>Cadastros</button>
@@ -17,10 +24,7 @@
         <button disabled="disabled">Relatórios</button>
     </a>
 </div>
-<div>
+<div style="margin-top: 30px;">
     <a href="{% url 'index' %}"><button>Voltar</button></a>
-</div>
-<div>
-    <a href="{% url 'logout' %}"><button>Logout</button></a>
 </div>
 {% endblock %}

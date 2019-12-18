@@ -15,6 +15,11 @@ urlpatterns = [
         name='patrimonio_entrada_ferramenta',
     ),
     path(
+        'patrimonio/menu-saidas/ferramentas/',
+        views.view_saida_ferramenta,
+        name='patrimonio_saida_ferramenta',
+    ),
+    path(
         'patrimonio/menu-consultas/ferramenta/',
         views.view_consulta_ferramentas,
         name='patrimonio_consulta_ferramentas',

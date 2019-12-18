@@ -33,7 +33,7 @@ class FormSaidaPatrimonio(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(FormSaidaPatrimonio, self).__init__(*args, **kwargs)
-        self.fields['entrada'].queryset = PatrimonioEntrada.objects.filter(status=0).order_by('codigo')
+        self.fields['entrada'].queryset = PatrimonioEntrada.objects.filter(status=0).order_by('patrimonio', 'codigo')
         users = User.objects.filter(is_active=True).order_by('first_name', 'last_name')
         users_name = [(i.id, '%s - %s %s' % (i.username, i.first_name.title(), i.last_name.title())) for i in users]
         self.fields['user_to'] = forms.ChoiceField(

@@ -2,11 +2,13 @@
 {% block title %}Constel | Patrimônio{% endblock %}
 {% block content %}
 <div><h1>Patrimônio</h1></div>
+<div style="margin-top: 30px;"><h2>Aplicativos</h2></div>
 <div>
     <a href="{% url 'gc_menu_principal' %}">
         <button>Controle de vales</button>
     </a>
 </div>
+<div style="margin-top: 30px;"><h2>Patrimônios e ferramentas</h2></div>
 <div>
     <a href="{% url 'patrimonio_menu_cadastros' %}">
         <button>Cadastros</button>
@@ -32,10 +34,7 @@
         <button disabled="disabled">Relatórios</button>
     </a>
 </div>
-<div>
+<div style="margin-top: 30px;">
     <a href="{% url 'index' %}"><button>Voltar</button></a>
-</div>
-<div>
-    <a href="{% url 'logout' %}"><button>Logout</button></a>
 </div>
 {% endblock %}

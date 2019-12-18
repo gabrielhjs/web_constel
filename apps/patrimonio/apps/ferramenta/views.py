@@ -62,6 +62,35 @@ def view_entrada_ferramenta(request):
     return render(request, 'patrimonio/entrada.html', {'form': form})
 
 
+@login_required()
+def view_saida_ferramenta(request):
+
+    if request.method == 'POST':
+        form = FormSaidaFerramenta(request.POST)
+
+        if form.is_valid():
+            saida = FerramentaSaida(
+                ferramenta=form.cleaned_data['ferramenta'],
+                quantidade=form.cleaned_data['quantidade'],
+                observacao=form.cleaned_data['observacao'],
+                user_to=form.cleaned_data['user_to'],
+                user=request.user,
+            )
+            ferramenta = form.cleaned_data['ferramenta']
+            ferramenta.quantidade.quantidade -= form.cleaned_data['quantidade']
+
+            ferramenta.quantidade.save()
+            saida.save()
+
+            return HttpResponseRedirect('/patrimonio/menu-saidas/')
+
+    else:
+        form = FormSaidaFerramenta()
+
+    return render(request, 'patrimonio/saida.html', {'form': form})
+
+
+@login_required()
 def view_consulta_ferramentas(request):
 
     context = {
