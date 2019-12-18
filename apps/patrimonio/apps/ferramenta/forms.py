@@ -46,6 +46,6 @@ class FormSaidaFerramenta(forms.ModelForm):
         retirada = form_data['quantidade']
 
         if (estoque - retirada) < 0:
-            self._errors['quantidade'] = ['Não há esta quantidade disponível em estoque!']
+            self._errors['quantidade'] = ['Não há esta quantidade de ferramentas disponível em estoque!']
 
         return form_data

@@ -24,7 +24,7 @@
                 <td>{{ vale.get_status_display }}</td>
                 <td>{{ vale.vale_entrega.first.data }}</td>
                 <td>{{ vale.vale_entrega.first.user_to }}</td>
-                <td>{{ vale.vale_entrega.first.user_to.get_full_name.upper }}</td>
+                <td>{{ vale.vale_entrega.first.user_to.get_full_name|title }}</td>
                 <td>{{ vale.vale_entrega.first.combustivel.combustivel }}</td>
                 <td>{{ vale.vale_entrega.first.valor_moeda }}</td>
                 <td>{{ vale.vale_entrega.first.observacao }}</td>
