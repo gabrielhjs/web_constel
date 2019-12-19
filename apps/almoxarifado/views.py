@@ -124,7 +124,7 @@ def view_entrada_material(request):
 
 
 @login_required()
-def view_saida_material(request):
+def view_saida_material_individual(request):
 
     if request.method == 'POST':
         form = FormSaidaMaterial(request.POST)
@@ -149,6 +149,62 @@ def view_saida_material(request):
         form = FormSaidaMaterial()
 
     return render(request, 'almoxarifado/saida.html', {'form': form})
+
+
+@login_required()
+def view_saida_materiais1(request):
+
+    if request.method == 'POST':
+        initial = {
+            'user_to': request.session.get('almoxarifado_user_to', None),
+            'materiais': request.session.get('materiais', None),
+        }
+
+        form = FormSaidaMateriais1(request.POST, initial=initial)
+
+        if form.is_valid():
+            request.session['almoxarifado_user_to'] = form.cleaned_data['user_to'].id
+            request.session['materiais'] = []
+
+            return HttpResponseRedirect('/almoxarifado/menu-saidas/materiais/2/')
+
+    else:
+        form = FormSaidaMateriais1()
+
+    return render(request, 'almoxarifado/saida.html', {'form': form})
+
+
+@login_required()
+def view_saida_materiais2(request):
+
+    if request.session.get('almoxarifado_user_to') is None:
+        return HttpResponseRedirect('/almoxarifado/menu-saidas/materiais/1/')
+
+    if request.method == 'POST':
+        form = FormSaidaMateriais2(request.POST)
+
+        if form.is_valid():
+            request.session['materiais'].append(
+                [
+                    form.cleaned_data['material'],
+                    form.cleaned_data['quantidade'],
+                    form.cleaned_data['observacao'],
+                ]
+            )
+            print('Deu certo')
+            print(request.session['materiais'])
+
+            return HttpResponseRedirect('/almoxarifado/menu-saidas/materiais/2/')
+
+    else:
+        form = FormSaidaMateriais2()
+
+    context = {
+        'form': form,
+        'materiais': request.session['materiais']
+    }
+
+    return render(request, 'almoxarifado/saida.html', context)
 
 
 class ViewConsultaMateriais(ListView):

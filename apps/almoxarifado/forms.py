@@ -56,3 +56,43 @@ class FormSaidaMaterial(forms.ModelForm):
             self._errors['quantidade'] = ['Não há esta quantidade de material disponível em estoque!']
 
         return form_data
+
+
+class FormSaidaMateriais1(forms.Form):
+
+    user_to = forms.CharField(label='Funcionário', help_text='Funcionário que está solicitando o material')
+
+    def clean(self):
+        form_data = self.cleaned_data
+        if User.objects.filter(username=form_data['user_to'], is_active=True).exists():
+            form_data['user_to'] = User.objects.get(username=form_data['user_to'])
+
+        else:
+            self.errors['user_to'] = ['Este usuário não é válido!']
+
+        return form_data
+
+
+class FormSaidaMateriais2(forms.ModelForm):
+
+    class Meta:
+        model = MaterialSaida
+        fields = ['material', 'quantidade', 'observacao', ]
+
+    def __init__(self, *args, **kwargs):
+        super(FormSaidaMateriais2, self).__init__(*args, **kwargs)
+
+        self.fields['material'].queryset = Material.objects.filter(
+            quantidade__quantidade__gt=0
+        ).order_by('material')
+
+    def clean(self):
+        form_data = self.cleaned_data
+
+        estoque = MaterialQuantidade.objects.get(material=form_data['material']).quantidade
+        retirada = form_data['quantidade']
+
+        if (estoque - retirada) < 0:
+            self._errors['quantidade'] = ['Não há esta quantidade de material disponível em estoque!']
+
+        return form_data

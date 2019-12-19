@@ -1,0 +1,40 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Patrimônio{% endblock %}
+{% block content %}
+<div class="table-content">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Material</th>
+                <th>Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for material in materiais %}
+            <tr>
+                <td>{{ material }}</td>
+                <td>{{ material }}</td>
+                <td>{{ material }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div>
+        <p>{{ field.label_tag }}</p>
+        {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+        {% endfor %}
+        <p>{{ field }}</p>
+        {% if field.help_text %}
+            <p><small style="color: grey">{{ field.help_text }}</small></p>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit">Registrar saída</button>
+</form>
+<a href="{% url 'almoxarifado_menu_saidas' %}"><button>Voltar</button></a>
+{% endblock %}

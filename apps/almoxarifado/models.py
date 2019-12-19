@@ -7,7 +7,7 @@ class Fornecedor(models.Model):
     Model que gerencia a tabela de fornecedores de materiais para o almoxarifado
     """
     nome = models.CharField(verbose_name='Fornecedor', max_length=255, blank=False, unique=True)
-    cnpj = models.IntegerField(verbose_name='CNPJ', null=False, blank=False)
+    cnpj = models.BigIntegerField(verbose_name='CNPJ', null=False, blank=False)
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None

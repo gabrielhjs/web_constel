@@ -41,8 +41,18 @@ urlpatterns = [
     ),
     path(
         'almoxarifado/menu-saidas/material/',
-        views.view_saida_material,
-        name='almoxarifado_saida_material',
+        views.view_saida_material_individual,
+        name='almoxarifado_saida_material_individual',
+    ),
+    path(
+        'almoxarifado/menu-saidas/materiais/1/',
+        views.view_saida_materiais1,
+        name='almoxarifado_saida_materiais1',
+    ),
+    path(
+        'almoxarifado/menu-saidas/materiais/2/',
+        views.view_saida_materiais2,
+        name='almoxarifado_saida_materiais2',
     ),
     path(
         'almoxarifado/menu-consultas/',

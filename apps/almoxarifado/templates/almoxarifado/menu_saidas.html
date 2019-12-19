@@ -3,8 +3,13 @@
 {% block content %}
 <div><h1>Almoxarifado</h1></div>
 <div>
-    <a href="{% url 'almoxarifado_saida_material' %}">
-        <button>Entrega de material</button>
+    <a href="{% url 'almoxarifado_saida_material_individual' %}">
+        <button>Entrega de material individual</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'almoxarifado_saida_materiais1' %}">
+        <button>Entrega de materiais</button>
     </a>
 </div>
 <div style="margin-top: 30px;">
