@@ -54,6 +54,10 @@ class MaterialQuantidade(models.Model):
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
 
+    def __str__(self):
+
+        return '%s' % self.material
+
 
 class Ordem(models.Model):
     """
