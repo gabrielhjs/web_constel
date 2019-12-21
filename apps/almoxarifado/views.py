@@ -102,12 +102,15 @@ def view_entrada_material(request):
         form = FormEntradaMaterial(request.POST)
 
         if form.is_valid():
+            ordem = Ordem.objects.create(tipo=0, user=request.user)
+            ordem.save()
             entrada = MaterialEntrada(
                 material=form.cleaned_data['material'],
                 quantidade=form.cleaned_data['quantidade'],
                 observacao=form.cleaned_data['observacao'],
                 fornecedor=form.cleaned_data['fornecedor'],
                 user=request.user,
+                ordem=ordem,
             )
             material = form.cleaned_data['material']
             material.quantidade.quantidade += form.cleaned_data['quantidade']
@@ -216,3 +219,19 @@ class ViewConsultaMateriais(ListView):
             'materiais': self.object_list.all(),
         }
         return context
+
+
+def view_consulta_estoque(request):
+
+    itens = MaterialQuantidade.objects.filter(quantidade__gt=0).order_by('material')
+    context = {'itens': itens}
+
+    return render(request, 'almoxarifado/consulta_estoque.html', context)
+
+
+def view_consulta_ordem(request, tipo):
+
+    itens = Ordem.objects.filter(tipo=tipo).order_by('data')
+    context = {'itens': itens}
+
+    return render(request, 'almoxarifado/consulta_ordem.html', context)

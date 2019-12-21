@@ -1,0 +1,29 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | ALmoxarifado{% endblock %}
+{% block content %}
+<h1>Estoque</h1>
+<div class="table-content">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Material</th>
+                <th>Descrição</th>
+                <th>Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in itens %}
+            <tr>
+                <td>{{ item.material.codigo }}</td>
+                <td>{{ item.material.material }}</td>
+                <td>{{ item.material.descricao }}</td>
+                <td>{{ item.quantidade }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div>
+    <a href="{% url 'almoxarifado_menu_consultas' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

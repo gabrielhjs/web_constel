@@ -55,6 +55,29 @@ class MaterialQuantidade(models.Model):
     objects = None
 
 
+class Ordem(models.Model):
+    """
+    Model que gerencia a tabela de controle de ordens de entrada e saída do almoxarifado.
+    Tem o intuito de documentar as entradas e saídas de materiais
+    """
+    TIPO = [
+        (0, 'Entrada'),
+        (1, 'Saida'),
+    ]
+
+    data = models.DateTimeField(auto_now=True, verbose_name='Data de cadastro')
+    tipo = models.IntegerField(choices=TIPO, null=False, blank=False)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='almoxaridado_ordens')
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+    id = None
+
+    def __str__(self):
+
+        return '%s | %s' % (self.id, self.data)
+
+
 class MaterialEntrada(models.Model):
     """
     Model que gerencia a tabela de entradas de materiais no almoxarifado
@@ -65,6 +88,7 @@ class MaterialEntrada(models.Model):
     fornecedor = models.ForeignKey(Fornecedor, on_delete=models.PROTECT, related_name='aquisicoes')
     observacao = models.TextField(verbose_name='Observação', max_length=500, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='almoxarifado_entradas', default=None)
+    ordem = models.ForeignKey(Ordem, on_delete=models.CASCADE, related_name='almoxarifado_ordem_entrada', default=None)
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
@@ -80,6 +104,7 @@ class MaterialSaida(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='almoxarifado_saidas')
     user_to = models.ForeignKey(User, on_delete=models.PROTECT, related_name='almoxarifado_retiradas')
     observacao = models.TextField(verbose_name='Observação', max_length=500, null=True, blank=True)
+    ordem = models.ForeignKey(Ordem, on_delete=models.CASCADE, related_name='almoxarifado_ordem_saida', default=None)
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None

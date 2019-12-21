@@ -23,6 +23,7 @@ ALLOWED_HOSTS = ['constel.herokuapp.com', 'http://192.168.1.114:8080', ]
 INSTALLED_APPS = [
     'constel',
     'apps.almoxarifado',
+    'apps.almoxarifado.apps.lista_saida',
     'apps.patrimonio',
     'apps.patrimonio.apps.ferramenta',
     'apps.patrimonio.apps.patrimonio1',

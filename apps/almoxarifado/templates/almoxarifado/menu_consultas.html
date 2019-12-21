@@ -7,6 +7,21 @@
         <button>Materiais cadastrados</button>
     </a>
 </div>
+<div>
+    <a href="{% url 'almoxarifado_consulta_estoque' %}">
+        <button>Estoque</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'almoxarifado_consulta_ordens' tipo=0 %}">
+        <button>Ordens de entrada</button>
+    </a>
+</div>
+<div>
+    <a href="{% url 'almoxarifado_consulta_ordens' tipo=1 %}">
+        <button>Ordens de saída</button>
+    </a>
+</div>
 <div style="margin-top: 30px;">
     <a href="{% url 'almoxarifado_menu_principal' %}">
         <button>Voltar</button>

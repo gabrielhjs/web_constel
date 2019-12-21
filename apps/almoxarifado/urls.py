@@ -1,9 +1,11 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
 
 urlpatterns = [
+    path('', include('apps.almoxarifado.apps.lista_saida.urls')),
+
     path(
         'almoxarifado/',
         views.view_menu_principal,
@@ -63,6 +65,16 @@ urlpatterns = [
         'almoxarifado/menu-consultas/materiais/',
         views.ViewConsultaMateriais.as_view(),
         name='almoxarifado_consulta_materiais',
+    ),
+    path(
+        'almoxarifado/menu-consultas/estoque/',
+        views.view_consulta_estoque,
+        name='almoxarifado_consulta_estoque',
+    ),
+    path(
+        'almoxarifado/menu-consultas/ordens/<int:tipo>/',
+        views.view_consulta_ordem,
+        name='almoxarifado_consulta_ordens',
     ),
     path(
         'almoxarifado/menu-relatorios/',
