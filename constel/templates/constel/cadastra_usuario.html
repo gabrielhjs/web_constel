@@ -1,23 +1,23 @@
 {% extends 'constel/base.html' %}
 {% block title %}Novo Usuário{% endblock %}
 {% block content %}
-<form method="post">
+<form method="post" class="form">
     {% csrf_token %}
     {% for field in form %}
     <div class="form">
         <p>{{ field.label_tag }}</p>
         <p>{{ field }}</p>
         {% if field.help_text %}
-            <p><small style="color: grey">{{ field.help_text }}</small></p>
+            <p><small>{{ field.help_text }}</small></p>
         {% endif %}
         {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
+            <p class="error">{{ error }}</p>
         {% endfor %}
     </div>
     {% endfor %}
-    <button type="submit">Cadastrar-se</button>
+    <div class="menu-button menu-back"><button type="submit">Cadastrar-se</button></div>
 </form>
-<div>
-    <a href="{% url 'login' %}"><button>Voltar</button></a>
+<div class="menu-button">
+    <a href="{% url 'login' %}"><button>Cancelar</button></a>
 </div>
 {% endblock %}

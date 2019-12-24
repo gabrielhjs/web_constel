@@ -7,6 +7,13 @@ from django.contrib import messages
 
 from .forms import FormCadastraUsuario, FormLogin, FormCadastraUsuarioPassivo, FormCadastrarVeiculo
 from .models import UserType, Veiculo
+from .objects import Button
+
+
+@login_required()
+def view_admin(request):
+
+    return HttpResponseRedirect('/admin')
 
 
 @login_required()
@@ -17,11 +24,20 @@ def index(request):
     :return: Renderiza página inicial
     """
 
+    button_patrimonio = Button('patrimonio_menu_principal', 'Patrimônio')
+    button_almoxarifado = Button('almoxarifado_menu_principal', 'Almoxarifado')
+    button_admin = Button('view_admin', 'Administração do sistema')
+    button_logout = Button('logout', 'Logout')
+
     context = {
         'admin': request.user.is_superuser,
+        'guia_titulo': 'Constel',
+        'menu_titulo': 'Constel',
+        'buttons': [button_patrimonio, button_almoxarifado, button_admin],
+        'rollback': button_logout,
     }
 
-    return render(request, 'constel/index.html', context)
+    return render(request, 'constel/menu.html', context)
 
 
 def view_cadastrar_usuario(request):

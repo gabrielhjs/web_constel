@@ -3,68 +3,80 @@
 ol, ul {list-style: none; margin: 0; padding: 0;}
 p {margin: 0;}
 label {margin: 20px 0 0 0;}
-
+html {font-size: 20px; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;}
+button {width: 100%; height: 100%;}
+body {background: #242424;}
 
 /*---BUTTONS---*/
-.body-content button, select {
-    transition: all .2s ease-in-out;
+
+.page-title h1 {
+    margin: 0;
+    font-size: 3rem;
 }
 
-.body-content select {
-    background: gray;
-}
-
-.body-content button:hover {
+.menu-text {
     color: white;
-    background: gray;
-}
-/*BREAKPOINT MÁXIMOS
---------------------------------------------------------------*/
-@media (max-width: 767.9px) {
-    .body-content button, select, input {
-        display: flex;
-        width: 100%;
-    }
+    margin-top: 20px;
+    font-size: 1rem;
 }
 
-/*BREAKPOINT MÍNIMOS
---------------------------------------------------------------*/
-@media (min-width: 768px) {
-    .body-content button, select, input {
-        width: 50%;
-    }
+.menu-button button {
+    transition: all .2s ease-in-out;
+    background: gray;
+    color: #242424;
+    max-width: 500px;
+    width: 100%;
+    height: 50px;
+    border: 2px solid magenta;
+    font-size: 1rem; 
+}
+
+.menu-button button:hover {
+    transition: all .2s ease-in-out;
+    background: rgb(50, 50, 50);
+    color: white;
+}
+
+.menu-back {
+    margin-top: 50px;
+}
+
+.body-content {
+    max-width: 1080px;
+    width: 90%;
+    margin: auto;
+    text-align: center;
+    border: 2px solid white;
 }
 
 .header-content {
     padding: 0;
-    height: 100vh;
 }
 
-body {
-    background-color: #242424;
+.page-title {
+    color: rgb(255, 207, 8);
+    font-size: 2rem;
+    border: 2px solid magenta;
 }
-
-.body-content {
-    width: 60%;
-    margin: auto;
-    margin-top: 50px;
+/* FORMS */
+.form {
     color: white;
-    text-align: center;
+    font-size: 1rem;
 }
-
-.table-content {
-    display: flex;
-    justify-content: center;
+.form label {
+    display: block;
+    margin-top: 20px;
 }
-
-table {
-    width: 100%;
+.form input, select {
+    height: 30px;
+    width: 40%;
+    font-size: 1rem;
 }
-
-.table-content th, td {
-    text-align: center;
+.form small {
+    font-size: .75rem;
+    margin-top: 0;
+    color: gray;
 }
-
-.table-content button {
-    width: 80px;
+.error {
+    color: red;
 }

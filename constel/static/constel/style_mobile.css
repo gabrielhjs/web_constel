@@ -1,0 +1,9 @@
+.menu-button button {
+    height: 60px;
+}
+.form {
+    font-size: 1.5rem;
+}
+.form input {
+    width: 90%;
+}

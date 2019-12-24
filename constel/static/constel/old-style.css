@@ -1,0 +1,70 @@
+/* RESETS
+--------------------------------------------------------------*/
+ol, ul {list-style: none; margin: 0; padding: 0;}
+p {margin: 0;}
+label {margin: 20px 0 0 0;}
+
+
+/*---BUTTONS---*/
+.body-content button, select {
+    transition: all .2s ease-in-out;
+}
+
+.body-content select {
+    background: gray;
+}
+
+.body-content button:hover {
+    color: white;
+    background: gray;
+}
+/*BREAKPOINT MÁXIMOS
+--------------------------------------------------------------*/
+@media (max-width: 767.9px) {
+    .body-content button, select, input {
+        display: flex;
+        width: 100%;
+    }
+}
+
+/*BREAKPOINT MÍNIMOS
+--------------------------------------------------------------*/
+@media (min-width: 768px) {
+    .body-content button, select, input {
+        width: 50%;
+    }
+}
+
+.header-content {
+    padding: 0;
+    height: 100vh;
+}
+
+body {
+    background-color: #242424;
+}
+
+.body-content {
+    width: 60%;
+    margin: auto;
+    margin-top: 50px;
+    color: white;
+    text-align: center;
+}
+
+.table-content {
+    display: flex;
+    justify-content: center;
+}
+
+table {
+    width: 100%;
+}
+
+.table-content th, td {
+    text-align: center;
+}
+
+.table-content button {
+    width: 80px;
+}
