@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
@@ -9,13 +9,6 @@ from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combu
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.add_talao',
-        'web_gc.add_vale',
-        'web_gc.add_entregatalao',
-    ),
-    raise_exception=True)
 def view_cadastrar_talao(request):
     """
     View de carregamento e gestão do cadastro de novos talões,
@@ -47,11 +40,6 @@ def view_cadastrar_talao(request):
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.add_combustivel',
-    ),
-    raise_exception=True)
 def view_cadastrar_combustivel(request):
     """
     View de carregamento e gestão de combustível novos cadastrados no sistema,
@@ -79,11 +67,6 @@ def view_cadastrar_combustivel(request):
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.add_combustivel',
-    ),
-    raise_exception=True)
 def view_cadastrar_posto(request):
     """
     View de carregamento e gestão de combustível novos cadastrados no sistema,
@@ -111,12 +94,6 @@ def view_cadastrar_posto(request):
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.change_talao',
-        'web_gc.add_entregatalao',
-    ),
-    raise_exception=True)
 def view_entrega_talao(request):
     """
     View de carregamento e gestão de entrega de talões cadastrados no sistema,
@@ -148,12 +125,6 @@ def view_entrega_talao(request):
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.change_vale',
-        'web_gc.add_entregavale',
-    ),
-    raise_exception=True)
 def view_entrega_vale_1(request):
     """
     View de carregamento e gestão de entrega de vales cadastrados no sistema,
@@ -183,12 +154,6 @@ def view_entrega_vale_1(request):
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.change_vale',
-        'web_gc.add_entregavale',
-    ),
-    raise_exception=True)
 def view_entrega_vale_2(request):
 
     if request.session.get('user_to') is None:
@@ -233,11 +198,6 @@ def view_entrega_vale_2(request):
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.view_talao',
-    ),
-    raise_exception=True)
 def view_taloes(request):
     """
     View de exibição dos talões cadastrados no sistema
@@ -254,12 +214,6 @@ def view_taloes(request):
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.view_talao',
-        'web_gc.view_vale',
-    ),
-    raise_exception=True)
 def view_talao(request, **kwargs):
     """
     View de exibição de informações de talão
@@ -276,12 +230,6 @@ def view_talao(request, **kwargs):
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.view_talao',
-        'web_gc.view_vale',
-    ),
-    raise_exception=True)
 def view_vales(request):
     """
 
@@ -298,11 +246,6 @@ def view_vales(request):
 
 
 @login_required()
-@permission_required(
-    (
-        'web_gc.view_vale',
-    ),
-    raise_exception=True)
 def view_meus_vales(request):
     """
 
