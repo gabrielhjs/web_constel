@@ -1,9 +1,13 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Almoxarifado{% endblock %}
 {% block content %}
-<h1>Lista de materiais</h1>
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+<p style="font-size: 25px;">ID: {{ user_to.username }}</p>
+<p style="font-size: 25px;">Nome: {{ user_to.first_name }} {{ user_to.last_name }}</p>
+<div class="menu-text"><h1>Lista de materiais</h1></div>
 <div class="table-content">
-    <table border="2">
+    <table>
         <thead>
             <tr>
                 <th>Código</th>
@@ -21,7 +25,7 @@
         {% endfor %}
     </table>
 </div>
-<form method="post">
+<form method="post" class="form">
     {% csrf_token %}
     {% for field in form_insere %}
     <div>
@@ -35,9 +39,15 @@
         {% endif %}
     </div>
     {% endfor %}
-    <button style="background-color: rgb(30,144,255); margin-top: 30px; height: 60px;" type="submit">Adicionar material</button>
+    <div class="menu-button button-blue"><button style="" type="submit">Adicionar material</button></div>
 </form>
-<a href="{% url 'almoxarifado_saida_lista_itens_entrega' user_to %}"><button  style="background-color: rgb(0,255,127); margin-top: 30px; height: 60px;">Entregar materiais</button></a>
-<a href="{% url 'almoxarifado_saida_lista_itens_limpa' user_to %}"><button  style="background-color: rgb(255,99,71); margin-top: 30px; ">Limpar lista</button></a>
-<a href="{% url 'almoxarifado_menu_saidas' %}"><button>Voltar</button></a>
+<div class="menu-button button-green">
+    <a href="{% url 'almoxarifado_saida_lista_itens_entrega' user_to %}"><button>Entregar materiais</button></a>
+</div>
+<div class="menu-button button-red">
+    <a href="{% url 'almoxarifado_saida_lista_itens_limpa' user_to %}"><button>Limpar lista</button></a>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_menu_saidas' %}"><button>Voltar</button></a>
+</div>
 {% endblock %}

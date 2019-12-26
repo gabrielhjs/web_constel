@@ -1,21 +1,30 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Patrimônio{% endblock %}
 {% block content %}
-<form method="post">
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+<form method="post" class="form">
     {% csrf_token %}
     {% for field in form %}
     <div>
         <p>{{ field.label_tag }}</p>
         {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
+            <p>{{ error }}</p>
         {% endfor %}
         <p>{{ field }}</p>
         {% if field.help_text %}
-            <p><small style="color: grey">{{ field.help_text }}</small></p>
+            <p><small>{{ field.help_text }}</small></p>
         {% endif %}
     </div>
     {% endfor %}
-    <button type="submit">Avançar</button>
+    <div class="menu-button button-green"><button type="submit">Avançar</button></div>
 </form>
-<a href="{% url 'almoxarifado_menu_saidas' %}"><button>Voltar</button></a>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_cadastrar_usuario_passivo_lista' callback='lista' %}">
+        <button>Cadastrar técnico</button>
+    </a>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_menu_saidas' %}"><button>Voltar</button></a>
+</div>
 {% endblock %}

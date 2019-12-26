@@ -1,5 +1,5 @@
 {% extends 'constel/base.html' %}
-{% block title %}Constel | Patrimônio{% endblock %}
+{% block title %}Constel | Novo Usuário{% endblock %}
 {% block content %}
 <form method="post" class="form">
     {% csrf_token %}
@@ -15,9 +15,9 @@
         {% endfor %}
     </div>
     {% endfor %}
-    <div class="menu-button back-back"><button type="submit">Registrar saída</button></div>
+    <div class="menu-button"><button type="submit">Cadastrar beneficiário</button></div>
 </form>
 <div class="menu-button menu-back">
-    <a href="{% url 'almoxarifado_menu_saidas' %}"><button>Voltar</button></a>
+    <a href="{% url callback %}"><button>Voltar</button></a>
 </div>
 {% endblock %}

@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import Material
 from constel.objects import Button
+from constel.models import UserType
 
 
 @login_required()
@@ -40,6 +41,7 @@ def view_menu_cadastros(request):
 
     button_1 = Button('almoxarifado_cadastrar_material', 'Cadastrar material')
     button_2 = Button('almoxarifado_cadastrar_fornecedor', 'Cadastrar fornecedor')
+    button_3 = Button('almoxarifado_cadastrar_usuario_passivo', 'Cadastrar técnico')
     button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
 
     context = {
@@ -49,6 +51,7 @@ def view_menu_cadastros(request):
         'buttons': [
             button_1,
             button_2,
+            button_3,
         ],
         'rollback': button_voltar,
     }
@@ -120,6 +123,49 @@ def view_menu_relatorios(request):
     }
 
     return render(request, 'constel/menu.html', context)
+
+
+@login_required()
+def view_cadastrar_usuario_passivo(request, callback=None):
+    """
+        View de cadastro de novos usuários passivos.
+        :param callback: próxima página
+        :param request: POST form
+        :return:
+        """
+
+    if request.method == 'POST':
+        form = FormCadastraUsuarioPassivo(request.POST)
+
+        if form.is_valid():
+            form.save()
+            user = User.objects.get(username=form.cleaned_data['username'])
+            user_type = UserType(user=user)
+            user_type.save()
+
+            if callback is not None:
+
+                if callback == 'lista':
+
+                    return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/')
+
+            return HttpResponseRedirect('/almoxarifado/menu-cadastros/')
+    else:
+        form = FormCadastraUsuarioPassivo()
+
+    if callback is not None:
+        context = {
+            'form': form,
+            'callback': 'almoxarifado_saida_lista',
+        }
+
+    else:
+        context = {
+            'form': form,
+            'callback': 'almoxarifado_menu_cadastros',
+        }
+
+    return render(request, 'almoxarifado/cadastra_usuario_passivo.html', context)
 
 
 @login_required()

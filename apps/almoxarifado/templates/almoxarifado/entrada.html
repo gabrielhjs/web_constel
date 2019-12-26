@@ -1,21 +1,23 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Patrimônio{% endblock %}
 {% block content %}
-<form method="post">
+<form method="post" class="form">
     {% csrf_token %}
     {% for field in form %}
     <div>
         <p>{{ field.label_tag }}</p>
-        {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
-        {% endfor %}
         <p>{{ field }}</p>
         {% if field.help_text %}
-            <p><small style="color: grey">{{ field.help_text }}</small></p>
+            <p><small>{{ field.help_text }}</small></p>
         {% endif %}
+        {% for error in field.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
     </div>
     {% endfor %}
-    <button type="submit">Registrar entrada</button>
+    <div class="menu-button back-back"><button type="submit">Registrar entrada</button></div>
 </form>
-<a href="{% url 'almoxarifado_menu_entradas' %}"><button style="margin-top: 30px;">Voltar</button></a>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_menu_entradas' %}"><button>Voltar</button></a>
+</div>
 {% endblock %}

@@ -31,7 +31,13 @@ def view_lista_cria(request):
     else:
         form = FormListaCria()
 
-    return render(request, 'lista_saida/lista_cria.html', {'form': form})
+    context = {
+        'form': form,
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Entrega de materiais',
+    }
+
+    return render(request, 'lista_saida/lista_cria.html', context)
 
 
 @login_required()
@@ -71,7 +77,9 @@ def view_item_insere(request, user_to):
     context = {
         'lista_itens': Item.objects.filter(lista__user_to__username=user_to),
         'form_insere': form_insere,
-        'user_to': user_to,
+        'user_to': User.objects.get(username=user_to),
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Entrega de materiais',
     }
 
     return render(request, 'lista_saida/lista_itens.html', context)

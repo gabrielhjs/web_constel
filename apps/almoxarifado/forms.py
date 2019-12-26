@@ -96,3 +96,23 @@ class FormSaidaMateriais2(forms.ModelForm):
             self._errors['quantidade'] = ['Não há esta quantidade de material disponível em estoque!']
 
         return form_data
+
+
+class FormCadastraUsuarioPassivo(forms.ModelForm):
+    """
+    Formulário de cadastro de novo usuário passivo. Não exige senha,
+    serve para cadastrar usuários que não necesstam logar no sistema.
+    """
+
+    username = forms.IntegerField(
+        required=True,
+        label='Matrícula',
+        help_text='Insira o número da sua matrícula (crachá)'
+    )
+    first_name = forms.CharField(max_length=30, help_text='Obrigatório.', label='Nome')
+    last_name = forms.CharField(max_length=100, help_text='Obrigatório.', label='Sobrenome')
+    email = forms.EmailField(max_length=254, help_text='Obrigatório. Informe um endereço válido de email.')
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email',)

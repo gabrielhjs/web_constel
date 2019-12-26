@@ -1,26 +1,28 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Almoxarifado{% endblock %}
 {% block content %}
-<form method="post">
+<form method="post" class="form">
     {% csrf_token %}
     {% for field in form %}
     <div>
         <p>{{ field.label_tag }}</p>
-        {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
-        {% endfor %}
         <p>{{ field }}</p>
         {% if field.help_text %}
-            <p><small style="color: grey">{{ field.help_text }}</small></p>
+            <p><small>{{ field.help_text }}</small></p>
         {% endif %}
+        {% for error in field.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
     </div>
     {% endfor %}
-    <button type="submit">Cadastrar fornecedor</button>
+    <div class="menu-button back-back"><button type="submit">Cadastrar fornecedor</button></div>
 </form>
-<a href="{% url 'almoxarifado_menu_cadastros' %}"><button>Voltar</button></a>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_menu_cadastros' %}"><button>Voltar</button></a>
+</div>
 <h1>Fornecedores cadastrados</h1>
 <div class="table-content">
-    <table border="2">
+    <table>
         <thead>
             <tr>
                 <th>CNPJ</th>

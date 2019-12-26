@@ -17,6 +17,16 @@ urlpatterns = [
         name='almoxarifado_menu_cadastros',
     ),
     path(
+        'almoxarifado/menu-cadastros/usuario-inativo/<str:callback>',
+        views.view_cadastrar_usuario_passivo,
+        name='almoxarifado_cadastrar_usuario_passivo_lista',
+    ),
+    path(
+        'almoxarifado/menu-cadastros/usuario-inativo/',
+        views.view_cadastrar_usuario_passivo,
+        name='almoxarifado_cadastrar_usuario_passivo',
+    ),
+    path(
         'almoxarifado/menu-cadastros/material/',
         views.view_cadastrar_material,
         name='almoxarifado_cadastrar_material',
