@@ -10,7 +10,7 @@
     </a>
 </div>
 {% endfor %}
-<div  class="menu-button menu-back">
-    <a href="{% url rollback.url %}?next={{ request.path }}"><button>{{ rollback.label }}</button></a>
+<div class="menu-button menu-back">
+    <a href="{% url rollback.url %}"><button>{{ rollback.label }}</button></a>
 </div>
 {% endblock %}

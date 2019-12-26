@@ -2,21 +2,23 @@
 {% block title %}Constel | Combustível{% endblock %}
 {% block content %}
 <h1>Passo 1:</h1>
-<form method="post">
+<form method="post" class="form">
     {% csrf_token %}
     {% for field in form %}
     <div>
         <p>{{ field.label_tag }}</p>
         {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
+            <p>{{ error }}</p>
         {% endfor %}
         <p>{{ field }}</p>
         {% if field.help_text %}
-            <p><small style="color: grey">{{ field.help_text }}</small></p>
+            <p><small>{{ field.help_text }}</small></p>
         {% endif %}
     </div>
     {% endfor %}
-    <button type="submit">Avançar</button>
+    <div class="menu-button"><button type="submit">Avançar</button></div>
 </form>
-<a href="{% url 'gc_menu_vales' %}"><button>Cancelar</button></a>
+<div class="menu-button menu-back">
+    <a href="{% url 'gc_menu_vales' %}"><button>Cancelar</button></a>
+</div>
 {% endblock %}

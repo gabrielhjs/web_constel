@@ -5,42 +5,121 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import *
 from .models import Material
+from constel.objects import Button
 
 
 @login_required()
 def view_menu_principal(request):
 
-    return render(request, 'almoxarifado/menu_principal.html')
+    button_1 = Button('almoxarifado_menu_cadastros', 'Cadastros')
+    button_2 = Button('almoxarifado_menu_entradas', 'Entradas')
+    button_3 = Button('almoxarifado_menu_saidas', 'Saídas')
+    button_4 = Button('almoxarifado_menu_consultas', 'Consultas')
+    button_5 = Button('almoxarifado_menu_relatorios', 'Relatórios')
+    button_voltar = Button('index', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Patrimônio',
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Menu principal',
+        'buttons': [
+            button_1,
+            button_2,
+            button_3,
+            button_4,
+            button_5,
+        ],
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
 def view_menu_cadastros(request):
 
-    return render(request, 'almoxarifado/menu_cadastros.html')
+    button_1 = Button('almoxarifado_cadastrar_material', 'Cadastrar material')
+    button_2 = Button('almoxarifado_cadastrar_fornecedor', 'Cadastrar fornecedor')
+    button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Patrimônio',
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Menu de cadastros',
+        'buttons': [
+            button_1,
+            button_2,
+        ],
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
 def view_menu_entradas(request):
 
-    return render(request, 'almoxarifado/menu_entradas.html')
+    button_1 = Button('almoxarifado_entrada_material', 'Aquisição de material')
+    button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Patrimônio',
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Menu de entradas',
+        'buttons': [
+            button_1,
+        ],
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
 def view_menu_saidas(request):
 
-    return render(request, 'almoxarifado/menu_saidas.html')
+    button_1 = Button('almoxarifado_saida_lista', 'Entrega de materiais')
+    button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Patrimônio',
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Menu de saídas',
+        'buttons': [
+            button_1,
+        ],
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
 def view_menu_consultas(request):
 
-    return render(request, 'almoxarifado/menu_consultas.html')
+    context = {
+        'guia_titulo': 'Constel | Patrimônio',
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Menu de consultas',
+    }
+
+    return render(request, 'almoxarifado/menu_consultas.html', context)
 
 
 @login_required()
 def view_menu_relatorios(request):
 
-    return render(request, 'almoxarifado/menu_relatorios.html')
+    button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Patrimônio',
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Menu de relatórios',
+        'buttons': [],
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()

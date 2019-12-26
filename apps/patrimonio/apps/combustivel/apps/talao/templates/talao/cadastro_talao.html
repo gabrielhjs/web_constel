@@ -15,7 +15,9 @@
         {% endfor %}
     </div>
     {% endfor %}
-    <button type="submit">Cadastrar talão</button>
+    <div class="menu-button"><button type="submit">Cadastrar talão</button></div>
 </form>
-<a href="{% url 'gc_menu_cadastros' %}"><button>Voltar</button></a>
+<div class="menu-button menu-back">
+    <a href="{% url 'gc_menu_cadastros' %}"><button>Voltar</button></a>
+</div>
 {% endblock %}

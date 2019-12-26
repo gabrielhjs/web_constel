@@ -1,28 +1,29 @@
 {% extends 'constel/base.html' %}
-{% block title %}Constel | Almoxarifado{% endblock %}
+{% block title %}{{ guia_titulo }}{% endblock %}
 {% block content %}
-<div><h1>Almoxarifado</h1></div>
-<div>
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+<div class="menu-button">
     <a href="{% url 'almoxarifado_consulta_materiais' %}">
         <button>Materiais cadastrados</button>
     </a>
 </div>
-<div>
+<div class="menu-button">
     <a href="{% url 'almoxarifado_consulta_estoque' %}">
         <button>Estoque</button>
     </a>
 </div>
-<div>
+<div class="menu-button">
     <a href="{% url 'almoxarifado_consulta_ordens' tipo=0 %}">
         <button>Ordens de entrada</button>
     </a>
 </div>
-<div>
+<div class="menu-button">
     <a href="{% url 'almoxarifado_consulta_ordens' tipo=1 %}">
         <button>Ordens de saída</button>
     </a>
 </div>
-<div style="margin-top: 30px;">
+<div class="menu-button menu-back">
     <a href="{% url 'almoxarifado_menu_principal' %}">
         <button>Voltar</button>
     </a>

@@ -1,7 +1,7 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Combustível{% endblock %}
 {% block content %}
-<form method="post">
+<form method="post" class="form">
     {% csrf_token %}
     {% for field in form %}
     <div>
@@ -15,9 +15,11 @@
         {% endfor %}
     </div>
     {% endfor %}
-    <button type="submit">Cadastrar combustível</button>
+    <div class="menu-button"><button type="submit">Cadastrar combustível</button></div>
 </form>
-<a href="{% url 'gc_menu_cadastros' %}"><button>Voltar</button></a>
+<div class="menu-button menu-back">
+    <a href="{% url 'gc_menu_cadastros' %}"><button>Voltar</button></a>
+</div>
 <div class="table-content">
     <table border="2">
         <thead>
