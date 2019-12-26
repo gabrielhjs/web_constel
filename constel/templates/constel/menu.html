@@ -1,7 +1,8 @@
 {% extends 'constel/base.html' %}
 {% block title %}{{ guia_titulo }}{% endblock %}
 {% block content %}
-<div class="page-title"><h1>{{ menu_titulo }}</h1></div>
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
 {% for button in buttons %}
 <div class="menu-button">
     <a href="{% url button.url %}">
@@ -10,6 +11,6 @@
 </div>
 {% endfor %}
 <div  class="menu-button menu-back">
-    <a href="{% url rollback.url %}"><button>{{ rollback.label }}</button></a>
+    <a href="{% url rollback.url %}?next={{ request.path }}"><button>{{ rollback.label }}</button></a>
 </div>
 {% endblock %}

@@ -24,16 +24,20 @@ def index(request):
     :return: Renderiza página inicial
     """
 
-    button_patrimonio = Button('patrimonio_menu_principal', 'Patrimônio')
-    button_almoxarifado = Button('almoxarifado_menu_principal', 'Almoxarifado')
-    button_admin = Button('view_admin', 'Administração do sistema')
+    button_1 = Button('patrimonio_menu_principal', 'Patrimônio')
+    button_2 = Button('almoxarifado_menu_principal', 'Almoxarifado')
+    button_3 = Button('view_admin', 'Administração do sistema')
     button_logout = Button('logout', 'Logout')
 
     context = {
         'admin': request.user.is_superuser,
         'guia_titulo': 'Constel',
-        'menu_titulo': 'Constel',
-        'buttons': [button_patrimonio, button_almoxarifado, button_admin],
+        'pagina_titulo': 'Constel',
+        'buttons': [
+            button_1,
+            button_2,
+            button_3,
+        ],
         'rollback': button_logout,
     }
 

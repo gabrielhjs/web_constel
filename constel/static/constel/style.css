@@ -16,8 +16,8 @@ body {background: #242424;}
 
 .menu-text {
     color: white;
-    margin-top: 20px;
-    font-size: 1rem;
+    font-size: .8rem;
+    border: 2px solid magenta;
 }
 
 .menu-button button {

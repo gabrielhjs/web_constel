@@ -7,25 +7,25 @@ from constel.objects import Button
 @login_required()
 def view_menu_principal(request):
 
-    button_vales = Button('gc_menu_principal', 'Controle de vales')
-    button_cadastros = Button('patrimonio_menu_cadastros', 'Cadastros')
-    button_entradas = Button('patrimonio_menu_entradas', 'Entradas')
-    button_saidas = Button('patrimonio_menu_saidas', 'Saídas')
-    button_consultas = Button('patrimonio_menu_consultas', 'Consultas')
-    button_relatorios = Button('patrimonio_menu_relatorios', 'Relatórios')
+    button_1 = Button('gc_menu_principal', 'Controle de vales')
+    button_2 = Button('patrimonio_menu_cadastros', 'Cadastros')
+    button_3 = Button('patrimonio_menu_entradas', 'Entradas')
+    button_4 = Button('patrimonio_menu_saidas', 'Saídas')
+    button_5 = Button('patrimonio_menu_consultas', 'Consultas')
+    button_6 = Button('patrimonio_menu_relatorios', 'Relatórios')
     button_voltar = Button('index', 'Voltar')
 
     context = {
-        'admin': request.user.is_superuser,
         'guia_titulo': 'Constel | Patrimônio',
-        'menu_titulo': 'Patrimônio',
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Menu principal',
         'buttons': [
-            button_vales,
-            button_cadastros,
-            button_entradas,
-            button_saidas,
-            button_consultas,
-            button_relatorios,
+            button_1,
+            button_2,
+            button_3,
+            button_4,
+            button_5,
+            # button_6,
         ],
         'rollback': button_voltar,
     }
@@ -36,25 +36,89 @@ def view_menu_principal(request):
 @login_required()
 def view_menu_cadastros(request):
 
-    return render(request, 'patrimonio/menu_cadastros.html')
+    button_1 = Button('patrimonio_cadastrar_ferramenta', 'Cadastrar ferramenta')
+    button_2 = Button('patrimonio_cadastrar_patrimonio', 'Cadastrar modelo de patrimônio')
+    button_voltar = Button('patrimonio_menu_principal', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Patrimônio',
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Menu cadastros',
+        'buttons': [
+            button_1,
+            button_2,
+        ],
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
 def view_menu_entradas(request):
 
-    return render(request, 'patrimonio/menu_entradas.html')
+    button_1 = Button('patrimonio_entrada_ferramenta', 'Aquisição de ferramentas')
+    button_2 = Button('patrimonio_entrada_patrimonio', 'Aquisição de patrimônio')
+    button_voltar = Button('patrimonio_menu_principal', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Patrimônio',
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Menu entradas',
+        'buttons': [
+            button_1,
+            button_2,
+        ],
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
 def view_menu_saidas(request):
 
-    return render(request, 'patrimonio/menu_saidas.html')
+    button_1 = Button('patrimonio_saida_patrimonio', 'Saída de patrimônio')
+    button_2 = Button('patrimonio_saida_ferramenta', 'Saída de ferramenta')
+    button_voltar = Button('patrimonio_menu_principal', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Patrimônio',
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Menu saídas',
+        'buttons': [
+            button_1,
+            button_2,
+        ],
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
 def view_menu_consultas(request):
 
-    return render(request, 'patrimonio/menu_consultas.html')
+    button_1 = Button('patrimonio_consulta_ferramentas', 'Modelos de ferramentas cadastradas')
+    button_2 = Button('patrimonio_consulta_patrimonios_modelos', 'Modelos de patrimônios cadastrados')
+    button_3 = Button('patrimonio_consulta_ferramentas_estoque', 'Ferramentas estoque')
+    button_4 = Button('patrimonio_consulta_patrimonios', 'Patrimônios datalhado')
+    button_voltar = Button('patrimonio_menu_principal', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Patrimônio',
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Menu saídas',
+        'buttons': [
+            button_1,
+            button_2,
+            button_3,
+            button_4,
+        ],
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()

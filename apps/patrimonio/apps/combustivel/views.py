@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 from .permissions import *
+from constel.objects import Button
 
 
 @login_required()
@@ -12,13 +13,28 @@ def view_menu_principal(request):
     :return: carregamento da página inicial
     """
 
+    button_1 = Button('gc_menu_cadastros', 'Cadastros')
+    button_2 = Button('gc_menu_taloes', 'Genrenciamento de talões')
+    button_3 = Button('gc_menu_vales', 'Gerenciamento de vales')
+    button_4 = Button('gc_menu_consultas', 'Consultas')
+    button_5 = Button('gc_menu_relatorios', 'Relatórios')
+    button_voltar = Button('patrimonio_menu_principal', 'Voltar')
+
     context = {
-        'gerencia_talao': combustivel_gerencia_talao(request.user),
-        'gerencia_vale': combustivel_gerencia_vale(request.user),
-        'beneficiario': combustivel_beneficiario(request.user),
+        'guia_titulo': 'Constel | Combustível',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Menu principal',
+        'buttons': [
+            button_1,
+            button_2,
+            button_3,
+            button_4,
+            button_5,
+        ],
+        'rollback': button_voltar,
     }
 
-    return render(request, 'combustivel/menu_principal.html', context)
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
@@ -29,13 +45,28 @@ def view_menu_cadastros(request):
     :return: carregamento da página de cadastro
     """
 
+    button_1 = Button('cadastra_usuario_passivo', 'Cadastrar beneficiário')
+    button_2 = Button('cadastra_veiculo', 'Cadastrar veículo de beneficiário')
+    button_3 = Button('gc_cadastro_combustivel', 'Cadastrar combustível')
+    button_4 = Button('gc_cadastro_posto', 'Cadastrar posto')
+    button_5 = Button('gc_cadastro_talao', 'Cadastrar talão')
+    button_voltar = Button('gc_menu_principal', 'Voltar')
+
     context = {
-        'gerencia_talao': combustivel_gerencia_talao(request.user),
-        'gerencia_vale': combustivel_gerencia_vale(request.user),
-        'beneficiario': combustivel_beneficiario(request.user),
+        'guia_titulo': 'Constel | Combustível',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Menu cadastros',
+        'buttons': [
+            button_1,
+            button_2,
+            button_3,
+            button_4,
+            button_5,
+        ],
+        'rollback': button_voltar,
     }
 
-    return render(request, 'combustivel/menu_cadastros.html', context)
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
@@ -46,13 +77,28 @@ def view_menu_consultas(request):
     :return: carregamento da página de consultas
     """
 
+    button_1 = Button('gc_consulta_taloes', 'Talões')
+    button_2 = Button('gc_consulta_vales', 'Vales')
+    button_3 = Button('gc_consulta_meus_vales', 'Meus vales')
+    button_4 = Button('consulta_funcionarios', 'Funcionários')
+    button_5 = Button('consulta_veiculos', 'Veículos')
+    button_voltar = Button('gc_menu_principal', 'Voltar')
+
     context = {
-        'gerencia_talao': combustivel_gerencia_talao(request.user),
-        'gerencia_vale': combustivel_gerencia_vale(request.user),
-        'beneficiario': combustivel_beneficiario(request.user),
+        'guia_titulo': 'Constel | Combustível',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Menu consultas',
+        'buttons': [
+            button_1,
+            button_2,
+            button_3,
+            button_4,
+            button_5,
+        ],
+        'rollback': button_voltar,
     }
 
-    return render(request, 'combustivel/menu_consultas.html', context)
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
@@ -63,13 +109,20 @@ def view_menu_relatorios(request):
     :return: carregamento da página de relatórios
     """
 
+    button_1 = Button('gc_relatorio_mensal', 'Acumulativo do mês')
+    button_voltar = Button('gc_menu_principal', 'Voltar')
+
     context = {
-        'gerencia_talao': combustivel_gerencia_talao(request.user),
-        'gerencia_vale': combustivel_gerencia_vale(request.user),
-        'beneficiario': combustivel_beneficiario(request.user),
+        'guia_titulo': 'Constel | Combustível',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Menu relatórios',
+        'buttons': [
+            button_1,
+        ],
+        'rollback': button_voltar,
     }
 
-    return render(request, 'combustivel/menu_relatorios.html', context)
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
@@ -80,13 +133,20 @@ def view_menu_taloes(request):
     :return: carregamento da página de gerenciamento de talões
     """
 
+    button_1 = Button('gc_entrega_talao', 'Entregar talão')
+    button_voltar = Button('gc_menu_principal', 'Voltar')
+
     context = {
-        'gerencia_talao': combustivel_gerencia_talao(request.user),
-        'gerencia_vale': combustivel_gerencia_vale(request.user),
-        'beneficiario': combustivel_beneficiario(request.user),
+        'guia_titulo': 'Constel | Combustível',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Menu de talões',
+        'buttons': [
+            button_1,
+        ],
+        'rollback': button_voltar,
     }
 
-    return render(request, 'combustivel/menu_taloes.html', context)
+    return render(request, 'constel/menu.html', context)
 
 
 @login_required()
@@ -97,10 +157,17 @@ def view_menu_vales(request):
     :return: carregamento da página de gerenciamento de vales
     """
 
+    button_1 = Button('gc_entrega_vale_1', 'Entregar vale')
+    button_voltar = Button('gc_menu_principal', 'Voltar')
+
     context = {
-        'gerencia_talao': combustivel_gerencia_talao(request.user),
-        'gerencia_vale': combustivel_gerencia_vale(request.user),
-        'beneficiario': combustivel_beneficiario(request.user),
+        'guia_titulo': 'Constel | Combustível',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Menu consultas',
+        'buttons': [
+            button_1,
+        ],
+        'rollback': button_voltar,
     }
 
-    return render(request, 'combustivel/menu_vales.html', context)
+    return render(request, 'constel/menu.html', context)
