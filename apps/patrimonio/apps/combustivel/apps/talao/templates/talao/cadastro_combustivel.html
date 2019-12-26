@@ -1,27 +1,9 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Combustível{% endblock %}
 {% block content %}
-<form method="post" class="form">
-    {% csrf_token %}
-    {% for field in form %}
-    <div>
-        <p>{{ field.label_tag }}</p>
-        <p>{{ field }}</p>
-        {% if field.help_text %}
-            <p><small style="color: grey">{{ field.help_text }}</small></p>
-        {% endif %}
-        {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
-        {% endfor %}
-    </div>
-    {% endfor %}
-    <div class="menu-button"><button type="submit">Cadastrar combustível</button></div>
-</form>
-<div class="menu-button menu-back">
-    <a href="{% url 'gc_menu_cadastros' %}"><button>Voltar</button></a>
-</div>
+{% include 'constel/form.html' %}
 <div class="table-content">
-    <table border="2">
+    <table>
         <thead>
             <tr>
                 <th>Combustíveis cadastrados</th>
@@ -30,7 +12,7 @@
         <tbody>
         {% for combustivel in combustiveis %}
             <tr>
-                <td>{{ combustivel.combustivel }}</td>
+                <td>{{ combustivel.combustivel|title }}</td>
             </tr>
         {% endfor %}
     </table>

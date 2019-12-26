@@ -36,7 +36,14 @@ def view_cadastrar_talao(request):
     else:
         form = FormTalao()
 
-    return render(request, 'talao/cadastro_talao.html', {'form': form})
+    context = {
+        'form': form,
+        'callback': 'gc_menu_cadastros',
+        'button_submit_text': 'Cadastrar talão',
+        'callback_text': 'Voltar',
+    }
+
+    return render(request, 'talao/cadastro_talao.html', context)
 
 
 @login_required()
@@ -61,6 +68,9 @@ def view_cadastrar_combustivel(request):
     context = {
         'combustiveis': Combustivel.objects.all(),
         'form': form,
+        'callback': 'gc_menu_cadastros',
+        'button_submit_text': 'Cadastrar combustível',
+        'callback_text': 'Voltar',
     }
 
     return render(request, 'talao/cadastro_combustivel.html', context)
@@ -88,6 +98,9 @@ def view_cadastrar_posto(request):
     context = {
         'postos': Posto.objects.all(),
         'form': form,
+        'callback': 'gc_menu_cadastros',
+        'button_submit_text': 'Cadastrar posto',
+        'callback_text': 'Voltar',
     }
 
     return render(request, 'talao/cadastro_posto.html', context)
@@ -121,7 +134,14 @@ def view_entrega_talao(request):
     else:
         form = FormEntregaTalao()
 
-    return render(request, 'talao/entrega_talao.html', {'form': form})
+    context = {
+        'form': form,
+        'callback': 'gc_menu_vales',
+        'button_submit_text': 'Entregar talão',
+        'callback_text': 'Cancelar',
+    }
+
+    return render(request, 'talao/entrega_talao.html', context)
 
 
 @login_required()
