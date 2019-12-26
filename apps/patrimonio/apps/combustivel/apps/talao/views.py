@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
-from django.db import IntegrityError
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
@@ -30,19 +29,13 @@ def view_cadastrar_talao(request):
 
         if form.is_valid():
             # Registro do cadastro do novo talão
-            form.save()
-            talao = Talao.objects.get(talao=form.cleaned_data['talao'])
+            talao = Talao.objects.create(talao=form.cleaned_data['talao'])
+            talao.save()
             cadastro_talao = CadastroTalao(talao=talao, user=request.user)
 
-            try:
-                for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_final'] + 1):
-                    vale = Vale(vale=i, status=0, talao=talao)
-                    vale.save()
-
-            except IntegrityError:
-                talao.delete()
-                cadastro_talao.delete()
-                return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/cadastro-talao')
+            for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_final'] + 1):
+                vale = Vale.objects.create(vale=i, talao=talao)
+                vale.save()
 
             cadastro_talao.save()
             return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros')
@@ -73,7 +66,7 @@ def view_cadastrar_combustivel(request):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros')
+            return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
     else:
         form = FormCadastraCombustivel()
 
@@ -105,7 +98,7 @@ def view_cadastrar_posto(request):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros')
+            return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
     else:
         form = FormCadastraPosto()
 
@@ -147,7 +140,7 @@ def view_entrega_talao(request):
             )
             entrega_talao.save()
             talao.save()
-            return HttpResponseRedirect('/patrimonio/combustivel/menu-taloes')
+            return HttpResponseRedirect('/patrimonio/combustivel/menu-taloes/')
     else:
         form = FormEntregaTalao()
 
@@ -199,6 +192,7 @@ def view_entrega_vale_1(request):
 def view_entrega_vale_2(request):
 
     if request.session.get('user_to') is None:
+
         return HttpResponseRedirect('/patrimonio/combustivel/menu-vales/entrega-vale-1/')
 
     vale = Vale.objects.get(id=request.session['vale'])

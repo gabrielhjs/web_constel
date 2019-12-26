@@ -94,7 +94,7 @@ def view_cadastrar_usuario_passivo(request):
             veiculo = Veiculo(user=user, modelo=modelo, placa=placa, cor=cor)
             veiculo.save()
 
-            return HttpResponseRedirect('/gc/menu-cadastros/')
+            return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
     else:
         form = FormCadastraUsuarioPassivo()
 
@@ -115,7 +115,7 @@ def view_cadastrar_veiculo(request):
         if form.is_valid():
             form.save()
 
-            return HttpResponseRedirect('/gc/menu-cadastros/')
+            return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
     else:
         form = FormCadastrarVeiculo()
 

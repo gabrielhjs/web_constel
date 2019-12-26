@@ -68,7 +68,9 @@ class Combustivel(models.Model):
     """
 
     HELP_TEXT = 'Insira um combustível'
-    combustivel = models.CharField(unique=True, max_length=30, help_text=HELP_TEXT)
+    combustivel = models.CharField(unique=True, max_length=30, help_text=HELP_TEXT, error_messages={
+        'unique': 'Este combustível já está cadastrado no sistema!',
+    })
 
     def __str__(self):
         return '%s' % self.combustivel

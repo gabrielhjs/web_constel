@@ -23,6 +23,19 @@ class FormTalao(forms.ModelForm):
         model = Talao
         fields = ['talao', ]
 
+    def clean(self):
+        form_data = self.cleaned_data
+        if Talao.objects.filter(talao=form_data['talao']).exists():
+            self.errors['talao'] = ['Este talão já está cadastrado']
+
+        for vale in range(form_data['vale_inicial'], form_data['vale_inicial'] + 1):
+            if Vale.objects.filter(vale=vale).exists():
+                self.errors['vale_final'] = ['O vale %d já está cadastrado no sistema!' % vale]
+
+                return form_data
+
+        return form_data
+
 
 class FormEntregaTalao(forms.ModelForm):
     """
