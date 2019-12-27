@@ -16,7 +16,7 @@
         {% for vale in vales %}
             <tr>
                 <td>{{ vale.username }}</td>
-                <td>{{ vale.first_name }} {{ vale.last_name }}</td>
+                <td>{{ vale.first_name|title }} {{ vale.last_name|title }}</td>
                 <td>{{ vale.total }}</td>
             </tr>
         {% endfor %}
