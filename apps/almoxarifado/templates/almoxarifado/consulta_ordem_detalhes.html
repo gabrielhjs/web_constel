@@ -1,0 +1,57 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | ALmoxarifado{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+<div class="table-content">
+    <table>
+        <tbody>
+            <tr>
+                <td>ID</td>
+                <td>{{ ordem.id }}</td>
+            </tr>
+            <tr>
+                <td>Data</td>
+                <td>{{ ordem.data }}</td>
+            </tr>
+            <tr>
+                <td>Tipo</td>
+                <td>{{ ordem.get_tipo_display }}</td>
+            </tr>
+            <tr>
+                <td>Responsável</td>
+                <td>{{ ordem.user.first_name }} {{ ordem.user.last_name }}</td>
+            </tr>
+            {% if tipo %}
+            <tr>
+                <td>Para</td>
+                <td>{{ ordem.almoxarifado_ordem_saida.first.user_to.first_name }} {{ ordem.almoxarifado_ordem_saida.first.user_to.last_name }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+<div class="menu-text"><h1>Lista de materiais</h1></div>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Material</th>
+                <th>Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in itens %}
+            <tr>
+                <td>{{ item.material.codigo }}</td>
+                <td>{{ item.material.material }}</td>
+                <td>{{ item.quantidade }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_consulta_ordens' tipo=tipo %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

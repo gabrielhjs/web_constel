@@ -10,6 +10,9 @@
                 <th>ID</th>
                 <th>Data</th>
                 <th>Responsável</th>
+                {% if tipo %}
+                <th>Para</th>
+                {% endif %}
                 <th>Detalhes</th>
             </tr>
         </thead>
@@ -19,7 +22,12 @@
                 <td>{{ item.id }}</td>
                 <td>{{ item.data }}</td>
                 <td>{{ item.user }}</td>
-                <td>Itens</td>
+                {% if tipo %}
+                <td>{{ item.user_to }}</td>
+                {% endif %}
+                <td>
+                    <a href="{% url 'almoxarifado_consulta_ordem_detalhes' tipo item.id %}"><button>Itens</button></a>
+                </td>
             </tr>
         {% endfor %}
     </table>

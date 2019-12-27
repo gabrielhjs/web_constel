@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.db.models import Sum
-from django.shortcuts import get_object_or_404
+
+from datetime import date
 
 from .forms import *
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
@@ -319,12 +320,23 @@ def view_meus_vales(request):
 
 def view_relatorio_mensal(request):
     """
-
     :param request:
     :return:
     """
+    hoje = date.today()
 
-    vales = Vale.objects.values('vale_entrega__user_to__username').annotate(total=Sum('vale_entrega__valor'))
+    vales = User.objects.filter(
+        vale_user_to__data__month=hoje.month,
+        vale_user_to__data__year=hoje.year,
+    ).annotate(
+        total=Sum('vale_user_to__valor')
+    ).order_by(
+        '-total'
+    )
+
+    for vale in vales:
+        vale.total = 'R$ {:8.2f}'.format(vale.total)
+
     context = {
         'vales': vales,
         'pagina_titulo': 'Combustível',

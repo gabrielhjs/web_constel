@@ -310,6 +310,33 @@ def view_consulta_ordem(request, tipo):
         'itens': itens,
         'pagina_titulo': 'Almoxarifado',
         'menu_titulo': 'Ordens',
+        'tipo': tipo,
     }
 
     return render(request, 'almoxarifado/consulta_ordem.html', context)
+
+
+def view_consulta_ordem_detalhes(request, **kwargs):
+
+    if Ordem.objects.filter(id=kwargs.get('ordem')).exists():
+        ordem = Ordem.objects.get(id=kwargs.get('ordem'))
+
+        if kwargs.get('tipo'):
+            itens = MaterialSaida.objects.filter(ordem=ordem).order_by('material__material', 'material__codigo')
+
+        else:
+            itens = MaterialEntrada.objects.filter(ordem=ordem).order_by('material__material', 'material__codigo')
+
+        context = {
+            'ordem': ordem,
+            'itens': itens,
+            'pagina_titulo': 'Almoxarifado',
+            'menu_titulo': 'Ordem',
+            'tipo': kwargs.get('tipo'),
+        }
+
+        return render(request, 'almoxarifado/consulta_ordem_detalhes.html', context)
+
+    else:
+
+        return HttpResponseRedirect('/almoxarifado/menu-consultas/')

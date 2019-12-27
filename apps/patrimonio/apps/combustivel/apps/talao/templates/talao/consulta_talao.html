@@ -28,7 +28,9 @@
                 <td>{{ talao.talao_entrega.first.user }}</td>
                 <td>{{ talao.talao_entrega.first.user_to }}</td>
                 <td>
-                    <a href="{% url 'gc_consulta_talao' talao.talao %}">Vales</a>
+                    <a href="{% url 'gc_consulta_talao' talao.talao %}">
+                        <button>Vales</button>
+                    </a>
                 </td>
             </tr>
         {% endfor %}

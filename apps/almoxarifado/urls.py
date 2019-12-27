@@ -72,6 +72,11 @@ urlpatterns = [
         name='almoxarifado_consulta_ordens',
     ),
     path(
+        'almoxarifado/menu-consultas/ordens/<int:tipo>/<int:ordem>/',
+        views.view_consulta_ordem_detalhes,
+        name='almoxarifado_consulta_ordem_detalhes',
+    ),
+    path(
         'almoxarifado/menu-relatorios/',
         views.view_menu_relatorios,
         name='almoxarifado_menu_relatorios',
