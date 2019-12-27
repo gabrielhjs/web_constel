@@ -1,8 +1,8 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel Login{% endblock %}
 {% block content %}
-<form method="post" class="form">
 <div class="page-title"><h1>Constel</h1></div>
+<form method="post" class="form">
 {% csrf_token %}
 {% for message in messages %}
     <div class="alert alert-success">
@@ -22,9 +22,9 @@
         {% endfor %}
     </div>
 {% endfor %}
-    <div class="menu-button menu-back"><button type="submit">Logar</button></div>
+    <div class="menu-button button-green"><button type="submit">Logar</button></div>
 </form>
-<div class="menu-button">
+<div class="menu-button button-blue">
     <a href="{% url 'cadastra_usuario' %}"><button>Cadastrar-se</button></a>
 </div>
 {% endblock %}

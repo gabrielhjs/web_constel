@@ -25,23 +25,8 @@
         {% endfor %}
     </table>
 </div>
-<form method="post" class="form">
-    {% csrf_token %}
-    {% for field in form_insere %}
-    <div>
-        <p>{{ field.label_tag }}</p>
-        {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
-        {% endfor %}
-        <p>{{ field }}</p>
-        {% if field.help_text %}
-            <p><small style="color: grey">{{ field.help_text }}</small></p>
-        {% endif %}
-    </div>
-    {% endfor %}
-    <div class="menu-button button-blue"><button style="" type="submit">Adicionar material</button></div>
-</form>
-<div class="menu-button button-green">
+{% include 'constel/form.html' %}
+<div class="menu-button button-blue">
     <a href="{% url 'almoxarifado_saida_lista_itens_entrega' user_to %}"><button>Entregar materiais</button></a>
 </div>
 <div class="menu-button button-red">

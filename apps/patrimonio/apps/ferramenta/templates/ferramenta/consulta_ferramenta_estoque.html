@@ -1,14 +1,15 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Patrimônio{% endblock %}
 {% block content %}
-<h1>Ferramentas</h1>
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
 <div class="table-content">
-    <table border="2">
+    <table>
         <thead>
             <tr>
                 <th>Ferramenta</th>
                 <th>Descrição</th>
-                <th>Qtd em estoque</th>
+                <th>Quantidade</th>
             </tr>
         </thead>
         <tbody>
@@ -21,7 +22,7 @@
         {% endfor %}
     </table>
 </div>
-<div style="margin-top: 30px;">
+<div class="menu-button menu-back">
     <a href="{% url 'patrimonio_menu_consultas' %}"><button>Voltar</button></a>
 </div>
 {% endblock %}

@@ -1,26 +1,12 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Patrimônio{% endblock %}
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {% for field in form %}
-    <div>
-        <p>{{ field.label_tag }}</p>
-        {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
-        {% endfor %}
-        <p>{{ field }}</p>
-        {% if field.help_text %}
-            <p><small style="color: grey">{{ field.help_text }}</small></p>
-        {% endif %}
-    </div>
-    {% endfor %}
-    <button type="submit">Cadastrar modelo de patrimônio</button>
-</form>
-<a href="{% url 'patrimonio_menu_cadastros' %}"><button style="margin-top: 30px;">Voltar</button></a>
-<h1 style="margin-top: 30px;">Lista de patrimônio existente</h1>
-<div class="table-content" style="margin-top: 30px;">
-    <table border="2">
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+{% include 'constel/form.html' %}
+<div class="menu-text"><h1>Lista de patrimônio existente</h1></div>
+<div class="table-content">
+    <table>
         <thead>
             <tr>
                 <th>Nome</th>

@@ -3,28 +3,13 @@
 {% block content %}
 <div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
 <div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
-<form method="post" class="form">
-    {% csrf_token %}
-    {% for field in form %}
-    <div>
-        <p>{{ field.label_tag }}</p>
-        {% for error in field.errors %}
-            <p>{{ error }}</p>
-        {% endfor %}
-        <p>{{ field }}</p>
-        {% if field.help_text %}
-            <p><small>{{ field.help_text }}</small></p>
-        {% endif %}
-    </div>
-    {% endfor %}
-    <div class="menu-button button-green"><button type="submit">Avançar</button></div>
-</form>
-<div class="menu-button menu-back">
+{% include 'constel/form.html' %}
+<div class="menu-button button-blue">
     <a href="{% url 'almoxarifado_cadastrar_usuario_passivo_lista' callback='lista' %}">
         <button>Cadastrar técnico</button>
     </a>
 </div>
-<div class="menu-button menu-back">
-    <a href="{% url 'almoxarifado_menu_saidas' %}"><button>Voltar</button></a>
+<div class="menu-button menu-back button-red">
+    <a href="{% url 'almoxarifado_menu_saidas' %}"><button>Cancelar</button></a>
 </div>
 {% endblock %}

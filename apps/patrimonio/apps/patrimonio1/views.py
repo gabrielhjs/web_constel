@@ -24,8 +24,13 @@ def view_cadastrar_patrimonio(request):
         form = FormCadastraPatrimonio()
 
     context = {
-        'patrimonios': Patrimonio.objects.all(),
+        'patrimonios': Patrimonio.objects.all().order_by('nome', 'data'),
         'form': form,
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Cadastro de patrimônio',
+        'callback': 'patrimonio_menu_cadastros',
+        'button_submit_text': 'Cadastrar patrimônio',
+        'callback_text': 'Cancelar',
     }
 
     return render(request, 'patrimonio1/cadastrar_patrimonio.html', context)
@@ -51,7 +56,16 @@ def view_entrada_patrimonio(request):
     else:
         form = FormEntradaPatrimonio()
 
-    return render(request, 'patrimonio/entrada.html', {'form': form})
+    context = {
+        'form': form,
+        'callback': 'patrimonio_menu_entradas',
+        'button_submit_text': 'Registrar entrada',
+        'callback_text': 'Cancelar',
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Aquisição de patrimônio',
+    }
+
+    return render(request, 'patrimonio/entrada.html', context)
 
 
 @login_required()
@@ -77,13 +91,24 @@ def view_saida_patrimonio(request):
     else:
         form = FormSaidaPatrimonio()
 
-    return render(request, 'patrimonio/saida.html', {'form': form})
+    context = {
+        'form': form,
+        'callback': 'patrimonio_menu_saidas',
+        'button_submit_text': 'Registrar entrega',
+        'callback_text': 'Cancelar',
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Entrega de patrimônio',
+    }
+
+    return render(request, 'patrimonio/entrada.html', context)
 
 
 def view_consulta_patrimonios_modelos(request):
 
     context = {
-        'patrimonios': Patrimonio.objects.all()
+        'patrimonios': Patrimonio.objects.all().order_by('nome'),
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Patrimônios cadastrados',
     }
 
     return render(request, 'patrimonio1/consulta_patrimonios_modelos.html', context=context)
@@ -92,7 +117,9 @@ def view_consulta_patrimonios_modelos(request):
 def view_consulta_patrimonios(request):
 
     context = {
-        'patrimonios': PatrimonioEntrada.objects.all()
+        'patrimonios': PatrimonioEntrada.objects.all().order_by('patrimonio__nome'),
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Patrimônio',
     }
 
     return render(request, 'patrimonio1/consulta_patrimonios.html', context=context)

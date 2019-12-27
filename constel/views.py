@@ -24,8 +24,8 @@ def index(request):
     :return: Renderiza página inicial
     """
 
-    button_1 = Button('patrimonio_menu_principal', 'Patrimônio')
-    button_2 = Button('almoxarifado_menu_principal', 'Almoxarifado')
+    button_1 = Button('almoxarifado_menu_principal', 'Almoxarifado')
+    button_2 = Button('patrimonio_menu_principal', 'Patrimônio')
     button_3 = Button('view_admin', 'Administração do sistema')
     button_logout = Button('logout', 'Logout')
 
@@ -69,7 +69,16 @@ def view_cadastrar_usuario(request):
     else:
         form = FormCadastraUsuario()
 
-    return render(request, 'constel/cadastra_usuario.html', {'form': form})
+    context = {
+        'form': form,
+        'callback': 'login',
+        'button_submit_text': 'Cadastrar-se',
+        'callback_text': 'Cancelar',
+        'pagina_titulo': 'Constel',
+        'menu_titulo': 'Cadastro de funcionário',
+    }
+
+    return render(request, 'constel/cadastra_usuario.html', context)
 
 
 @login_required()
@@ -98,7 +107,16 @@ def view_cadastrar_usuario_passivo(request):
     else:
         form = FormCadastraUsuarioPassivo()
 
-    return render(request, 'constel/cadastra_usuario_passivo.html', {'form': form})
+    context = {
+        'form': form,
+        'callback': 'gc_menu_cadastros',
+        'button_submit_text': 'Cadastrar beneficiário',
+        'callback_text': 'Cancelar',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Cadastro de beneficiário',
+    }
+
+    return render(request, 'constel/cadastra_usuario_passivo.html', context)
 
 
 @login_required()
@@ -119,7 +137,16 @@ def view_cadastrar_veiculo(request):
     else:
         form = FormCadastrarVeiculo()
 
-    return render(request, 'constel/cadastra_veiculo.html', {'form': form})
+    context = {
+        'form': form,
+        'callback': 'gc_menu_cadastros',
+        'button_submit_text': 'Cadastrar veículo',
+        'callback_text': 'Cancelar',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Cadastro de veículo',
+    }
+
+    return render(request, 'constel/cadastra_veiculo.html', context)
 
 
 def view_login(request):
@@ -156,9 +183,11 @@ def view_login(request):
 @login_required()
 def view_consulta_funcionarios(request):
 
-    users = User.objects.all().order_by('first_name')
+    users = User.objects.all().order_by('first_name', 'last_name')
     context = {
         'users': users,
+        'pagina_titulo': 'Constel',
+        'menu_titulo': 'Funcionários',
     }
 
     return render(request, 'constel/consulta_funcionarios.html', context)
@@ -170,6 +199,8 @@ def view_consulta_veiculos(request):
     veiculos = Veiculo.objects.filter(user__is_active=True).order_by('user__first_name', 'user__last_name')
     context = {
         'veiculos': veiculos,
+        'pagina_titulo': 'Constel',
+        'menu_titulo': 'Veículos',
     }
 
     return render(request, 'constel/consulta_veiculos.html', context)

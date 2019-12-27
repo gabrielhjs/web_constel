@@ -1,26 +1,10 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Combustível{% endblock %}
 {% block content %}
-<h1>Passo 2:</h1>
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+<div class="menu-text"><h1>Passo 2:</h1></div>
 <p style="font-size: 25px;">Vale: {{ vale }}</p>
 <p style="font-size: 25px;">Para: {{ user_to.first_name }} {{ user_to.last_name }}</p>
-<form method="post" class="form">
-    {% csrf_token %}
-    {% for field in form %}
-    <div>
-        <p>{{ field.label_tag }}</p>
-        {% for error in field.errors %}
-            <p>{{ error }}</p>
-        {% endfor %}
-        <p>{{ field }}</p>
-        {% if field.help_text %}
-            <p><small>{{ field.help_text }}</small></p>
-        {% endif %}
-    </div>
-    {% endfor %}
-    <div class="menu-button"><button type="submit">Entregar vale</button></div>
-</form>
-<div class="menu-button menu-back">
-    <a href="{% url 'gc_menu_vales' %}"><button>Cancelar</button></a>
-</div>
+{% include 'constel/form.html' %}
 {% endblock %}

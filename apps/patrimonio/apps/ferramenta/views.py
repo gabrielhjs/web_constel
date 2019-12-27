@@ -29,8 +29,13 @@ def view_cadastrar_ferramenta(request):
         form = FormCadastraFerramenta()
 
     context = {
-        'ferramentas': Ferramenta.objects.all(),
+        'ferramentas': Ferramenta.objects.all().order_by('nome'),
         'form': form,
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Cadastro de ferramenta',
+        'callback': 'patrimonio_menu_cadastros',
+        'button_submit_text': 'Cadastrar ferramenta',
+        'callback_text': 'Cancelar',
     }
 
     return render(request, 'ferramenta/cadastrar_ferramenta.html', context)
@@ -59,7 +64,16 @@ def view_entrada_ferramenta(request):
     else:
         form = FormEntradaFerramenta()
 
-    return render(request, 'patrimonio/entrada.html', {'form': form})
+    context = {
+        'form': form,
+        'callback': 'patrimonio_menu_entradas',
+        'button_submit_text': 'Registrar entrada',
+        'callback_text': 'Cancelar',
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Aquisição de ferramenta',
+    }
+
+    return render(request, 'patrimonio/entrada.html', context)
 
 
 @login_required()
@@ -87,14 +101,25 @@ def view_saida_ferramenta(request):
     else:
         form = FormSaidaFerramenta()
 
-    return render(request, 'patrimonio/saida.html', {'form': form})
+    context = {
+        'form': form,
+        'callback': 'patrimonio_menu_saidas',
+        'button_submit_text': 'Registrar entrega',
+        'callback_text': 'Cancelar',
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Entrega de ferramenta',
+    }
+
+    return render(request, 'patrimonio/entrada.html', context)
 
 
 @login_required()
 def view_consulta_ferramentas(request):
 
     context = {
-        'ferramentas': Ferramenta.objects.all()
+        'ferramentas': Ferramenta.objects.all().order_by('nome'),
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Ferramentas cadastradas',
     }
 
     return render(request, 'ferramenta/consulta_ferramenta.html', context=context)
@@ -104,7 +129,9 @@ def view_consulta_ferramentas(request):
 def view_consulta_ferramentas_estoque(request):
 
     context = {
-        'ferramentas': FerramentaQuantidade.objects.all()
+        'ferramentas': FerramentaQuantidade.objects.all().order_by('ferramenta__nome'),
+        'pagina_titulo': 'Patrimônio',
+        'menu_titulo': 'Estoque de ferramentas',
     }
 
     return render(request, 'ferramenta/consulta_ferramenta_estoque.html', context=context)

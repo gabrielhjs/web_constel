@@ -1,19 +1,14 @@
 {% extends 'constel/base.html' %}
 {% block title %}Constel | Combustível | {{ talao.talao }}{% endblock %}
 {% block content %}
-<h1>Vales</h1>
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
 <div class="table-content">
-    <table border="2">
+    <table>
         <thead>
             <tr>
-                <th>Vale</th>
-                <th>Status</th>
-                <th>Data de entrega</th>
-                <th>Matrícula</th>
-                <th>Nome</th>
-                <th>Combustível</th>
-                <th>Valor</th>
-                <th>Observação</th>
+                <th>Funcionário</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
@@ -26,7 +21,7 @@
         </tbody>
     </table>
 </div>
-<div>
+<div class="menu-button menu-back">
     <a href="{% url 'gc_menu_relatorios' %}"><button>Voltar</button></a>
 </div>
 {% endblock %}

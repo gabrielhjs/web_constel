@@ -157,12 +157,20 @@ def view_cadastrar_usuario_passivo(request, callback=None):
         context = {
             'form': form,
             'callback': 'almoxarifado_saida_lista',
+            'button_submit_text': 'Cadastrar beneficiário',
+            'callback_text': 'Cancelar',
+            'pagina_titulo': 'Almoxarifado',
+            'menu_titulo': 'Cadastro de técnico',
         }
 
     else:
         context = {
             'form': form,
             'callback': 'almoxarifado_menu_cadastros',
+            'button_submit_text': 'Cadastrar beneficiário',
+            'callback_text': 'Cancelar',
+            'pagina_titulo': 'Almoxarifado',
+            'menu_titulo': 'Cadastro de técnico',
         }
 
     return render(request, 'almoxarifado/cadastra_usuario_passivo.html', context)
@@ -184,6 +192,11 @@ def view_cadastrar_fornecedor(request):
     context = {
         'fornecedores': Fornecedor.objects.all().order_by('nome', 'cnpj'),
         'form': form,
+        'button_submit_text': 'Cadastrar fornecedor',
+        'callback': 'almoxarifado_menu_cadastros',
+        'callback_text': 'Cancelar',
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Cadastro de fornecedor',
     }
 
     return render(request, 'almoxarifado/cadastrar_fornecedor.html', context)
@@ -215,6 +228,11 @@ def view_cadastrar_material(request):
     context = {
         'materiais': Material.objects.all(),
         'form': form,
+        'callback': 'almoxarifado_menu_cadastros',
+        'button_submit_text': 'Cadastrar material',
+        'callback_text': 'Cancelar',
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Cadastro de material',
     }
 
     return render(request, 'almoxarifado/cadastrar_material.html', context)
@@ -248,7 +266,16 @@ def view_entrada_material(request):
     else:
         form = FormEntradaMaterial()
 
-    return render(request, 'almoxarifado/entrada.html', {'form': form})
+    context = {
+        'form': form,
+        'callback': 'almoxarifado_menu_entradas',
+        'button_submit_text': 'Registrar entrada',
+        'callback_text': 'Cancelar',
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Entrada de material',
+    }
+
+    return render(request, 'almoxarifado/entrada.html', context)
 
 
 class ViewConsultaMateriais(ListView):
@@ -258,6 +285,8 @@ class ViewConsultaMateriais(ListView):
     def get_context_data(self, **kwargs):
         context = {
             'materiais': self.object_list.all(),
+            'pagina_titulo': 'Almoxarifado',
+            'menu_titulo': 'Materiais cadastrados',
         }
         return context
 
@@ -265,7 +294,11 @@ class ViewConsultaMateriais(ListView):
 def view_consulta_estoque(request):
 
     itens = MaterialQuantidade.objects.filter(quantidade__gt=0).order_by('material')
-    context = {'itens': itens}
+    context = {
+        'itens': itens,
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Estoque',
+    }
 
     return render(request, 'almoxarifado/consulta_estoque.html', context)
 
@@ -273,6 +306,10 @@ def view_consulta_estoque(request):
 def view_consulta_ordem(request, tipo):
 
     itens = Ordem.objects.filter(tipo=tipo).order_by('data')
-    context = {'itens': itens}
+    context = {
+        'itens': itens,
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Ordens',
+    }
 
     return render(request, 'almoxarifado/consulta_ordem.html', context)

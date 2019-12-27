@@ -14,6 +14,8 @@
     {% endfor %}
     <div class="menu-button button-green"><button type="submit">{{ button_submit_text }}</button></div>
 </form>
+{% if callback %}
 <div class="menu-button button-red">
     <a href="{% url callback %}"><button>{{ callback_text }}</button></a>
 </div>
+{% endif %}

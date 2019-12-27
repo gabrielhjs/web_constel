@@ -71,6 +71,8 @@ def view_cadastrar_combustivel(request):
         'callback': 'gc_menu_cadastros',
         'button_submit_text': 'Cadastrar combustível',
         'callback_text': 'Voltar',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Cadastro de combutível',
     }
 
     return render(request, 'talao/cadastro_combustivel.html', context)
@@ -101,6 +103,8 @@ def view_cadastrar_posto(request):
         'callback': 'gc_menu_cadastros',
         'button_submit_text': 'Cadastrar posto',
         'callback_text': 'Voltar',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Cadastro de posto',
     }
 
     return render(request, 'talao/cadastro_posto.html', context)
@@ -136,9 +140,11 @@ def view_entrega_talao(request):
 
     context = {
         'form': form,
-        'callback': 'gc_menu_vales',
+        'callback': 'gc_menu_taloes',
         'button_submit_text': 'Entregar talão',
         'callback_text': 'Cancelar',
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Entrega de talão',
     }
 
     return render(request, 'talao/entrega_talao.html', context)
@@ -170,7 +176,16 @@ def view_entrega_vale_1(request):
     else:
         form = FormEntregaVale1(user=request.user)
 
-    return render(request, 'talao/entrega_vale1.html', {'form': form})
+    context = {
+        'form': form,
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Entrega de vale',
+        'callback': 'gc_menu_vales',
+        'button_submit_text': 'Avançar',
+        'callback_text': 'Cancelar',
+    }
+
+    return render(request, 'talao/entrega_vale1.html', context)
 
 
 @login_required()
@@ -212,6 +227,11 @@ def view_entrega_vale_2(request):
         'user_to': user_to,
         'vale': vale,
         'form': form,
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Entrega de vale',
+        'callback': 'gc_menu_vales',
+        'button_submit_text': 'Entregar vale',
+        'callback_text': 'Cancelar',
     }
 
     return render(request, 'talao/entrega_vale2.html', context)
@@ -227,7 +247,9 @@ def view_taloes(request):
 
     taloes = Talao.objects.all().order_by('talao')
     context = {
-        'taloes': taloes
+        'taloes': taloes,
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Talões',
     }
 
     return render(request, 'talao/consulta_talao.html', context)
@@ -242,11 +264,21 @@ def view_talao(request, **kwargs):
     :return: informações do talão requerido
     """
 
-    talao = get_object_or_404(Talao, talao=kwargs.get('talao_id'))
-    context = {
-        'talao': talao,
-    }
-    return render(request, 'talao/detalhes_talao.html', context)
+    if Talao.objects.filter(talao=kwargs.get('talao_id')).exists():
+        talao = Talao.objects.get(talao=kwargs.get('talao_id'))
+        vales = Vale.objects.filter(talao=talao).order_by('vale')
+
+        context = {
+            'talao': talao,
+            'vales': vales,
+            'pagina_titulo': 'Combustível',
+            'menu_titulo': 'Talão',
+        }
+        return render(request, 'talao/detalhes_talao.html', context)
+
+    else:
+
+        return HttpResponseRedirect('/patrimonio/combustivel/menu-consultas/')
 
 
 @login_required()
@@ -257,9 +289,11 @@ def view_vales(request):
     :return:
     """
 
-    vales = Vale.objects.all().order_by('vale')
+    vales = Vale.objects.all().order_by('vale', 'talao')
     context = {
         'vales': vales,
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Vales',
     }
 
     return render(request, 'talao/consulta_vales.html', context)
@@ -276,8 +310,9 @@ def view_meus_vales(request):
     vales = Vale.objects.filter(vale_entrega__user_to=request.user).order_by('vale')
     context = {
         'vales': vales,
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Meus vales recebidos',
     }
-    print(vales)
 
     return render(request, 'talao/consulta_meus_vales.html', context)
 
@@ -292,6 +327,8 @@ def view_relatorio_mensal(request):
     vales = Vale.objects.values('vale_entrega__user_to__username').annotate(total=Sum('vale_entrega__valor'))
     context = {
         'vales': vales,
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Resumo mensal',
     }
 
     return render(request, 'talao/relatorio_mensal.html', context)
