@@ -22,8 +22,8 @@ class FormListaCria(forms.Form):
 
 class FormItemInsere(forms.Form):
 
+    quantidade = forms.IntegerField()
     material = forms.IntegerField(label='Código', help_text='Código do material a ser inserido na lista')
-    quantidade = forms.IntegerField(initial=1)
 
     def __init__(self, user_to, *args, **kwargs):
         super(FormItemInsere, self).__init__(*args, **kwargs)
@@ -33,7 +33,7 @@ class FormItemInsere(forms.Form):
             quantidade__quantidade__gt=0
         ).order_by('material')
 
-        self.fields['material'].widget.attrs.update(
+        self.fields['quantidade'].widget.attrs.update(
             {'autofocus': 'autofocus', 'required': 'required'}
         )
 
