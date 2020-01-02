@@ -29,4 +29,9 @@ urlpatterns = [
         views.view_item_limpa,
         name='almoxarifado_saida_lista_itens_limpa',
     ),
+    path(
+        'almoxarifado/menu-saidas/lista/itens/concluido/<int:ordem_id>/',
+        views.view_item_conclui,
+        name='almoxarifado_saida_lista_itens_conclui',
+    ),
 ]

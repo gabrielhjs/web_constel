@@ -1,0 +1,14 @@
+{% extends 'constel/base.html' %}
+{% block title %}{{ guia_titulo }}{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+<div class="menu-button button-green">
+    <a href="{% url button.url ordem_id %}" target="_blank">
+        <button>{{ button.label }}</button>
+    </a>
+</div>
+<div class="menu-button menu-back button-red">
+    <a href="{% url rollback.url %}"><button>{{ rollback.label }}</button></a>
+</div>
+{% endblock %}

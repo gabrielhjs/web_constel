@@ -17,6 +17,32 @@ def view_admin(request):
 
 
 @login_required()
+def view_menu_gerenciamento_sistema(request):
+    button_1 = Button('constel_view_admin', 'Administração Django')
+    button_2 = Button('constel_controle_acessos', 'Controle de acessos')
+    rollback = Button('index', 'Voltar')
+
+    context = {
+        'admin': request.user.is_superuser,
+        'guia_titulo': 'Constel',
+        'pagina_titulo': 'Constel',
+        'buttons': [
+            button_1,
+            button_2,
+        ],
+        'rollback': rollback,
+    }
+
+    return render(request, 'constel/menu.html', context)
+
+
+@login_required()
+def view_controle_acessos(request):
+
+    pass
+
+
+@login_required()
 def index(request):
     """
     View da página inicial do sistema
@@ -26,7 +52,7 @@ def index(request):
 
     button_1 = Button('almoxarifado_menu_principal', 'Almoxarifado')
     button_2 = Button('patrimonio_menu_principal', 'Patrimônio')
-    button_3 = Button('view_admin', 'Administração do sistema')
+    button_3 = Button('constel_menu_admin', 'Administração do sistema')
     button_logout = Button('logout', 'Logout')
 
     context = {

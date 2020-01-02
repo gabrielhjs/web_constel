@@ -7,6 +7,7 @@ from .models import *
 from .forms import *
 from apps.almoxarifado.models import MaterialSaida, Ordem
 from apps.almoxarifado.apps.pdf.objects import FichaMateriais
+from constel.objects import Button
 
 
 @login_required()
@@ -119,7 +120,7 @@ def view_item_entrega(request, user_to):
 
         itens[0].lista.delete()
 
-        return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/itens/imprimir/' + str(ordem.id) + '/')
+        return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/itens/concluido/' + str(ordem.id) + '/')
 
 
 def view_item_imprime(request, ordem_id):
@@ -149,3 +150,20 @@ def view_item_limpa(request, user_to):
             item.delete()
 
         return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/itens/' + user_to + '/')
+
+
+@login_required()
+def view_item_conclui(request, ordem_id):
+    button_1 = Button('almoxarifado_saida_lista_itens_imprimi', 'Imprimir ficha')
+    button_voltar = Button('almoxarifado_saida_lista', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Almoxarifado',
+        'pagina_titulo': 'Almoxarifado',
+        'menu_titulo': 'Entrega concluída!',
+        'ordem_id': ordem_id,
+        'button': button_1,
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'lista_saida/menu.html', context)

@@ -21,18 +21,20 @@ class FichaMateriais(FPDF):
             
     def cabecalho(self):
 
-        self.cell(self.epw, self.th * 2, 'FICHA DE ENTRADA DE MATERIAIS NO ALMOXARIFADO', align='C', border=1)
-        self.ln(self.th * 2)
-        self.set_font_size(8)
-        
         if self.ordem.tipo == 0:
+            cabecalho_texto = 'FICHA DE ENTRADA DE MATERIAIS NO ALMOXARIFADO'
             cabecalho_fornecedor_tecnico = 'Fornecedor:'
             fornecedor_tecnico = str(self.ordem.almoxarifado_ordem_entrada.first().fornecedor.nome)
 
         else:
+            cabecalho_texto = 'FICHA DE SAÍDA DE MATERIAIS DO ALMOXARIFADO'
             cabecalho_fornecedor_tecnico = 'Técnico:'
             fornecedor_tecnico = self.ordem.almoxarifado_ordem_saida.first().user_to.first_name + ' ' + \
                 self.ordem.almoxarifado_ordem_saida.first().user_to.last_name
+
+        self.cell(self.epw, self.th * 2, cabecalho_texto, align='C', border=1)
+        self.ln(self.th * 2)
+        self.set_font_size(8)
         
         data = str(self.ordem.data.day) + '/' + str(self.ordem.data.month) + '/' + str(self.ordem.data.year)
         hora = str(self.ordem.data.hour) + ':' + str(self.ordem.data.minute) + ':' + str(self.ordem.data.second)
