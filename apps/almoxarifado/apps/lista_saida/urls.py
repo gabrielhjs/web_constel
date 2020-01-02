@@ -20,6 +20,11 @@ urlpatterns = [
         name='almoxarifado_saida_lista_itens_entrega',
     ),
     path(
+        'almoxarifado/menu-saidas/lista/itens/imprimir/<int:ordem_id>/',
+        views.view_item_imprime,
+        name='almoxarifado_saida_lista_itens_imprimi',
+    ),
+    path(
         'almoxarifado/menu-saidas/lista/itens/limpa/<str:user_to>/',
         views.view_item_limpa,
         name='almoxarifado_saida_lista_itens_limpa',

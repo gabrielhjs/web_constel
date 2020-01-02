@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
+from django.http import FileResponse
 
 from .forms import *
 from .models import Material
 from constel.objects import Button
 from constel.models import UserType
+from apps.almoxarifado.apps.pdf.objects import FichaMateriais
 
 
 @login_required()
@@ -340,3 +342,9 @@ def view_consulta_ordem_detalhes(request, **kwargs):
     else:
 
         return HttpResponseRedirect('/almoxarifado/menu-consultas/')
+
+
+def teste(request):
+
+    ficha = FichaMateriais({})
+    return FileResponse(ficha.file(), filename='teste.pdf')

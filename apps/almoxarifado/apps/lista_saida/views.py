@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.http import FileResponse
 
 from .models import *
 from .forms import *
 from apps.almoxarifado.models import MaterialSaida, Ordem
+from apps.almoxarifado.apps.pdf.objects import FichaMateriais
 
 
 @login_required()
@@ -98,13 +100,14 @@ def view_item_entrega(request, user_to):
         itens = Item.objects.filter(lista__user_to__username=user_to)
         ordem = Ordem.objects.create(tipo=1, user=request.user)
         ordem.save()
+        user_to_object = User.objects.get(username=user_to)
 
         for item in itens:
             saida = MaterialSaida(
                 material=item.material,
                 quantidade=item.quantidade,
                 observacao='',
-                user_to=User.objects.get(username=user_to),
+                user_to=user_to_object,
                 user=request.user,
                 ordem=ordem
             )
@@ -116,7 +119,21 @@ def view_item_entrega(request, user_to):
 
         itens[0].lista.delete()
 
-        return HttpResponseRedirect('/almoxarifado/menu-saidas/')
+        return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/itens/imprimir/' + str(ordem.id) + '/')
+
+
+def view_item_imprime(request, ordem_id):
+
+    if Ordem.objects.filter(id=ordem_id).exists():
+        ordem = Ordem.objects.get(id=ordem_id)
+
+    else:
+
+        return HttpResponseRedirect('/almoxarifado/menu-consultas/ordens/1/')
+
+    ficha = FichaMateriais(ordem)
+
+    return FileResponse(ficha.file(), filename='ficha_' + str(ordem.id) + '.pdf')
 
 
 def view_item_limpa(request, user_to):
