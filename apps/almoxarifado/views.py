@@ -8,10 +8,12 @@ from .forms import *
 from .models import Material
 from constel.objects import Button
 from constel.models import UserType
+from constel.apps.controle_acessos.decorator import permission
 from apps.almoxarifado.apps.pdf.objects import FichaMateriais
 
 
 @login_required()
+@permission('almoxarifado', )
 def view_menu_principal(request):
 
     button_1 = Button('almoxarifado_menu_cadastros', 'Cadastros')
@@ -39,6 +41,7 @@ def view_menu_principal(request):
 
 
 @login_required()
+@permission('almoxarifado', 'gestor', )
 def view_menu_cadastros(request):
 
     button_1 = Button('almoxarifado_cadastrar_material', 'Cadastrar material')
@@ -62,6 +65,7 @@ def view_menu_cadastros(request):
 
 
 @login_required()
+@permission('almoxarifado', 'almoxarifado - entrada', )
 def view_menu_entradas(request):
 
     button_1 = Button('almoxarifado_entrada_material', 'Aquisição de material')
@@ -81,6 +85,7 @@ def view_menu_entradas(request):
 
 
 @login_required()
+@permission('almoxarifado', 'almoxarifado - saida', )
 def view_menu_saidas(request):
 
     button_1 = Button('almoxarifado_saida_lista', 'Entrega de materiais')
@@ -100,6 +105,7 @@ def view_menu_saidas(request):
 
 
 @login_required()
+@permission('almoxarifado', )
 def view_menu_consultas(request):
 
     context = {
@@ -112,6 +118,7 @@ def view_menu_consultas(request):
 
 
 @login_required()
+@permission('almoxarifado', 'gestor', )
 def view_menu_relatorios(request):
 
     button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
@@ -128,6 +135,7 @@ def view_menu_relatorios(request):
 
 
 @login_required()
+@permission('almoxarifado', )
 def view_cadastrar_usuario_passivo(request, callback=None):
     """
         View de cadastro de novos usuários passivos.
@@ -179,6 +187,7 @@ def view_cadastrar_usuario_passivo(request, callback=None):
 
 
 @login_required()
+@permission('almoxarifado', 'gestor', )
 def view_cadastrar_fornecedor(request):
 
     if request.method == 'POST':
@@ -205,6 +214,7 @@ def view_cadastrar_fornecedor(request):
 
 
 @login_required()
+@permission('almoxarifado', 'gestor', )
 def view_cadastrar_material(request):
 
     if request.method == 'POST':
@@ -241,6 +251,7 @@ def view_cadastrar_material(request):
 
 
 @login_required()
+@permission('almoxarifado', 'almoxarifado - entrada', )
 def view_entrada_material(request):
 
     if request.method == 'POST':
@@ -293,6 +304,7 @@ class ViewConsultaMateriais(ListView):
         return context
 
 
+@permission('almoxarifado', )
 def view_consulta_estoque(request):
 
     itens = MaterialQuantidade.objects.filter(quantidade__gt=0).order_by('material')
@@ -305,6 +317,7 @@ def view_consulta_estoque(request):
     return render(request, 'almoxarifado/consulta_estoque.html', context)
 
 
+@permission('almoxarifado', )
 def view_consulta_ordem(request, tipo):
 
     itens = Ordem.objects.filter(tipo=tipo).order_by('data')
@@ -318,6 +331,7 @@ def view_consulta_ordem(request, tipo):
     return render(request, 'almoxarifado/consulta_ordem.html', context)
 
 
+@permission('almoxarifado', )
 def view_consulta_ordem_detalhes(request, **kwargs):
 
     if Ordem.objects.filter(id=kwargs.get('ordem')).exists():

@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 from constel.objects import Button
+from constel.apps.controle_acessos.decorator import permission
 
 
-@login_required()
+@login_required
+@permission('Admin', )
 def view_menu_principal(request):
 
     button_1 = Button('gc_menu_principal', 'Controle de vales')
@@ -33,7 +35,7 @@ def view_menu_principal(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
 def view_menu_cadastros(request):
 
     button_1 = Button('patrimonio_cadastrar_ferramenta', 'Cadastrar ferramenta')
@@ -54,7 +56,7 @@ def view_menu_cadastros(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
 def view_menu_entradas(request):
 
     button_1 = Button('patrimonio_entrada_ferramenta', 'Aquisição de ferramentas')
@@ -75,7 +77,7 @@ def view_menu_entradas(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
 def view_menu_saidas(request):
 
     button_1 = Button('patrimonio_saida_patrimonio', 'Saída de patrimônio')
@@ -96,7 +98,7 @@ def view_menu_saidas(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
 def view_menu_consultas(request):
 
     button_1 = Button('patrimonio_consulta_ferramentas', 'Modelos de ferramentas cadastradas')
@@ -121,7 +123,7 @@ def view_menu_consultas(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
 def view_menu_relatorios(request):
 
     return render(request, 'patrimonio/menu_relatorios.html')

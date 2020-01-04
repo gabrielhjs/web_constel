@@ -30,11 +30,6 @@ urlpatterns = [
         name='gc_consulta_talao'
     ),
     path(
-        'patrimonio/combustivel/menu-consultas/consulta-vales/',
-        views.view_vales,
-        name='gc_consulta_vales'
-    ),
-    path(
         'patrimonio/combustivel/menu-consultas/consulta-meus-vales/',
         views.view_meus_vales,
         name='gc_consulta_meus_vales'

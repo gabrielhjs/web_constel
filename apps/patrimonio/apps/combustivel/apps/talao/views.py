@@ -283,24 +283,6 @@ def view_talao(request, **kwargs):
 
 
 @login_required()
-def view_vales(request):
-    """
-
-    :param request:
-    :return:
-    """
-
-    vales = Vale.objects.all().order_by('vale', 'talao')
-    context = {
-        'vales': vales,
-        'pagina_titulo': 'Combustível',
-        'menu_titulo': 'Vales',
-    }
-
-    return render(request, 'talao/consulta_vales.html', context)
-
-
-@login_required()
 def view_meus_vales(request):
     """
 

@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from .permissions import *
 from constel.objects import Button
 
 
@@ -78,7 +77,6 @@ def view_menu_consultas(request):
     """
 
     button_1 = Button('gc_consulta_taloes', 'Talões')
-    button_2 = Button('gc_consulta_vales', 'Vales')
     button_3 = Button('gc_consulta_meus_vales', 'Meus vales')
     button_4 = Button('consulta_funcionarios', 'Funcionários')
     button_5 = Button('consulta_veiculos', 'Veículos')
@@ -90,7 +88,6 @@ def view_menu_consultas(request):
         'menu_titulo': 'Menu consultas',
         'buttons': [
             button_1,
-            button_2,
             button_3,
             button_4,
             button_5,

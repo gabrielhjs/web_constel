@@ -1,0 +1,29 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Admin{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Nome</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.username }}</td>
+                <td>{{ usuario.first_name|title }} {{ usuario.last_name|title }}</td>
+                <td>
+                    <a href="{% url 'constel_controle_grupos_usuario' usuario.id %}"><button>Grupos</button></a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'constel_controle_menu_grupos' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

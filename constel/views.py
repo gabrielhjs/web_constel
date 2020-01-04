@@ -8,18 +8,21 @@ from django.contrib import messages
 from .forms import FormCadastraUsuario, FormLogin, FormCadastraUsuarioPassivo, FormCadastrarVeiculo
 from .models import UserType, Veiculo
 from .objects import Button
+from .apps.controle_acessos.decorator import permission
 
 
 @login_required()
+@permission('admin', )
 def view_admin(request):
 
     return HttpResponseRedirect('/admin')
 
 
 @login_required()
+@permission('admin', )
 def view_menu_gerenciamento_sistema(request):
     button_1 = Button('constel_view_admin', 'Administração Django')
-    button_2 = Button('constel_controle_acessos', 'Controle de acessos')
+    button_2 = Button('constel_menu_controle_acessos', 'Controle de acessos')
     rollback = Button('index', 'Voltar')
 
     context = {
@@ -34,12 +37,6 @@ def view_menu_gerenciamento_sistema(request):
     }
 
     return render(request, 'constel/menu.html', context)
-
-
-@login_required()
-def view_controle_acessos(request):
-
-    pass
 
 
 @login_required()
@@ -108,6 +105,7 @@ def view_cadastrar_usuario(request):
 
 
 @login_required()
+@permission('patrimonio', )
 def view_cadastrar_usuario_passivo(request):
     """
     View de cadastro de novos usuários passivos.
@@ -146,6 +144,7 @@ def view_cadastrar_usuario_passivo(request):
 
 
 @login_required()
+@permission('patrimonio', )
 def view_cadastrar_veiculo(request):
     """
     View de cadastro de veículos de funcionários existentes
