@@ -11,7 +11,7 @@ from constel.apps.controle_acessos.decorator import permission
 
 
 @login_required
-@permission('patrimonio - combustivel', 'patrimonio - talao', )
+@permission('patrimonio - combustivel', 'patrimonio - combustivel - talao', )
 def view_cadastrar_talao(request):
     """
     View de carregamento e gestão do cadastro de novos talões,
@@ -50,7 +50,7 @@ def view_cadastrar_talao(request):
 
 
 @login_required
-@permission('patrimonio', 'patrimonio - combustivel', 'patrimonio - talao', )
+@permission('patrimonio', 'patrimonio - combustivel', 'patrimonio - combustivel - talao', )
 def view_cadastrar_combustivel(request):
     """
     View de carregamento e gestão de combustível novos cadastrados no sistema,
@@ -83,7 +83,7 @@ def view_cadastrar_combustivel(request):
 
 
 @login_required
-@permission('patrimonio', 'patrimonio - combustivel', 'patrimonio - talao', )
+@permission('patrimonio', 'patrimonio - combustivel', 'patrimonio - combustivel - talao', )
 def view_cadastrar_posto(request):
     """
     View de carregamento e gestão de combustível novos cadastrados no sistema,
@@ -116,7 +116,7 @@ def view_cadastrar_posto(request):
 
 
 @login_required
-@permission('patrimonio - combustivel', 'patrimonio - talao', )
+@permission('patrimonio - combustivel', 'patrimonio - combustivel - talao', )
 def view_entrega_talao(request):
     """
     View de carregamento e gestão de entrega de talões cadastrados no sistema,
@@ -157,7 +157,7 @@ def view_entrega_talao(request):
 
 
 @login_required
-@permission('patrimonio', 'patrimonio - vale', )
+@permission('patrimonio', 'patrimonio - combustivel - vale', )
 def view_entrega_vale_1(request):
     """
     View de carregamento e gestão de entrega de vales cadastrados no sistema,
@@ -196,7 +196,7 @@ def view_entrega_vale_1(request):
 
 
 @login_required
-@permission('patrimonio', 'patrimonio - vale', )
+@permission('patrimonio', 'patrimonio - combustivel - vale', )
 def view_entrega_vale_2(request):
 
     if request.session.get('user_to') is None:
