@@ -157,7 +157,7 @@ def view_entrega_talao(request):
 
 
 @login_required
-@permission('patrimonio', 'patrimonio - combustivel - vale', )
+@permission('patrimonio - combustivel - vale', )
 def view_entrega_vale_1(request):
     """
     View de carregamento e gestão de entrega de vales cadastrados no sistema,
@@ -196,7 +196,7 @@ def view_entrega_vale_1(request):
 
 
 @login_required
-@permission('patrimonio', 'patrimonio - combustivel - vale', )
+@permission('patrimonio - combustivel - vale', )
 def view_entrega_vale_2(request):
 
     if request.session.get('user_to') is None:
