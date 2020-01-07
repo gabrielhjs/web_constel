@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 from constel.objects import Button
+from constel.apps.controle_acessos.decorator import permission
 
 
-@login_required()
+@login_required
+@permission('patrimonio - combustivel', )
 def view_menu_principal(request):
     """
     View de carregamento da página inicial do GC
@@ -36,7 +38,8 @@ def view_menu_principal(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio - talao', 'patrimonio - combustivel', )
 def view_menu_cadastros(request):
     """
     View de carregamento da página de cadastros do GC
@@ -68,7 +71,8 @@ def view_menu_cadastros(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio - combustivel', )
 def view_menu_consultas(request):
     """
     View de carregamento da página de consultas do GC
@@ -98,7 +102,8 @@ def view_menu_consultas(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio', 'patrimonio - combustivel', )
 def view_menu_relatorios(request):
     """
     View de carregamento da página de relatórios do GC
@@ -122,7 +127,8 @@ def view_menu_relatorios(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio - combustivel', 'patrimonio - talao', )
 def view_menu_taloes(request):
     """
     View de carregamento da página de gerenciamento de talões do GC
@@ -146,7 +152,8 @@ def view_menu_taloes(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio - combustivel', )
 def view_menu_vales(request):
     """
     View de carregamento da página de gerenciamento de vales do GC

@@ -16,5 +16,5 @@ urlpatterns = [
         views.view_grupos_usuario,
         name='constel_controle_grupos_usuario'
     ),
-    path('authorization-denied/', views.view_acesso_negado, name='constel_acesso_negado'),
+    path('acesso-restrito/', views.view_acesso_negado, name='constel_acesso_restrito'),
 ]

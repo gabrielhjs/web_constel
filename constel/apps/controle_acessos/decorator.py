@@ -18,4 +18,4 @@ def permission(*group_names):
 
         return True
 
-    return user_passes_test(in_groups, login_url='/authorization-denied/')
+    return user_passes_test(in_groups, login_url='/acesso-restrito/', redirect_field_name=None)

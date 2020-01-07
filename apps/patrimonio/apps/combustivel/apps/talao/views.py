@@ -7,9 +7,11 @@ from datetime import date
 
 from .forms import *
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
+from constel.apps.controle_acessos.decorator import permission
 
 
-@login_required()
+@login_required
+@permission('patrimonio - combustivel', 'patrimonio - talao', )
 def view_cadastrar_talao(request):
     """
     View de carregamento e gestão do cadastro de novos talões,
@@ -47,7 +49,8 @@ def view_cadastrar_talao(request):
     return render(request, 'talao/cadastro_talao.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio', 'patrimonio - combustivel', 'patrimonio - talao', )
 def view_cadastrar_combustivel(request):
     """
     View de carregamento e gestão de combustível novos cadastrados no sistema,
@@ -79,7 +82,8 @@ def view_cadastrar_combustivel(request):
     return render(request, 'talao/cadastro_combustivel.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio', 'patrimonio - combustivel', 'patrimonio - talao', )
 def view_cadastrar_posto(request):
     """
     View de carregamento e gestão de combustível novos cadastrados no sistema,
@@ -111,7 +115,8 @@ def view_cadastrar_posto(request):
     return render(request, 'talao/cadastro_posto.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio - combustivel', 'patrimonio - talao', )
 def view_entrega_talao(request):
     """
     View de carregamento e gestão de entrega de talões cadastrados no sistema,
@@ -151,7 +156,8 @@ def view_entrega_talao(request):
     return render(request, 'talao/entrega_talao.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio', 'patrimonio - vale', )
 def view_entrega_vale_1(request):
     """
     View de carregamento e gestão de entrega de vales cadastrados no sistema,
@@ -189,7 +195,8 @@ def view_entrega_vale_1(request):
     return render(request, 'talao/entrega_vale1.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio', 'patrimonio - vale', )
 def view_entrega_vale_2(request):
 
     if request.session.get('user_to') is None:
@@ -238,7 +245,8 @@ def view_entrega_vale_2(request):
     return render(request, 'talao/entrega_vale2.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio - combustivel', )
 def view_taloes(request):
     """
     View de exibição dos talões cadastrados no sistema
@@ -256,7 +264,8 @@ def view_taloes(request):
     return render(request, 'talao/consulta_talao.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio - combustivel', )
 def view_talao(request, **kwargs):
     """
     View de exibição de informações de talão
@@ -282,7 +291,8 @@ def view_talao(request, **kwargs):
         return HttpResponseRedirect('/patrimonio/combustivel/menu-consultas/')
 
 
-@login_required()
+@login_required
+@permission('patrimonio - combustivel', )
 def view_meus_vales(request):
     """
 
@@ -300,6 +310,8 @@ def view_meus_vales(request):
     return render(request, 'talao/consulta_meus_vales.html', context)
 
 
+@login_required
+@permission('patrimonio', 'patrimonio - combustivel', )
 def view_relatorio_mensal(request):
     """
     :param request:

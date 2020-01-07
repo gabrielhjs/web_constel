@@ -133,4 +133,4 @@ def view_grupos_usuario(request, usuario_id):
 @login_required()
 def view_acesso_negado(request):
 
-    return render(request, 'controle_acessos/acesso_negado.html')
+    return render(request, 'controle_acessos/acesso_restrito.html')

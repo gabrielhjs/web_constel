@@ -4,9 +4,11 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import *
 from .models import *
+from constel.apps.controle_acessos.decorator import permission
 
 
-@login_required()
+@login_required
+@permission('patrimonio', )
 def view_cadastrar_ferramenta(request):
 
     if request.method == 'POST':
@@ -41,7 +43,8 @@ def view_cadastrar_ferramenta(request):
     return render(request, 'ferramenta/cadastrar_ferramenta.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio', )
 def view_entrada_ferramenta(request):
 
     if request.method == 'POST':
@@ -76,7 +79,8 @@ def view_entrada_ferramenta(request):
     return render(request, 'patrimonio/entrada.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio', )
 def view_saida_ferramenta(request):
 
     if request.method == 'POST':
@@ -113,7 +117,8 @@ def view_saida_ferramenta(request):
     return render(request, 'patrimonio/entrada.html', context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio', )
 def view_consulta_ferramentas(request):
 
     context = {
@@ -125,7 +130,8 @@ def view_consulta_ferramentas(request):
     return render(request, 'ferramenta/consulta_ferramenta.html', context=context)
 
 
-@login_required()
+@login_required
+@permission('patrimonio', )
 def view_consulta_ferramentas_estoque(request):
 
     context = {

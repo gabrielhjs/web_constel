@@ -8,9 +8,11 @@ from .forms import *
 from apps.almoxarifado.models import MaterialSaida, Ordem
 from apps.almoxarifado.apps.pdf.objects import FichaMateriais
 from constel.objects import Button
+from constel.apps.controle_acessos.decorator import permission
 
 
-@login_required()
+@login_required
+@permission('almoxarifado', 'almoxarifado - saida', )
 def view_lista_cria(request):
 
     if request.method == 'POST':
@@ -45,6 +47,7 @@ def view_lista_cria(request):
 
 
 @login_required()
+@permission('almoxarifado', 'almoxarifado - saida', )
 def view_item_insere(request, user_to):
 
     if not Lista.objects.filter(user_to__username=user_to).exists():
@@ -91,6 +94,7 @@ def view_item_insere(request, user_to):
 
 
 @login_required()
+@permission('almoxarifado', 'almoxarifado - saida', )
 def view_item_entrega(request, user_to):
 
     if not Item.objects.filter(lista__user_to__username=user_to).exists():
@@ -123,6 +127,8 @@ def view_item_entrega(request, user_to):
         return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/itens/concluido/' + str(ordem.id) + '/')
 
 
+@login_required
+@permission('almoxarifado', 'almoxarifado - saida', )
 def view_item_imprime(request, ordem_id):
 
     if Ordem.objects.filter(id=ordem_id).exists():
@@ -137,6 +143,8 @@ def view_item_imprime(request, ordem_id):
     return FileResponse(ficha.file(), filename='ficha_' + str(ordem.id) + '.pdf')
 
 
+@login_required
+@permission('almoxarifado', 'almoxarifado - saida', )
 def view_item_limpa(request, user_to):
 
     if not Lista.objects.filter(user_to__username=user_to).exists():
@@ -152,7 +160,8 @@ def view_item_limpa(request, user_to):
         return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/itens/' + user_to + '/')
 
 
-@login_required()
+@login_required
+@permission('almoxarifado', 'almoxarifado - saida', )
 def view_item_conclui(request, ordem_id):
     button_1 = Button('almoxarifado_saida_lista_itens_imprimi', 'Imprimir ficha')
     button_voltar = Button('almoxarifado_saida_lista', 'Voltar')

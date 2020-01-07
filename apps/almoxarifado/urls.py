@@ -81,14 +81,4 @@ urlpatterns = [
         views.view_menu_relatorios,
         name='almoxarifado_menu_relatorios',
     ),
-    path(
-        'teste/',
-        views.teste,
-        name='teste',
-    ),
-    path(
-        'teste1/',
-        views.teste,
-        name='teste1',
-    ),
 ]
