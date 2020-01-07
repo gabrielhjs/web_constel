@@ -39,7 +39,7 @@ def view_menu_principal(request):
 
 
 @login_required
-@permission('patrimonio - combustivel - talao', 'patrimonio - combustivel', )
+@permission('patrimonio - combustivel', )
 def view_menu_cadastros(request):
     """
     View de carregamento da página de cadastros do GC

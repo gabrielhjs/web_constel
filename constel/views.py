@@ -11,14 +11,14 @@ from .objects import Button
 from .apps.controle_acessos.decorator import permission
 
 
-@login_required()
+@login_required
 @permission('admin', )
 def view_admin(request):
 
     return HttpResponseRedirect('/admin')
 
 
-@login_required()
+@login_required
 @permission('admin', )
 def view_menu_gerenciamento_sistema(request):
     button_1 = Button('constel_view_admin', 'Administração Django')
@@ -39,7 +39,7 @@ def view_menu_gerenciamento_sistema(request):
     return render(request, 'constel/menu.html', context)
 
 
-@login_required()
+@login_required
 def index(request):
     """
     View da página inicial do sistema
@@ -104,8 +104,8 @@ def view_cadastrar_usuario(request):
     return render(request, 'constel/cadastra_usuario.html', context)
 
 
-@login_required()
-@permission('patrimonio', )
+@login_required
+@permission('patrimonio - combustivel', )
 def view_cadastrar_usuario_passivo(request):
     """
     View de cadastro de novos usuários passivos.
@@ -143,8 +143,8 @@ def view_cadastrar_usuario_passivo(request):
     return render(request, 'constel/cadastra_usuario_passivo.html', context)
 
 
-@login_required()
-@permission('patrimonio', )
+@login_required
+@permission('patrimonio - combustivel', )
 def view_cadastrar_veiculo(request):
     """
     View de cadastro de veículos de funcionários existentes
@@ -205,7 +205,7 @@ def view_login(request):
         return render(request, 'constel/login.html', {'form': form})
 
 
-@login_required()
+@login_required
 def view_consulta_funcionarios(request):
 
     users = User.objects.all().order_by('first_name', 'last_name')
@@ -218,7 +218,7 @@ def view_consulta_funcionarios(request):
     return render(request, 'constel/consulta_funcionarios.html', context)
 
 
-@login_required()
+@login_required
 def view_consulta_veiculos(request):
 
     veiculos = Veiculo.objects.filter(user__is_active=True).order_by('user__first_name', 'user__last_name')
@@ -231,7 +231,7 @@ def view_consulta_veiculos(request):
     return render(request, 'constel/consulta_veiculos.html', context)
 
 
-@login_required()
+@login_required
 def view_logout(request):
 
     logout(request)
