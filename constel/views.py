@@ -206,26 +206,28 @@ def view_login(request):
 
 
 @login_required
-def view_consulta_funcionarios(request):
+def view_consulta_funcionarios(request, rollback):
 
     users = User.objects.all().order_by('first_name', 'last_name')
     context = {
         'users': users,
         'pagina_titulo': 'Constel',
         'menu_titulo': 'Funcionários',
+        'rollback': rollback,
     }
 
     return render(request, 'constel/consulta_funcionarios.html', context)
 
 
 @login_required
-def view_consulta_veiculos(request):
+def view_consulta_veiculos(request, rollback):
 
     veiculos = Veiculo.objects.filter(user__is_active=True).order_by('user__first_name', 'user__last_name')
     context = {
         'veiculos': veiculos,
         'pagina_titulo': 'Constel',
         'menu_titulo': 'Veículos',
+        'rollback': rollback,
     }
 
     return render(request, 'constel/consulta_veiculos.html', context)

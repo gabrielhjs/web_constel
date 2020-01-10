@@ -1,0 +1,42 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Combustível{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Talão</th>
+                <th>Status</th>
+                <th>Data de cadastro</th>
+                <th>Cadastrado por</th>
+                <th>Data de entrega</th>
+                <th>Entregue por</th>
+                <th>Recebido por</th>
+                <th>Opções</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for talao in taloes %}
+            <tr>
+                <td>{{ talao.talao }}</td>
+                <td>{{ talao.get_status_display }}</td>
+                <td>{{ talao.talao_cadastro.first.data }}</td>
+                <td>{{ talao.talao_cadastro.first.user }}</td>
+                <td>{{ talao.talao_entrega.first.data }}</td>
+                <td>{{ talao.talao_entrega.first.user }}</td>
+                <td>{{ talao.talao_entrega.first.user_to }}</td>
+                <td>
+                    <a href="{% url 'gc_consulta_meu_talao' talao.talao %}">
+                        <button>Vales</button>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'gc_menu_consultas' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

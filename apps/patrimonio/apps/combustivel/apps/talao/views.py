@@ -293,6 +293,33 @@ def view_talao(request, **kwargs):
 
 @login_required
 @permission('patrimonio - combustivel', )
+def view_meu_talao(request, **kwargs):
+    """
+    View de exibição de informações de talão
+    :param request: informações gerais
+    :param kwargs: id do talão desejado
+    :return: informações do talão requerido
+    """
+
+    if Talao.objects.filter(talao=kwargs.get('talao_id')).exists():
+        talao = Talao.objects.get(talao=kwargs.get('talao_id'))
+        vales = Vale.objects.filter(talao=talao).order_by('vale')
+
+        context = {
+            'talao': talao,
+            'vales': vales,
+            'pagina_titulo': 'Combustível',
+            'menu_titulo': 'Talão',
+        }
+        return render(request, 'talao/detalhes_meu_talao.html', context)
+
+    else:
+
+        return HttpResponseRedirect('/patrimonio/combustivel/menu-consultas/')
+
+
+@login_required
+@permission('patrimonio - combustivel', )
 def view_meus_vales(request):
     """
 
@@ -308,6 +335,25 @@ def view_meus_vales(request):
     }
 
     return render(request, 'talao/consulta_meus_vales.html', context)
+
+
+@login_required
+@permission('patrimonio - combustivel', )
+def view_meus_taloes(request):
+    """
+    View de exibição dos talões cadastrados no sistema
+    :param request: informações gerais
+    :return: lista de talões cadastrados
+    """
+
+    taloes = Talao.objects.filter(talao_entrega__user_to=request.user).order_by('talao')
+    context = {
+        'taloes': taloes,
+        'pagina_titulo': 'Combustível',
+        'menu_titulo': 'Talões',
+    }
+
+    return render(request, 'talao/consulta_meus_talao.html', context)
 
 
 @login_required

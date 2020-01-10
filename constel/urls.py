@@ -13,6 +13,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('menu-admin/', views.view_menu_gerenciamento_sistema, name='constel_menu_admin'),
     path('menu-admin/view-admin/', views.view_admin, name='constel_view_admin'),
-    path('consulta/usuarios/', views.view_consulta_funcionarios, name='consulta_funcionarios'),
-    path('consulta/veiculos/', views.view_consulta_veiculos, name='consulta_veiculos'),
+    path('consulta/usuarios/next=<str:rollback>', views.view_consulta_funcionarios, name='consulta_funcionarios'),
+    path('consulta/veiculos/next=<str:rollback>', views.view_consulta_veiculos, name='consulta_veiculos'),
 ]

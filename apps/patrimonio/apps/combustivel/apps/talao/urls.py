@@ -25,9 +25,19 @@ urlpatterns = [
         name='gc_consulta_taloes',
     ),
     path(
+        'patrimonio/combustivel/menu-consultas/consulta-meus-taloes/',
+        views.view_meus_taloes,
+        name='gc_consulta_meus_taloes',
+    ),
+    path(
         'patrimonio/combustivel/menu-consultas/consulta-taloes/talao=<int:talao_id>/',
         views.view_talao,
         name='gc_consulta_talao'
+    ),
+    path(
+        'patrimonio/combustivel/menu-consultas/consulta-meus-taloes/talao=<int:talao_id>/',
+        views.view_meu_talao,
+        name='gc_consulta_meu_talao'
     ),
     path(
         'patrimonio/combustivel/menu-consultas/consulta-meus-vales/',

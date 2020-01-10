@@ -54,6 +54,6 @@
     </table>
 </div>
 <div class="menu-button menu-back">
-    <a href="{% firstof request.GET.next '/' %}"><button>Voltar</button></a>
+    <a href="{% url rollback %}"><button>Voltar</button></a>
 </div>
 {% endblock %}

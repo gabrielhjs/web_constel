@@ -81,9 +81,10 @@ def view_menu_consultas(request):
     """
 
     button_1 = Button('gc_consulta_taloes', 'Talões')
-    button_3 = Button('gc_consulta_meus_vales', 'Meus vales')
-    button_4 = Button('consulta_funcionarios', 'Funcionários')
-    button_5 = Button('consulta_veiculos', 'Veículos')
+    button_2 = Button('gc_consulta_meus_taloes', 'Meus talões recebidos')
+    button_3 = Button('gc_consulta_meus_vales', 'Meus vales recebidos')
+    button_4 = Button('consulta_funcionarios', 'Funcionários', 'gc_menu_consultas')
+    button_5 = Button('consulta_veiculos', 'Veículos', 'gc_menu_consultas')
     button_voltar = Button('gc_menu_principal', 'Voltar')
 
     context = {
@@ -92,6 +93,7 @@ def view_menu_consultas(request):
         'menu_titulo': 'Menu consultas',
         'buttons': [
             button_1,
+            button_2,
             button_3,
             button_4,
             button_5,
