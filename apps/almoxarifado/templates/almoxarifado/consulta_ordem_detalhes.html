@@ -20,12 +20,12 @@
             </tr>
             <tr>
                 <td>Responsável</td>
-                <td>{{ ordem.user.first_name }} {{ ordem.user.last_name }}</td>
+                <td>{{ ordem.user.get_full_name|title }}</td>
             </tr>
             {% if tipo %}
             <tr>
                 <td>Para</td>
-                <td>{{ ordem.almoxarifado_ordem_saida.first.user_to.first_name }} {{ ordem.almoxarifado_ordem_saida.first.user_to.last_name }}</td>
+                <td>{{ ordem.almoxarifado_ordem_saida.first.user_to.get_full_name|title }}</td>
             </tr>
             {% endif %}
         </tbody>
