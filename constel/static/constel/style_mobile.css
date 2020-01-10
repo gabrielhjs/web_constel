@@ -14,8 +14,3 @@ html {font-size: 14px;}
 .table-content {
     max-width: 100%;
 }
-.table-content table {
-    display: block;
-    overflow: auto;
-    position: static;
-}
