@@ -101,6 +101,12 @@ body {background: #242424; color: white;}
     color: red;
 }
 
+.form-data select {
+    height: 30px;
+    width: 8%;
+    font-size: 1rem;
+}
+
 /* TABLES */
 
 .table-content {
@@ -111,6 +117,7 @@ body {background: #242424; color: white;}
     overflow: auto;
     position: static;
     margin: auto;
+    margin-top: 40px;
 }
 
 .table-content table th {

@@ -138,3 +138,31 @@ class FormCadastraPosto(forms.ModelForm):
     class Meta:
         model = Posto
         fields = '__all__'
+
+
+class FormDataIniciaFinal(forms.Form):
+    """
+    Formulário que permite selecionar uma data inicial e uma final
+    """
+
+    data_inicial = forms.DateField(widget=forms.SelectDateWidget, required=True)
+    data_final = forms.DateField(widget=forms.SelectDateWidget, required=True)
+    funcionario = forms.Select()
+
+    def __init__(self, *args, **kwargs):
+        super(FormDataIniciaFinal, self).__init__(*args, **kwargs)
+        users = User.objects.filter(is_active=True).order_by('first_name', 'last_name')
+        users_name = [(i.id, '%s - %s %s' % (i.username, i.first_name.title(), i.last_name.title())) for i in users]
+        users_name.insert(0, (0, 'Todos'))
+        self.fields['funcionario'] = forms.ChoiceField(
+            choices=users_name,
+            label='Funcionário',
+        )
+
+    def clean(self):
+        form_data = self.cleaned_data
+
+        if form_data['data_inicial'] >= form_data['data_final']:
+            self.errors['data_inicial'] = ['A data inicial não pode ser mais recente que a data final']
+
+        return form_data

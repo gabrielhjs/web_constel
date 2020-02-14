@@ -384,3 +384,54 @@ def view_relatorio_mensal(request):
     }
 
     return render(request, 'talao/relatorio_mensal.html', context)
+
+
+@login_required
+@permission('patrimonio', 'patrimonio - combustivel', )
+def view_relatorio_por_mes(request):
+
+    context = {}
+
+    if request.method == 'POST':
+        form = FormDataIniciaFinal(request.POST)
+
+        if form.is_valid():
+            data_inicial = form.cleaned_data['data_inicial']
+            data_final = form.cleaned_data['data_final']
+            funcionario = form.cleaned_data['funcionario']
+
+            if funcionario == '0':
+                vales = User.objects.filter(
+                    vale_user_to__data__gte=data_inicial,
+                    vale_user_to__data__lte=data_final,
+                ).annotate(
+                    total=Sum('vale_user_to__valor')
+                ).order_by(
+                    '-total'
+                )
+
+            else:
+                vales = User.objects.filter(
+                    vale_user_to__data__gte=data_inicial,
+                    vale_user_to__data__lte=data_final,
+                    id=funcionario,
+                ).annotate(
+                    total=Sum('vale_user_to__valor')
+                ).order_by(
+                    '-total'
+                )
+
+            for vale in vales:
+                vale.total = 'R$ {:8.2f}'.format(vale.total)
+
+            context.update({'vales': vales, })
+
+    form = FormDataIniciaFinal()
+
+    context.update({
+        'pagina_titulo': 'Relatório por data',
+        'button_submit_text': 'Pesquisar',
+        'form': form,
+    })
+
+    return render(request, 'talao/relatorio_por_periodo_e_funcionario.html', context)

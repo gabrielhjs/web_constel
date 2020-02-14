@@ -45,9 +45,14 @@ urlpatterns = [
         name='gc_consulta_meus_vales'
     ),
     path(
-        'patrimonio/combustivel/menu-relatorios/mensal',
+        'patrimonio/combustivel/menu-relatorios/mensal/',
         views.view_relatorio_mensal,
         name='gc_relatorio_mensal'
+    ),
+    path(
+        'patrimonio/combustivel/menu-relatorios/por-mes/',
+        views.view_relatorio_por_mes,
+        name='gc_relatorio_por_mes'
     ),
     path(
         'patrimonio/combustivel/menu-taloes/entrega-talao/',
