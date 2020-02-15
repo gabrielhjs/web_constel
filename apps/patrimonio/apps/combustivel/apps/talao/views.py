@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 from datetime import date
 
@@ -388,45 +388,32 @@ def view_relatorio_mensal(request):
 
 @login_required
 @permission('patrimonio', 'patrimonio - combustivel', )
-def view_relatorio_por_mes(request):
+def view_relatorio_por_periodo(request):
 
     context = {}
 
     if request.method == 'POST':
-        form = FormDataIniciaFinal(request.POST)
+        form = FormRelatorioPeriodo(request.POST)
 
         if form.is_valid():
             data_inicial = form.cleaned_data['data_inicial']
             data_final = form.cleaned_data['data_final']
-            funcionario = form.cleaned_data['funcionario']
 
-            if funcionario == '0':
-                vales = User.objects.filter(
-                    vale_user_to__data__gte=data_inicial,
-                    vale_user_to__data__lte=data_final,
-                ).annotate(
-                    total=Sum('vale_user_to__valor')
-                ).order_by(
-                    '-total'
-                )
-
-            else:
-                vales = User.objects.filter(
-                    vale_user_to__data__gte=data_inicial,
-                    vale_user_to__data__lte=data_final,
-                    id=funcionario,
-                ).annotate(
-                    total=Sum('vale_user_to__valor')
-                ).order_by(
-                    '-total'
-                )
+            vales = User.objects.filter(
+                vale_user_to__data__gte=data_inicial,
+                vale_user_to__data__lte=data_final,
+            ).annotate(
+                total=Sum('vale_user_to__valor')
+            ).order_by(
+                '-total'
+            )
 
             for vale in vales:
                 vale.total = 'R$ {:8.2f}'.format(vale.total)
 
             context.update({'vales': vales, })
 
-    form = FormDataIniciaFinal()
+    form = FormRelatorioPeriodo()
 
     context.update({
         'pagina_titulo': 'Relatório por data',
@@ -434,4 +421,50 @@ def view_relatorio_por_mes(request):
         'form': form,
     })
 
-    return render(request, 'talao/relatorio_por_periodo_e_funcionario.html', context)
+    return render(request, 'talao/relatorio_por_periodo.html', context)
+
+
+@login_required
+@permission('patrimonio', 'patrimonio - combustivel', )
+def view_relatorio_por_funcionario(request):
+
+    context = {}
+
+    if request.method == 'POST':
+        form = FormRelatorioFuncionario(request.POST)
+
+        if form.is_valid():
+            data_inicial = form.cleaned_data['data_inicial']
+            data_final = form.cleaned_data['data_final']
+            funcionario = form.cleaned_data['funcionario']
+
+            vales = Vale.objects.filter(
+                vale_entrega__data__gte=data_inicial,
+                vale_entrega__data__lte=data_final,
+                vale_entrega__user_to__id=funcionario,
+            ).order_by(
+                'vale_entrega__data'
+            )
+
+            vales_total = vales.aggregate(total=Sum('vale_entrega__valor'), n_vales=Count('vale_entrega__valor'))
+
+            vales_total['total'] = 'R$ {:8.2f}'.format(vales_total['total'])
+
+            print(vales_total)
+
+            context.update(
+                {
+                    'vales': vales,
+                    'total': vales_total
+                }
+            )
+
+    form = FormRelatorioFuncionario()
+
+    context.update({
+        'pagina_titulo': 'Relatório por Funcionário',
+        'button_submit_text': 'Pesquisar',
+        'form': form,
+    })
+
+    return render(request, 'talao/relatorio_por_funcionario.html', context)

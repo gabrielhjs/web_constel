@@ -1,0 +1,59 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Combustível | {{ talao.talao }}{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+{% include 'constel/form_data.html' %}
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Talão</th>
+                <th>Responsável</th>
+                <th>Vale</th>
+                <th>Beneficiário</th>
+                <th>Data de entrega</th>
+                <th>Valor</th>
+                <th>Posto</th>
+                <th>Veículo</th>
+                <th>Combustível</th>
+                <th>Observação</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vale in vales %}
+            <tr>
+                <td>{{ vale.talao }}</td>
+                <td>{{ vale.talao.talao_entrega.first.user_to.get_full_name|title }}</td>
+                <td>{{ vale }}</td>
+                <td>{{ vale.vale_entrega.first.user_to.get_full_name|title }}</td>
+                <td>{{ vale.vale_entrega.first.data }}</td>
+                <td>{{ vale.vale_entrega.first.valor_moeda }}</td>
+                <td>{{ vale.vale_entrega.first.posto }}</td>
+                <td>---</td>
+                <td>{{ vale.vale_entrega.first.combustivel }}</td>
+                <td>{{ vale.vale_entrega.first.observacao|lower }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Total vales</th>
+                <th>Total valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ total.n_vales }}</td>
+                <td>{{ total.total }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'gc_menu_relatorios' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

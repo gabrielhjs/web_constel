@@ -114,7 +114,8 @@ def view_menu_relatorios(request):
     """
 
     button_1 = Button('gc_relatorio_mensal', 'Acumulativo do mês')
-    button_2 = Button('gc_relatorio_por_mes', 'Por período e funcionário')
+    button_2 = Button('gc_relatorio_por_periodo', 'Por período')
+    button_3 = Button('gc_relatorio_por_funcionario', 'Por funcionário')
     button_voltar = Button('gc_menu_principal', 'Voltar')
 
     context = {
@@ -124,6 +125,7 @@ def view_menu_relatorios(request):
         'buttons': [
             button_1,
             button_2,
+            button_3,
         ],
         'rollback': button_voltar,
     }
