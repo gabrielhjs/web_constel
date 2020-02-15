@@ -448,7 +448,13 @@ def view_relatorio_por_funcionario(request):
 
             vales_total = vales.aggregate(total=Sum('vale_entrega__valor'), n_vales=Count('vale_entrega__valor'))
 
-            vales_total['total'] = 'R$ {:8.2f}'.format(vales_total['total'])
+            print(vales_total)
+
+            if vales_total['total'] is not None:
+                vales_total['total'] = 'R$ {:8.2f}'.format(vales_total['total'])
+
+            else:
+                vales_total['total'] = 'R$ 0.00'
 
             print(vales_total)
 

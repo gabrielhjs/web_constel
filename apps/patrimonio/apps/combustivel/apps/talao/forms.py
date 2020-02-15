@@ -145,8 +145,8 @@ class FormRelatorioPeriodo(forms.Form):
     Formulário que permite selecionar uma data inicial e uma final
     """
 
-    data_inicial = forms.DateField(widget=forms.SelectDateWidget, required=True)
-    data_final = forms.DateField(widget=forms.SelectDateWidget, required=True)
+    data_inicial = forms.DateField(widget=forms.SelectDateWidget(years=range(2019, 2050)))
+    data_final = forms.DateField(widget=forms.SelectDateWidget(years=range(2019, 2050)))
 
     def clean(self):
         form_data = self.cleaned_data
@@ -163,8 +163,8 @@ class FormRelatorioFuncionario(forms.Form):
     """
 
     funcionario = forms.Select()
-    data_inicial = forms.DateField(widget=forms.SelectDateWidget, required=True)
-    data_final = forms.DateField(widget=forms.SelectDateWidget, required=True)
+    data_inicial = forms.DateField(widget=forms.SelectDateWidget(years=range(2019, 2050)))
+    data_final = forms.DateField(widget=forms.SelectDateWidget(years=range(2019, 2050)))
 
     def __init__(self, *args, **kwargs):
         super(FormRelatorioFuncionario, self).__init__(*args, **kwargs)
