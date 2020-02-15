@@ -4,9 +4,14 @@ from .models import UserType, Veiculo
 
 
 class AdminVeiculo(admin.ModelAdmin):
-    list_filter = ('user__first_name', )
+    search_fields = ('modelo', 'placa', 'user__username', 'user__first_name',)
     list_display = ('user', 'modelo', 'placa', 'cor',)
 
 
-admin.site.register(UserType)
+class AdminUserType(admin.ModelAdmin):
+    search_fields = ('user__username', 'user__first_name',)
+    list_display = ('user', 'is_passive',)
+
+
+admin.site.register(UserType, AdminUserType)
 admin.site.register(Veiculo, AdminVeiculo)
