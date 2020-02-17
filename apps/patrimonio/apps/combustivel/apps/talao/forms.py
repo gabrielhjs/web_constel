@@ -157,23 +157,18 @@ class FormRelatorioPeriodo(forms.Form):
         return form_data
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class FormRelatorioFuncionario(forms.Form):
     """
     Formulário que permite selecionar uma data inicial e uma final
     """
 
-    funcionario = forms.Select()
-    data_inicial = forms.DateField(widget=forms.SelectDateWidget(years=range(2019, 2050)))
-    data_final = forms.DateField(widget=forms.SelectDateWidget(years=range(2019, 2050)))
-
-    def __init__(self, *args, **kwargs):
-        super(FormRelatorioFuncionario, self).__init__(*args, **kwargs)
-        users = User.objects.filter(is_active=True).order_by('first_name', 'last_name')
-        users_name = [(i.id, '%s - %s %s' % (i.username, i.first_name.title(), i.last_name.title())) for i in users]
-        self.fields['funcionario'] = forms.ChoiceField(
-            choices=users_name,
-            label='Funcionário',
-        )
+    data_inicial = forms.DateField(widget=DateInput(), required=False)
+    data_final = forms.DateField(widget=DateInput(), required=False)
+    funcionario = forms.CharField(label='Matrícula', help_text='Insira a matrícula do funcionário', required=False)
 
     def clean(self):
         form_data = self.cleaned_data

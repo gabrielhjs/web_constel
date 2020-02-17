@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.db.models import Sum, Count
+from django.db.models import Sum, Max
+from django.db.models import Q
 
-from datetime import date
+import datetime
 
 from .forms import *
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
@@ -363,7 +364,7 @@ def view_relatorio_mensal(request):
     :param request:
     :return:
     """
-    hoje = date.today()
+    hoje = datetime.date.today()
 
     vales = User.objects.filter(
         vale_user_to__data__month=hoje.month,
@@ -428,49 +429,74 @@ def view_relatorio_por_periodo(request):
 @permission('patrimonio', 'patrimonio - combustivel', )
 def view_relatorio_por_funcionario(request):
 
+    data_inicial = request.GET.get('data_inicial', '')
+    data_final = request.GET.get('data_final', '')
+    funcionario = request.GET.get('funcionario', '')
+
+    form = FormRelatorioFuncionario(
+        initial={
+            'data_inicial': data_inicial,
+            'data_final': data_final,
+            'funcionario': funcionario,
+        }
+    )
+
+    if data_inicial != '':
+        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
+
+    if data_final != '':
+        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
+
     context = {}
 
-    if request.method == 'POST':
-        form = FormRelatorioFuncionario(request.POST)
+    print(data_inicial, data_final, funcionario)
 
-        if form.is_valid():
-            data_inicial = form.cleaned_data['data_inicial']
-            data_final = form.cleaned_data['data_final']
-            funcionario = form.cleaned_data['funcionario']
+    if funcionario != '' and data_inicial != '' and data_final != '':
+        queryset = Q(username__contains=funcionario) & \
+                   Q(vale_user_to__data__gte=data_inicial) & \
+                   Q(vale_user_to__data__lte=data_final)
 
-            vales = Vale.objects.filter(
-                vale_entrega__data__gte=data_inicial,
-                vale_entrega__data__lte=data_final,
-                vale_entrega__user_to__id=funcionario,
-            ).order_by(
-                'vale_entrega__data'
-            )
+    elif funcionario != '' and data_inicial != '':
+        queryset = Q(username__contains=funcionario) & \
+                   Q(vale_user_to__data__gte=data_inicial)
 
-            vales_total = vales.aggregate(total=Sum('vale_entrega__valor'), n_vales=Count('vale_entrega__valor'))
+    elif funcionario != '' and data_final != '':
+        queryset = Q(username__contains=funcionario) & \
+                   Q(vale_user_to__data__lte=data_final)
 
-            print(vales_total)
+    elif data_inicial != '' and data_final != '':
+        queryset = Q(vale_user_to__data__gte=data_inicial) & \
+                   Q(vale_user_to__data__lte=data_final)
 
-            if vales_total['total'] is not None:
-                vales_total['total'] = 'R$ {:8.2f}'.format(vales_total['total'])
+    elif data_inicial != '':
+        queryset = Q(vale_user_to__data__gte=data_inicial)
 
-            else:
-                vales_total['total'] = 'R$ 0.00'
+    elif data_final != '':
+        queryset = Q(vale_user_to__data__lte=data_final)
 
-            print(vales_total)
+    elif funcionario != '':
+        queryset = Q(username__contains=funcionario)
 
-            context.update(
-                {
-                    'vales': vales,
-                    'total': vales_total
-                }
-            )
+    else:
+        queryset = Q(vale_user_to__data__gte=datetime.datetime.strptime('2018-01-01', "%Y-%m-%d").date())
 
-    form = FormRelatorioFuncionario()
+    vales = User.objects.filter(
+        queryset
+    ).annotate(
+        total=Sum('vale_user_to__valor'),
+        data=Max('vale_user_to__data')
+    ).order_by(
+        '-total'
+    )
+
+    for vale in vales:
+        vale.total = 'R$ {:8.2f}'.format(vale.total)
 
     context.update({
-        'pagina_titulo': 'Relatório por Funcionário',
-        'button_submit_text': 'Pesquisar',
+        'pagina_titulo': 'Relatório geral',
+        'button_submit_text': 'Filtrar',
         'form': form,
+        'vales': vales
     })
 
-    return render(request, 'talao/relatorio_por_funcionario.html', context)
+    return render(request, 'talao/relatorio_beneficiarios.html', context)

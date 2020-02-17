@@ -11,6 +11,11 @@ html {font-size: 14px;}
     width: 90%;
 }
 
+.form-data select {
+    width: 90%;
+}
+
 .table-content {
     max-width: 100%;
 }
+

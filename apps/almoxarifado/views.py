@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from .forms import *
 from .models import Material
+
 from constel.objects import Button
 from constel.models import UserType
 from constel.apps.controle_acessos.decorator import permission
@@ -318,9 +320,13 @@ def view_consulta_estoque(request):
 @permission('almoxarifado', )
 def view_consulta_ordem(request, tipo):
 
-    itens = Ordem.objects.filter(tipo=tipo).order_by('data')
+    itens = Ordem.objects.filter(tipo=tipo).order_by('-data')
+    paginator = Paginator(itens, 50)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
-        'itens': itens,
+        'page_obj': page_obj,
         'pagina_titulo': 'Almoxarifado',
         'menu_titulo': 'Ordens',
         'tipo': tipo,

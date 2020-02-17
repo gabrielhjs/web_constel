@@ -50,14 +50,9 @@ urlpatterns = [
         name='gc_relatorio_mensal'
     ),
     path(
-        'patrimonio/combustivel/menu-relatorios/por-periodo/',
-        views.view_relatorio_por_periodo,
-        name='gc_relatorio_por_periodo'
-    ),
-    path(
-        'patrimonio/combustivel/menu-relatorios/por-funcionario/',
+        'patrimonio/combustivel/menu-relatorios/beneficiarios/',
         views.view_relatorio_por_funcionario,
-        name='gc_relatorio_por_funcionario'
+        name='gc_relatorio_beneficiarios'
     ),
     path(
         'patrimonio/combustivel/menu-taloes/entrega-talao/',
