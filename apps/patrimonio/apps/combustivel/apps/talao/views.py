@@ -451,18 +451,23 @@ def view_relatorio_por_funcionario(request):
 
     print(data_inicial, data_final, funcionario)
 
+    funcionario_queryset = Q(
+            Q(username__icontains=funcionario) |
+            Q(first_name__icontains=funcionario) |
+            Q(last_name__icontains=funcionario))
+
     if funcionario != '' and data_inicial != '' and data_final != '':
-        queryset = Q(username__contains=funcionario) & \
-                   Q(vale_user_to__data__gte=data_inicial) & \
-                   Q(vale_user_to__data__lte=data_final)
+        queryset = funcionario_queryset & \
+            Q(vale_user_to__data__gte=data_inicial) & \
+            Q(vale_user_to__data__lte=data_final)
 
     elif funcionario != '' and data_inicial != '':
-        queryset = Q(username__contains=funcionario) & \
-                   Q(vale_user_to__data__gte=data_inicial)
+        queryset = funcionario_queryset & \
+            Q(vale_user_to__data__gte=data_inicial)
 
     elif funcionario != '' and data_final != '':
-        queryset = Q(username__contains=funcionario) & \
-                   Q(vale_user_to__data__lte=data_final)
+        queryset = funcionario_queryset & \
+            Q(vale_user_to__data__lte=data_final)
 
     elif data_inicial != '' and data_final != '':
         queryset = Q(vale_user_to__data__gte=data_inicial) & \
@@ -475,11 +480,7 @@ def view_relatorio_por_funcionario(request):
         queryset = Q(vale_user_to__data__lte=data_final)
 
     elif funcionario != '':
-        queryset = Q(
-            Q(username__contains=funcionario) |
-            Q(first_name__contains=funcionario) |
-            Q(last_name__contains=funcionario)
-        ) & \
+        queryset = funcionario_queryset & \
             Q(vale_user_to__data__gte=datetime.datetime.strptime('2018-01-01', "%Y-%m-%d").date())
 
     else:
