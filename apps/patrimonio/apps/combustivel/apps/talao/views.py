@@ -475,7 +475,8 @@ def view_relatorio_por_funcionario(request):
         queryset = Q(vale_user_to__data__lte=data_final)
 
     elif funcionario != '':
-        queryset = Q(username__contains=funcionario)
+        queryset = Q(username__contains=funcionario) & \
+                   Q(vale_user_to__data__gte=datetime.datetime.strptime('2018-01-01', "%Y-%m-%d").date())
 
     else:
         queryset = Q(vale_user_to__data__gte=datetime.datetime.strptime('2018-01-01', "%Y-%m-%d").date())
