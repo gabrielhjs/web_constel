@@ -14,15 +14,22 @@
                 <th>Funcionário</th>
                 <th>Último vale</th>
                 <th>Total</th>
+                <th colspan="2">Qtde de vales</th>
             </tr>
         </thead>
         <tbody>
         {% for vale in vales %}
             <tr>
-                <td>{{ vale.username }}</td>
+                <td>{{ vale.username|upper }}</td>
                 <td>{{ vale.first_name|title }} {{ vale.last_name|title }}</td>
-                <td>{{ vale.data|date:'d/m/Y' }}</td>
+                <td>{{ vale.max_data|date:'d/m/Y' }}</td>
                 <td>{{ vale.total }}</td>
+                <td>{{ vale.n_vales }}</td>
+                <td>
+                    <a href="{% url 'gc_relatorio_beneficiarios_detalhe' vale.username %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">
+                        <button>Vales</button>
+                    </a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

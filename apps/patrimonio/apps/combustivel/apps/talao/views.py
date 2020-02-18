@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.db.models import Sum, Max
+from django.db.models import Sum, Max, Count
 from django.db.models import Q
 
 import datetime
@@ -427,13 +427,13 @@ def view_relatorio_por_periodo(request):
 
 @login_required
 @permission('patrimonio', 'patrimonio - combustivel', )
-def view_relatorio_por_funcionario(request):
+def view_relatorio_beneficiarios(request):
 
     data_inicial = request.GET.get('data_inicial', '')
     data_final = request.GET.get('data_final', '')
     funcionario = request.GET.get('funcionario', '')
 
-    form = FormRelatorioFuncionario(
+    form = FormRelatorioBeneficiario(
         initial={
             'data_inicial': data_inicial,
             'data_final': data_final,
@@ -441,68 +441,92 @@ def view_relatorio_por_funcionario(request):
         }
     )
 
-    if data_inicial != '':
-        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
+    query = Q(vale_user_to__vale__status=2)
 
-    if data_final != '':
-        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
-
-    context = {}
-
-    print(data_inicial, data_final, funcionario)
-
-    funcionario_queryset = Q(
+    if funcionario != '':
+        query = query & Q(
             Q(username__icontains=funcionario) |
             Q(first_name__icontains=funcionario) |
             Q(last_name__icontains=funcionario))
 
-    if funcionario != '' and data_inicial != '' and data_final != '':
-        queryset = funcionario_queryset & \
-            Q(vale_user_to__data__gte=data_inicial) & \
-            Q(vale_user_to__data__lte=data_final)
+    if data_inicial != '':
+        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
+        query = query & Q(vale_user_to__data__gte=data_inicial)
 
-    elif funcionario != '' and data_inicial != '':
-        queryset = funcionario_queryset & \
-            Q(vale_user_to__data__gte=data_inicial)
+    if data_final != '':
+        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
+        query = query & Q(vale_user_to__data__lte=data_final)
 
-    elif funcionario != '' and data_final != '':
-        queryset = funcionario_queryset & \
-            Q(vale_user_to__data__lte=data_final)
-
-    elif data_inicial != '' and data_final != '':
-        queryset = Q(vale_user_to__data__gte=data_inicial) & \
-                   Q(vale_user_to__data__lte=data_final)
-
-    elif data_inicial != '':
-        queryset = Q(vale_user_to__data__gte=data_inicial)
-
-    elif data_final != '':
-        queryset = Q(vale_user_to__data__lte=data_final)
-
-    elif funcionario != '':
-        queryset = funcionario_queryset & \
-            Q(vale_user_to__data__gte=datetime.datetime.strptime('2018-01-01', "%Y-%m-%d").date())
-
-    else:
-        queryset = Q(vale_user_to__data__gte=datetime.datetime.strptime('2018-01-01', "%Y-%m-%d").date())
-
-    vales = User.objects.filter(
-        queryset
-    ).annotate(
+    vales = User.objects.filter(query).annotate(
         total=Sum('vale_user_to__valor'),
-        data=Max('vale_user_to__data')
+        max_data=Max('vale_user_to__data'),
+        n_vales=Count('vale_user_to__valor'),
     ).order_by(
         '-total'
     )
 
-    for vale in vales:
-        vale.total = 'R$ {:8.2f}'.format(vale.total)
+    vales = vales.values(
+        'username',
+        'first_name',
+        'last_name',
+        'max_data',
+        'total',
+        'n_vales',
+    )
 
-    context.update({
+    context = {
         'pagina_titulo': 'Relatório geral',
         'button_submit_text': 'Filtrar',
         'form': form,
-        'vales': vales
-    })
+        'vales': vales,
+    }
 
     return render(request, 'talao/relatorio_beneficiarios.html', context)
+
+
+def view_relatorio_beneficiarios_detalhe(request, funcionario):
+
+    data_inicial = request.GET.get('data_inicial', '')
+    data_final = request.GET.get('data_final', '')
+
+    form = FormRelatorioBeneficiarioDetalhe(
+        initial={
+            'data_inicial': data_inicial,
+            'data_final': data_final,
+        }
+    )
+
+    query = Q(user_to__username=funcionario)
+
+    if data_inicial != '':
+        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
+        query = query & Q(data__gte=data_inicial)
+
+    if data_final != '':
+        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
+        query = query & Q(data__lte=data_final)
+
+    vales = EntregaVale.objects.filter(query)
+
+    vales = vales.values(
+        'vale',
+        'data',
+        'user__first_name',
+        'user__last_name',
+        'user_to__first_name',
+        'user_to__last_name',
+        'valor',
+        'combustivel__combustivel',
+        'posto',
+        'observacao',
+    )
+
+    context = {
+        'pagina_titulo': 'Detalhe',
+        'button_submit_text': 'Filtrar',
+        'form': form,
+        'vales': vales,
+        'funcionario': funcionario,
+    }
+
+    return render(request, 'talao/relatorio_beneficiarios_detalhe.html', context)

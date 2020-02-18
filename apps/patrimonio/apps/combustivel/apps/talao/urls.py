@@ -51,8 +51,13 @@ urlpatterns = [
     ),
     path(
         'patrimonio/combustivel/menu-relatorios/beneficiarios/',
-        views.view_relatorio_por_funcionario,
+        views.view_relatorio_beneficiarios,
         name='gc_relatorio_beneficiarios'
+    ),
+    path(
+        'patrimonio/combustivel/menu-relatorios/beneficiarios/<str:funcionario>/',
+        views.view_relatorio_beneficiarios_detalhe,
+        name='gc_relatorio_beneficiarios_detalhe'
     ),
     path(
         'patrimonio/combustivel/menu-taloes/entrega-talao/',
