@@ -256,6 +256,20 @@ def view_taloes(request):
     """
 
     taloes = Talao.objects.all().order_by('talao')
+
+    taloes = taloes.values(
+        'talao',
+        'status',
+        'talao_cadastro__data',
+        'talao_cadastro__user__first_name',
+        'talao_cadastro__user__last_name',
+        'talao_entrega__data',
+        'talao_entrega__user__first_name',
+        'talao_entrega__user__last_name',
+        'talao_entrega__user_to__first_name',
+        'talao_entrega__user_to__last_name',
+    )
+
     context = {
         'taloes': taloes,
         'pagina_titulo': 'Combustível',
@@ -433,7 +447,7 @@ def view_relatorio_beneficiarios(request):
     data_final = request.GET.get('data_final', '')
     funcionario = request.GET.get('funcionario', '')
 
-    form = FormRelatorioBeneficiario(
+    form = FormDataInicialFinalFuncionario(
         initial={
             'data_inicial': data_inicial,
             'data_final': data_final,
@@ -489,7 +503,7 @@ def view_relatorio_beneficiarios_detalhe(request, funcionario):
     data_inicial = request.GET.get('data_inicial', '')
     data_final = request.GET.get('data_final', '')
 
-    form = FormRelatorioBeneficiarioDetalhe(
+    form = FormDataInicialFinal(
         initial={
             'data_inicial': data_inicial,
             'data_final': data_final,

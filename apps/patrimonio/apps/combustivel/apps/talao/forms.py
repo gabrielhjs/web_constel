@@ -161,7 +161,7 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
-class FormRelatorioBeneficiario(forms.Form):
+class FormDataInicialFinalFuncionario(forms.Form):
     """
     Formulário que permite selecionar uma data inicial e uma final
     """
@@ -179,7 +179,7 @@ class FormRelatorioBeneficiario(forms.Form):
         return form_data
 
 
-class FormRelatorioBeneficiarioDetalhe(forms.Form):
+class FormDataInicialFinal(forms.Form):
     """
     Formulário que permite selecionar uma data inicial e uma final
     """
