@@ -25,12 +25,13 @@ class FichaMateriais(FPDF):
             cabecalho_texto = 'FICHA DE ENTRADA DE MATERIAIS NO ALMOXARIFADO'
             cabecalho_fornecedor_tecnico = 'Fornecedor:'
             fornecedor_tecnico = str(self.ordem.almoxarifado_ordem_entrada.first().fornecedor.nome)
+            fornecedor_tecnico_id = self.ordem.almoxarifado_ordem_entrada.first().fornecedor.cnpj
 
         else:
             cabecalho_texto = 'FICHA DE SAÍDA DE MATERIAIS DO ALMOXARIFADO'
             cabecalho_fornecedor_tecnico = 'Técnico:'
-            fornecedor_tecnico = self.ordem.almoxarifado_ordem_saida.first().user_to.first_name + ' ' + \
-                self.ordem.almoxarifado_ordem_saida.first().user_to.last_name
+            fornecedor_tecnico = self.ordem.almoxarifado_ordem_saida.first().user_to.get_full_name().title()
+            fornecedor_tecnico_id = self.ordem.almoxarifado_ordem_saida.first().user_to.username
 
         self.cell(self.epw, self.th * 2, cabecalho_texto, align='C', border=1)
         self.ln(self.th * 2)
@@ -39,7 +40,8 @@ class FichaMateriais(FPDF):
         data = str(self.ordem.data.day) + '/' + str(self.ordem.data.month) + '/' + str(self.ordem.data.year)
         hora = str(self.ordem.data.hour) + ':' + str(self.ordem.data.minute) + ':' + str(self.ordem.data.second)
         colunas = [self.epw * .15, self.epw * .15, self.epw * .3, self.epw * .3, self.epw * .1]
-        responsavel = self.ordem.user.first_name + ' ' + self.ordem.user.last_name
+        responsavel = self.ordem.user.get_full_name().title()
+        responsavel_id = self.ordem.user.username
         
         linha = self.th * .8
         
@@ -55,9 +57,17 @@ class FichaMateriais(FPDF):
         
         self.cell(colunas[0], linha, data, align='C', border=1)
         self.cell(colunas[1], linha, hora, align='C', border=1)
-        self.cell(colunas[2], linha, responsavel.title(), align='C', border=1)
-        self.cell(colunas[3], linha, fornecedor_tecnico.title(), align='C', border=1)
-        self.cell(colunas[4], linha, str(self.ordem.id), align='C', border=1)      
+        self.cell(colunas[2], linha, responsavel, align='C', border=1)
+        self.cell(colunas[3], linha, fornecedor_tecnico, align='C', border=1)
+        self.cell(colunas[4], linha, str(self.ordem.id), align='C', border=1)
+
+        self.ln(0)
+        self.set_font_size(8)
+        linha = self.th * 4.5
+
+        self.cell(colunas[0] + colunas[1], linha, '', align='C')
+        self.cell(colunas[2], linha, '(%s)' % responsavel_id, align='C')
+        self.cell(colunas[3], linha, '(%s)' % fornecedor_tecnico_id, align='C')
             
     def tabela(self):
 
