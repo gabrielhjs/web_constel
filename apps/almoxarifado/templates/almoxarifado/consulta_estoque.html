@@ -16,9 +16,9 @@
         <tbody>
         {% for item in itens %}
             <tr>
-                <td>{{ item.material.codigo }}</td>
-                <td>{{ item.material.material }}</td>
-                <td>{{ item.material.descricao }}</td>
+                <td>{{ item.material__codigo }}</td>
+                <td>{{ item.material__material }}</td>
+                <td>{{ item.material__descricao }}</td>
                 <td>{{ item.quantidade }}</td>
             </tr>
         {% endfor %}

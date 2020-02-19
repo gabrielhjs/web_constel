@@ -20,10 +20,10 @@
         {% for item in page_obj %}
             <tr>
                 <td>{{ item.id }}</td>
-                <td>{{ item.data }}</td>
-                <td>{{ item.user.get_full_name|title }}</td>
+                <td>{{ item.data|date:'d/m/Y h:m:s' }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
                 {% if tipo %}
-                <td>{{ item.almoxarifado_ordem_saida.first.user_to.get_full_name|title }}</td>
+                <td>{{ item.almoxarifado_ordem_saida__user_to__first_name|title }} {{ item.almoxarifado_ordem_saida__user_to__last_name|title }}</td>
                 {% endif %}
                 <td>
                     <a href="{% url 'almoxarifado_consulta_ordem_detalhes' tipo item.id %}"><button>Itens</button></a>

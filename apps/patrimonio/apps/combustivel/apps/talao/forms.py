@@ -140,23 +140,6 @@ class FormCadastraPosto(forms.ModelForm):
         fields = '__all__'
 
 
-class FormRelatorioPeriodo(forms.Form):
-    """
-    Formulário que permite selecionar uma data inicial e uma final
-    """
-
-    data_inicial = forms.DateField(widget=forms.SelectDateWidget(years=range(2019, 2050)))
-    data_final = forms.DateField(widget=forms.SelectDateWidget(years=range(2019, 2050)))
-
-    def clean(self):
-        form_data = self.cleaned_data
-
-        if form_data['data_inicial'] >= form_data['data_final']:
-            self.errors['data_inicial'] = ['A data inicial não pode ser mais recente que a data final']
-
-        return form_data
-
-
 class DateInput(forms.DateInput):
     input_type = 'date'
 

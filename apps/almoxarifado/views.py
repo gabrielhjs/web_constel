@@ -308,6 +308,13 @@ class ViewConsultaMateriais(ListView):
 def view_consulta_estoque(request):
 
     itens = MaterialQuantidade.objects.filter(quantidade__gt=0).order_by('material')
+    itens = itens.values(
+        'material__codigo',
+        'material__material',
+        'material__descricao',
+        'quantidade',
+    )
+
     context = {
         'itens': itens,
         'pagina_titulo': 'Almoxarifado',
@@ -321,6 +328,14 @@ def view_consulta_estoque(request):
 def view_consulta_ordem(request, tipo):
 
     itens = Ordem.objects.filter(tipo=tipo).order_by('-data')
+    itens = itens.values(
+        'id',
+        'data',
+        'user__first_name',
+        'user__last_name',
+        'almoxarifado_ordem_saida__user_to__first_name',
+        'almoxarifado_ordem_saida__user_to__last_name',
+    )
     paginator = Paginator(itens, 50)
 
     page_number = request.GET.get('page')
