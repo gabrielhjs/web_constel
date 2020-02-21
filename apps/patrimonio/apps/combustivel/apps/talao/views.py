@@ -112,8 +112,6 @@ def view_cadastrar_posto(request):
         'posto',
     )
 
-    print(postos)
-
     context = {
         'postos': postos,
         'form': form,
@@ -303,8 +301,8 @@ def view_talao(request, **kwargs):
     talao_id = kwargs.get('talao_id')
 
     if Talao.objects.filter(talao=talao_id).exists():
-        talao = Talao.objects.filter(talao=kwargs.get('talao_id'))
-        vales = Vale.objects.filter(talao_id=talao_id).order_by('vale')
+        talao = Talao.objects.filter(talao=talao_id)
+        vales = Vale.objects.filter(talao__talao=talao_id).order_by('vale')
 
         talao = talao.values(
             'talao',
@@ -361,7 +359,7 @@ def view_meu_talao(request, **kwargs):
 
     if Talao.objects.filter(talao=kwargs.get('talao_id')).exists():
         talao = Talao.objects.filter(talao=kwargs.get('talao_id'))
-        vales = Vale.objects.filter(talao_id=talao_id).order_by('vale')
+        vales = Vale.objects.filter(talao__talao=talao_id).order_by('vale')
 
         talao = talao.values(
             'talao',
