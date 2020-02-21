@@ -1,5 +1,5 @@
 {% extends 'constel/base.html' %}
-{% block title %}Constel | Combustível{% endblock %}
+{% block title %}Constel | Combustível | {{ talao.talao }}{% endblock %}
 {% block content %}
 <div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
 <div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
@@ -10,11 +10,10 @@
                 <th>Talão</th>
                 <th>Status</th>
                 <th>Data de cadastro</th>
-                <th>Cadastrado por</th>
+                <th>Quem cadastrou</th>
                 <th>Data de entrega</th>
-                <th>Entregue por</th>
-                <th>Recebido por</th>
-                <th>Opções</th>
+                <th>Quem entregou</th>
+                <th>Quem recebeu</th>
             </tr>
         </thead>
         <tbody>
@@ -23,20 +22,45 @@
                 <td>{{ talao.talao }}</td>
                 <td>{{ talao.status }}</td>
                 <td>{{ talao.talao_cadastro__data|date:'d/m/Y' }}</td>
-                <td>{{ talao.talao_cadastro__user__first_name|title }} {{ talao.talao_cadastro__user__last_name|title }}</td>
+                <td>{{ talao.talao_cadastro__user__first_name }} {{ talao.talao_cadastro__user__last_name }}</td>
                 <td>{{ talao.talao_entrega__data|date:'d/m/Y' }}</td>
-                <td>{{ talao.talao_entrega__user__first_name|title }} {{ talao.talao_entrega__user__last_name|title }}</td>
-                <td>{{ talao.talao_entrega__user_to__first_name|title }} {{ talao.talao_entrega__user_to__last_name|title }}</td>
-                <td>
-                    <a href="{% url 'gc_consulta_talao' talao.talao %}">
-                        <button>Vales</button>
-                    </a>
-                </td>
+                <td>{{ talao.talao_entrega__user__first_name }} {{ talao.talao_entrega__user__last_name }}</td>
+                <td>{{ talao.talao_entrega__user_to__first_name }} {{ talao.talao_entrega__user_to__last_name }}</td>
             </tr>
         {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="menu-text"><h1>Vales</h1></div>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Vale</th>
+                <th>Status</th>
+                <th>Data de entrega</th>
+                <th>Quem recebeu</th>
+                <th>Combustível</th>
+                <th>Valor</th>
+                <th>Observação</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vale in vales %}
+            <tr>
+                <td>{{ vale.vale }}</td>
+                <td>{{ vale.status }}</td>
+                <td>{{ vale.vale_entrega__data|date:'d/m/Y' }}</td>
+                <td>{{ vale.vale_entrega__user__first_name|default:""|title }} {{ vale.vale_entrega__user__last_name|default:""|title }}</td>
+                <td>{{ vale.vale_entrega__combustivel__combustivel|default:"" }}</td>
+                <td>{{ vale.vale_entrega__valor|default:"" }}</td>
+                <td>{{ vale.vale_entrega__observacao|default:"" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
     </table>
 </div>
 <div class="menu-button menu-back">
-    <a href="{% url 'gc_menu_consultas' %}"><button>Voltar</button></a>
+    <a href="{% url 'gc_consulta_taloes' %}"><button>Voltar</button></a>
 </div>
 {% endblock %}

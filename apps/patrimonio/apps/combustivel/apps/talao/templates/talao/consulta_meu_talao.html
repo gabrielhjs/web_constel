@@ -17,15 +17,17 @@
             </tr>
         </thead>
         <tbody>
+        {% for talao in taloes %}
             <tr>
                 <td>{{ talao.talao }}</td>
-                <td>{{ talao.get_status_display }}</td>
-                <td>{{ talao.talao_cadastro.first.data }}</td>
-                <td>{{ talao.talao_cadastro.first.user }}</td>
-                <td>{{ talao.talao_entrega.first.data }}</td>
-                <td>{{ talao.talao_entrega.first.user }}</td>
-                <td>{{ talao.talao_entrega.first.user_to }}</td>
+                <td>{{ talao.status }}</td>
+                <td>{{ talao.talao_cadastro__data|date:'d/m/Y' }}</td>
+                <td>{{ talao.talao_cadastro__user__first_name }} {{ talao.talao_cadastro__user__last_name }}</td>
+                <td>{{ talao.talao_entrega__data|date:'d/m/Y' }}</td>
+                <td>{{ talao.talao_entrega__user__first_name }} {{ talao.talao_entrega__user__last_name }}</td>
+                <td>{{ talao.talao_entrega__user_to__first_name }} {{ talao.talao_entrega__user_to__last_name }}</td>
             </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>
@@ -37,30 +39,28 @@
                 <th>Vale</th>
                 <th>Status</th>
                 <th>Data de entrega</th>
-                <th>Matrícula</th>
-                <th>Nome</th>
+                <th>Quem recebeu</th>
                 <th>Combustível</th>
                 <th>Valor</th>
                 <th>Observação</th>
             </tr>
         </thead>
         <tbody>
-        {% for vale in talao.talao_vales.all %}
+        {% for vale in vales %}
             <tr>
                 <td>{{ vale.vale }}</td>
-                <td>{{ vale.get_status_display }}</td>
-                <td>{{ vale.vale_entrega.first.data }}</td>
-                <td>{{ vale.vale_entrega.first.user_to }}</td>
-                <td>{{ vale.vale_entrega.first.user_to.get_full_name|title }}</td>
-                <td>{{ vale.vale_entrega.first.combustivel.combustivel }}</td>
-                <td>{{ vale.vale_entrega.first.valor_moeda }}</td>
-                <td>{{ vale.vale_entrega.first.observacao }}</td>
+                <td>{{ vale.status }}</td>
+                <td>{{ vale.vale_entrega__data|date:'d/m/Y' }}</td>
+                <td>{{ vale.vale_entrega__user__first_name|default:""|title }} {{ vale.vale_entrega__user__last_name|default:""|title }}</td>
+                <td>{{ vale.vale_entrega__combustivel__combustivel|default:"" }}</td>
+                <td>{{ vale.vale_entrega__valor|default:"" }}</td>
+                <td>{{ vale.vale_entrega__observacao|default:"" }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
 <div class="menu-button menu-back">
-    <a href="{% url 'gc_consulta_taloes' %}"><button>Voltar</button></a>
+    <a href="{% url 'gc_consulta_meus_taloes' %}"><button>Voltar</button></a>
 </div>
 {% endblock %}

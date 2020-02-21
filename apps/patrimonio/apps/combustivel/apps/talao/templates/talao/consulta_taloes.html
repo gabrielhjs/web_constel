@@ -21,14 +21,14 @@
         {% for talao in taloes %}
             <tr>
                 <td>{{ talao.talao }}</td>
-                <td>{{ talao.get_status_display }}</td>
-                <td>{{ talao.talao_cadastro.first.data }}</td>
-                <td>{{ talao.talao_cadastro.first.user }}</td>
-                <td>{{ talao.talao_entrega.first.data }}</td>
-                <td>{{ talao.talao_entrega.first.user }}</td>
-                <td>{{ talao.talao_entrega.first.user_to }}</td>
+                <td>{{ talao.status }}</td>
+                <td>{{ talao.talao_cadastro__data|date:'d/m/Y' }}</td>
+                <td>{{ talao.talao_cadastro__user__first_name|title }} {{ talao.talao_cadastro__user__last_name|title }}</td>
+                <td>{{ talao.talao_entrega__data|date:'d/m/Y' }}</td>
+                <td>{{ talao.talao_entrega__user__first_name|default:""|title }} {{ talao.talao_entrega__user__last_name|default:""|title }}</td>
+                <td>{{ talao.talao_entrega__user_to__first_name|default:""|title }} {{ talao.talao_entrega__user_to__last_name|default:""|title }}</td>
                 <td>
-                    <a href="{% url 'gc_consulta_meu_talao' talao.talao %}">
+                    <a href="{% url 'gc_consulta_talao' talao.talao %}">
                         <button>Vales</button>
                     </a>
                 </td>

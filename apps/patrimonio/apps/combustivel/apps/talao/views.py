@@ -9,6 +9,7 @@ import datetime
 from .forms import *
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
 from constel.apps.controle_acessos.decorator import permission
+from constel.forms import FormDataInicialFinal, FormDataInicialFinalFuncionario
 
 
 @login_required
@@ -70,8 +71,12 @@ def view_cadastrar_combustivel(request):
     else:
         form = FormCadastraCombustivel()
 
+    combustiveis = Combustivel.objects.all().values(
+        'combustivel'
+    )
+
     context = {
-        'combustiveis': Combustivel.objects.all(),
+        'combustiveis': combustiveis,
         'form': form,
         'callback': 'gc_menu_cadastros',
         'button_submit_text': 'Cadastrar combustível',
@@ -103,8 +108,14 @@ def view_cadastrar_posto(request):
     else:
         form = FormCadastraPosto()
 
+    postos = Posto.objects.all().values(
+        'posto',
+    )
+
+    print(postos)
+
     context = {
-        'postos': Posto.objects.all(),
+        'postos': postos,
         'form': form,
         'callback': 'gc_menu_cadastros',
         'button_submit_text': 'Cadastrar posto',
@@ -276,7 +287,7 @@ def view_taloes(request):
         'menu_titulo': 'Talões',
     }
 
-    return render(request, 'talao/consulta_talao.html', context)
+    return render(request, 'talao/consulta_taloes.html', context)
 
 
 @login_required
@@ -289,17 +300,47 @@ def view_talao(request, **kwargs):
     :return: informações do talão requerido
     """
 
-    if Talao.objects.filter(talao=kwargs.get('talao_id')).exists():
-        talao = Talao.objects.get(talao=kwargs.get('talao_id'))
-        vales = Vale.objects.filter(talao=talao).order_by('vale')
+    talao_id = kwargs.get('talao_id')
+
+    if Talao.objects.filter(talao=talao_id).exists():
+        talao = Talao.objects.filter(talao=kwargs.get('talao_id'))
+        vales = Vale.objects.filter(talao_id=talao_id).order_by('vale')
+
+        talao = talao.values(
+            'talao',
+            'status',
+            'talao_cadastro__data',
+            'talao_cadastro__user__first_name',
+            'talao_cadastro__user__last_name',
+            'talao_entrega__data',
+            'talao_entrega__user__first_name',
+            'talao_entrega__user__last_name',
+            'talao_entrega__user_to__first_name',
+            'talao_entrega__user_to__last_name',
+        )
+
+        vales = vales.values(
+            'vale',
+            'status',
+            'vale_entrega__data',
+            'vale_entrega__user__first_name',
+            'vale_entrega__user__last_name',
+            'vale_entrega__combustivel__combustivel',
+            'vale_entrega__valor',
+            'vale_entrega__observacao',
+        )
+
+        for vale in vales:
+            if vale['vale_entrega__valor'] is not None:
+                vale['vale_entrega__valor'] = 'R$ {:8.2f}'.format(vale['vale_entrega__valor'])
 
         context = {
-            'talao': talao,
+            'taloes': talao,
             'vales': vales,
             'pagina_titulo': 'Combustível',
             'menu_titulo': 'Talão',
         }
-        return render(request, 'talao/detalhes_talao.html', context)
+        return render(request, 'talao/consulta_talao.html', context)
 
     else:
 
@@ -316,17 +357,47 @@ def view_meu_talao(request, **kwargs):
     :return: informações do talão requerido
     """
 
+    talao_id = kwargs.get('talao_id')
+
     if Talao.objects.filter(talao=kwargs.get('talao_id')).exists():
-        talao = Talao.objects.get(talao=kwargs.get('talao_id'))
-        vales = Vale.objects.filter(talao=talao).order_by('vale')
+        talao = Talao.objects.filter(talao=kwargs.get('talao_id'))
+        vales = Vale.objects.filter(talao_id=talao_id).order_by('vale')
+
+        talao = talao.values(
+            'talao',
+            'status',
+            'talao_cadastro__data',
+            'talao_cadastro__user__first_name',
+            'talao_cadastro__user__last_name',
+            'talao_entrega__data',
+            'talao_entrega__user__first_name',
+            'talao_entrega__user__last_name',
+            'talao_entrega__user_to__first_name',
+            'talao_entrega__user_to__last_name',
+        )
+
+        vales = vales.values(
+            'vale',
+            'status',
+            'vale_entrega__data',
+            'vale_entrega__user__first_name',
+            'vale_entrega__user__last_name',
+            'vale_entrega__combustivel__combustivel',
+            'vale_entrega__valor',
+            'vale_entrega__observacao',
+        )
+
+        for vale in vales:
+            if vale['vale_entrega__valor'] is not None:
+                vale['vale_entrega__valor'] = 'R$ {:8.2f}'.format(vale['vale_entrega__valor'])
 
         context = {
-            'talao': talao,
+            'taloes': talao,
             'vales': vales,
             'pagina_titulo': 'Combustível',
             'menu_titulo': 'Talão',
         }
-        return render(request, 'talao/detalhes_meu_talao.html', context)
+        return render(request, 'talao/consulta_meu_talao.html', context)
 
     else:
 
@@ -343,6 +414,21 @@ def view_meus_vales(request):
     """
 
     vales = Vale.objects.filter(vale_entrega__user_to=request.user).order_by('vale')
+    vales = vales.values(
+        'vale',
+        'talao',
+        'status',
+        'vale_entrega__data',
+        'vale_entrega__user__first_name',
+        'vale_entrega__user__last_name',
+        'vale_entrega__combustivel__combustivel',
+        'vale_entrega__valor',
+        'vale_entrega__observacao',
+    )
+
+    for vale in vales:
+        vale['vale_entrega__valor'] = 'R$ {:8.2f}'.format(vale['vale_entrega__valor'])
+
     context = {
         'vales': vales,
         'pagina_titulo': 'Combustível',
@@ -362,13 +448,26 @@ def view_meus_taloes(request):
     """
 
     taloes = Talao.objects.filter(talao_entrega__user_to=request.user).order_by('talao')
+    taloes = taloes.values(
+        'talao',
+        'status',
+        'talao_cadastro__data',
+        'talao_cadastro__user__first_name',
+        'talao_cadastro__user__last_name',
+        'talao_entrega__data',
+        'talao_entrega__user__first_name',
+        'talao_entrega__user__last_name',
+        'talao_entrega__user_to__first_name',
+        'talao_entrega__user_to__last_name',
+    )
+
     context = {
         'taloes': taloes,
         'pagina_titulo': 'Combustível',
         'menu_titulo': 'Talões',
     }
 
-    return render(request, 'talao/consulta_meus_talao.html', context)
+    return render(request, 'talao/consulta_meus_taloes.html', context)
 
 
 @login_required
@@ -384,13 +483,23 @@ def view_relatorio_mensal(request):
         vale_user_to__data__month=hoje.month,
         vale_user_to__data__year=hoje.year,
     ).annotate(
-        total=Sum('vale_user_to__valor')
+        total=Sum('vale_user_to__valor'),
+        max_data=Max('vale_user_to__data'),
+        n_vales=Count('vale_user_to__valor'),
     ).order_by(
         '-total'
     )
+    vales = vales.values(
+        'username',
+        'first_name',
+        'last_name',
+        'max_data',
+        'total',
+        'n_vales',
+    )
 
     for vale in vales:
-        vale.total = 'R$ {:8.2f}'.format(vale.total)
+        vale['total'] = 'R$ {:8.2f}'.format(vale['total'])
 
     context = {
         'vales': vales,
@@ -450,6 +559,9 @@ def view_relatorio_beneficiarios(request):
         'n_vales',
     )
 
+    for vale in vales:
+        vale['total'] = 'R$ {:8.2f}'.format(vale['total'])
+
     context = {
         'pagina_titulo': 'Relatório geral',
         'button_submit_text': 'Filtrar',
@@ -460,6 +572,8 @@ def view_relatorio_beneficiarios(request):
     return render(request, 'talao/relatorio_beneficiarios.html', context)
 
 
+@login_required
+@permission('patrimonio', 'patrimonio - combustivel', )
 def view_relatorio_beneficiarios_detalhe(request, funcionario):
 
     data_inicial = request.GET.get('data_inicial', '')
@@ -496,6 +610,9 @@ def view_relatorio_beneficiarios_detalhe(request, funcionario):
         'posto',
         'observacao',
     )
+
+    for vale in vales:
+        vale['valor'] = 'R$ {:8.2f}'.format(vale['valor'])
 
     context = {
         'pagina_titulo': 'Detalhe',

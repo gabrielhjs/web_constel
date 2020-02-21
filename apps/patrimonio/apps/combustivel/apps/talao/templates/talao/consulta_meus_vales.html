@@ -11,8 +11,7 @@
                 <th>Talão</th>
                 <th>Status</th>
                 <th>Data de entrega</th>
-                <th>Matrícula</th>
-                <th>Nome</th>
+                <th>Responsável pela entrega</th>
                 <th>Combustível</th>
                 <th>Valor</th>
                 <th>Observação</th>
@@ -23,13 +22,12 @@
             <tr>
                 <td>{{ vale.vale }}</td>
                 <td>{{ vale.talao }}</td>
-                <td>{{ vale.get_status_display }}</td>
-                <td>{{ vale.vale_entrega.first.data }}</td>
-                <td>{{ vale.vale_entrega.first.user_to }}</td>
-                <td>{{ vale.vale_entrega.first.user_to.get_full_name|title }}</td>
-                <td>{{ vale.vale_entrega.first.combustivel.combustivel }}</td>
-                <td>{{ vale.vale_entrega.first.valor_moeda }}</td>
-                <td>{{ vale.vale_entrega.first.observacao }}</td>
+                <td>{{ vale.status }}</td>
+                <td>{{ vale.vale_entrega__data|date:'d/m/Y' }}</td>
+                <td>{{ vale.vale_entrega__user__first_name|title }} {{ vale.vale_entrega__user__last_name|title }}</td>
+                <td>{{ vale.vale_entrega__combustivel__combustivel }}</td>
+                <td>{{ vale.vale_entrega__valor }}</td>
+                <td>{{ vale.vale_entrega__observacao }}</td>
             </tr>
         {% endfor %}
         </tbody>
