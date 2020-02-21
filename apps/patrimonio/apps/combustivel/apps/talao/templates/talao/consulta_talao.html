@@ -22,10 +22,10 @@
                 <td>{{ talao.talao }}</td>
                 <td>{{ talao.status }}</td>
                 <td>{{ talao.talao_cadastro__data|date:'d/m/Y' }}</td>
-                <td>{{ talao.talao_cadastro__user__first_name }} {{ talao.talao_cadastro__user__last_name }}</td>
+                <td>{{ talao.talao_cadastro__user__first_name|title }} {{ talao.talao_cadastro__user__last_name|title }}</td>
                 <td>{{ talao.talao_entrega__data|date:'d/m/Y' }}</td>
-                <td>{{ talao.talao_entrega__user__first_name }} {{ talao.talao_entrega__user__last_name }}</td>
-                <td>{{ talao.talao_entrega__user_to__first_name }} {{ talao.talao_entrega__user_to__last_name }}</td>
+                <td>{{ talao.talao_entrega__user__first_name|title }} {{ talao.talao_entrega__user__last_name|title }}</td>
+                <td>{{ talao.talao_entrega__user_to__first_name|title }} {{ talao.talao_entrega__user_to__last_name|title }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -51,7 +51,7 @@
                 <td>{{ vale.vale }}</td>
                 <td>{{ vale.status }}</td>
                 <td>{{ vale.vale_entrega__data|date:'d/m/Y' }}</td>
-                <td>{{ vale.vale_entrega__user__first_name|default:""|title }} {{ vale.vale_entrega__user__last_name|default:""|title }}</td>
+                <td>{{ vale.vale_entrega__user_to__first_name|default:""|title }} {{ vale.vale_entrega__user_to__last_name|default:""|title }}</td>
                 <td>{{ vale.vale_entrega__combustivel__combustivel|default:"" }}</td>
                 <td>{{ vale.vale_entrega__valor|default:"" }}</td>
                 <td>{{ vale.vale_entrega__observacao|default:"" }}</td>
