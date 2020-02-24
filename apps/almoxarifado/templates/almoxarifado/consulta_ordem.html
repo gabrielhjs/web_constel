@@ -23,7 +23,7 @@
                 <td>{{ item.data|date:'d/m/Y h:m:s' }}</td>
                 <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
                 {% if tipo %}
-                <td>{{ item.almoxarifado_ordem_saida__user_to__first_name|title }} {{ item.almoxarifado_ordem_saida__user_to__last_name|title }}</td>
+                <td>{{ item.user_to_first_name|title }} {{ item.user_to_last_name|title }}</td>
                 {% endif %}
                 <td>
                     <a href="{% url 'almoxarifado_consulta_ordem_detalhes' tipo item.id %}"><button>Itens</button></a>
