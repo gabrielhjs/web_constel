@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Min
 
 from .forms import *
 from .models import Material
@@ -329,14 +330,21 @@ def view_consulta_estoque(request):
 @permission('almoxarifado', )
 def view_consulta_ordem(request, tipo):
 
-    itens = Ordem.objects.filter(tipo=tipo).order_by('-data')
+    itens = Ordem.objects.filter(
+        tipo=tipo
+    ).order_by(
+        '-data'
+    ).annotate(
+        user_to_first_name=Min('almoxarifado_ordem_saida__user_to__first_name'),
+        user_to_last_name=Min('almoxarifado_ordem_saida__user_to__last_name'),
+    )
     itens = itens.values(
         'id',
         'data',
         'user__first_name',
         'user__last_name',
-        'almoxarifado_ordem_saida__user_to__first_name',
-        'almoxarifado_ordem_saida__user_to__last_name',
+        'user_to_first_name',
+        'user_to_last_name',
     )
     paginator = Paginator(itens, 50)
 
