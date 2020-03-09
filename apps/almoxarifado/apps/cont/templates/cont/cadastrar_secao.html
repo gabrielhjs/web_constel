@@ -1,0 +1,25 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Cont 2{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+{% include 'constel/form.html' %}
+<h1>Seções cadastradas</h1>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descricao</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for secao in secoes %}
+            <tr>
+                <td>{{ secao.nome|title }}</td>
+                <td>{{ secao.descricao|lower }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

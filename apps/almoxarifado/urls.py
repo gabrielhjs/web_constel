@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path('', include('apps.almoxarifado.apps.lista_saida.urls')),
+    path('', include('apps.almoxarifado.apps.cont.urls')),
 
     path(
         'almoxarifado/',

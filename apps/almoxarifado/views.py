@@ -16,11 +16,12 @@ from constel.apps.controle_acessos.decorator import permission
 @permission('almoxarifado', )
 def view_menu_principal(request):
 
-    button_1 = Button('almoxarifado_menu_cadastros', 'Cadastros')
-    button_2 = Button('almoxarifado_menu_entradas', 'Entradas')
-    button_3 = Button('almoxarifado_menu_saidas', 'Saídas')
-    button_4 = Button('almoxarifado_menu_consultas', 'Consultas')
-    button_5 = Button('almoxarifado_menu_relatorios', 'Relatórios')
+    button_1 = Button('almoxarifado_cont_menu_principal', 'Cont 2')
+    button_2 = Button('almoxarifado_menu_cadastros', 'Cadastros')
+    button_3 = Button('almoxarifado_menu_entradas', 'Entradas')
+    button_4 = Button('almoxarifado_menu_saidas', 'Saídas')
+    button_5 = Button('almoxarifado_menu_consultas', 'Consultas')
+    button_6 = Button('almoxarifado_menu_relatorios', 'Relatórios')
     button_voltar = Button('index', 'Voltar')
 
     context = {
@@ -33,6 +34,7 @@ def view_menu_principal(request):
             button_3,
             button_4,
             button_5,
+            button_6,
         ],
         'rollback': button_voltar,
     }
