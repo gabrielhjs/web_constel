@@ -454,7 +454,7 @@ def view_relatorio_tecnicos(request):
 
 
 @login_required
-@permission('patrimonio', 'patrimonio - combustivel', )
+@permission('almoxarifado', )
 def view_relatorio_tecnicos_detalhe(request, funcionario):
 
     data_inicial = request.GET.get('data_inicial', '')
