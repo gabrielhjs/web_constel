@@ -1,0 +1,34 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Almoxarifado{% endblock %}
+{% block content %}
+<div class="page-title"><h1>Ordem {{ ordem }}</h1></div>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Ordem</th>
+                <th>Data de entrega</th>
+                <th>Responsável</th>
+                <th>Funcionário</th>
+                <th>Material</th>
+                <th>Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for material in materiais %}
+            <tr>
+                <td>{{ material.ordem__id }}</td>
+                <td>{{ material.data|date:'d/m/Y' }}</td>
+                <td>{{ material.user__first_name|title }} {{ material.user__last_name|title }}</td>
+                <td>{{ material.user_to__first_name|title }} {{ material.user_to__last_name|title }}</td>
+                <td>{{ material.material__material|upper }}</td>
+                <td>{{ material.quantidade }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_relatorio_tecnicos_detalhe' funcionario %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Min, Sum, Max, Count, Q
+from django.db.models import Min, Max, Count, Q
 
 import datetime
 
@@ -467,7 +467,7 @@ def view_relatorio_tecnicos_detalhe(request, funcionario):
         }
     )
 
-    query = Q(user_to__username=funcionario)
+    query = Q(almoxarifado_ordem_saida__user_to__username=funcionario)
 
     if data_inicial != '':
         data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
@@ -477,16 +477,16 @@ def view_relatorio_tecnicos_detalhe(request, funcionario):
         data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
         query = query & Q(data__lte=data_final)
 
-    entregas = MaterialSaida.objects.filter(query)
+    entregas = Ordem.objects.filter(query)
 
     entregas = entregas.values(
-        'ordem__id',
+        'id',
         'data',
         'user__first_name',
         'user__last_name',
-        'quantidade',
-        'material__material',
-        'observacao',
+    ).annotate(
+        observacao=Min('almoxarifado_ordem_saida__observacao'),
+        n_materiais=Count('almoxarifado_ordem_saida__id', distinct=True),
     )
 
     context = {
@@ -498,3 +498,31 @@ def view_relatorio_tecnicos_detalhe(request, funcionario):
     }
 
     return render(request, 'almoxarifado/relatorio_tecnicos_detalhe.html', context)
+
+
+def view_relatorio_tecnicos_detalhe_ordem(request, funcionario, ordem):
+
+    data_inicial = request.GET.get('data_inicial', '')
+    data_final = request.GET.get('data_final', '')
+
+    materiais = MaterialSaida.objects.filter(ordem=ordem)
+
+    materiais = materiais.values(
+        'ordem__id',
+        'material__material',
+        'quantidade',
+        'data',
+        'user__first_name',
+        'user__last_name',
+        'user_to__first_name',
+        'user_to__last_name',
+    )
+
+    context = {
+        'pagina_titulo': 'Detalhe ordem',
+        'materiais': materiais,
+        'ordem': ordem,
+        'funcionario': funcionario,
+    }
+
+    return render(request, 'almoxarifado/relatorio_tecnicos_detalhe_ordem.html', context)
