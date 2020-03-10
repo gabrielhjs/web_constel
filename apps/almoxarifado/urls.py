@@ -82,4 +82,14 @@ urlpatterns = [
         views.view_menu_relatorios,
         name='almoxarifado_menu_relatorios',
     ),
+    path(
+        'almoxarifado/menu-relatorios/tecnicos/',
+        views.view_relatorio_tecnicos,
+        name='almoxarifado_relatorio_tecnicos',
+    ),
+    path(
+        'almoxarifado/menu-relatorios/tecnicos/<str:funcionario>/',
+        views.view_relatorio_tecnicos_detalhe,
+        name='almoxarifado_relatorio_tecnicos_detalhe',
+    ),
 ]

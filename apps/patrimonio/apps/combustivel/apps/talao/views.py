@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.db.models import Sum, Max, Count
-from django.db.models import Q
+from django.db.models import Sum, Max, Count, Q
 
 import datetime
 

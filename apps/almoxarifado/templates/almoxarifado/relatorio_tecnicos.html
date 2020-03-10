@@ -1,0 +1,39 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Combustível | {{ talao.talao }}{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+{% include 'constel/form_data.html' %}
+<div class="menu-button button-blue">
+    <a href="{% url 'gc_relatorio_beneficiarios' %}"><button>Limpar</button></a>
+</div>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Funcionário</th>
+                <th>Última retirada</th>
+                <th colspan="2">Total de retiradas</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for retirada in retiradas %}
+            <tr>
+                <td>{{ retirada.username|upper }}</td>
+                <td>{{ retirada.first_name|title }} {{ vale.last_name|title }}</td>
+                <td>{{ retirada.max_data|date:'d/m/Y' }}</td>
+                <td>{{ retirada.total }}</td>
+                <td>
+                    <a href="{% url 'almoxarifado_relatorio_tecnicos_detalhe' retirada.username %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">
+                        <button>Detalhes</button>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_menu_relatorios' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Combustível | {{ talao.talao }}{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ vales.first.user_to__first_name|title }} {{ vales.first.user_to__last_name|title }}</h1></div>
+{% include 'constel/form_data.html' %}
+<div class="menu-button button-blue">
+    <a href="{% url 'gc_relatorio_beneficiarios_detalhe' funcionario %}"><button>Limpar</button></a>
+</div>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Ordem</th>
+                <th>Data de entrega</th>
+                <th>Responsável</th>
+                <th>Material</th>
+                <th>Quantidade</th>
+                <th>Observação</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entrega in entregas %}
+            <tr>
+                <td>{{ entrega.ordem__id }}</td>
+                <td>{{ entrega.data|date:'d/m/Y' }}</td>
+                <td>{{ entrega.user__first_name|title }} {{ vale.user__last_name|title }}</td>
+                <td>{{ entrega.material__material|upper }}</td>
+                <td>{{ entrega.quantidade }}</td>
+                <td>{{ entrega.observacao|lower }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_relatorio_tecnicos' %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

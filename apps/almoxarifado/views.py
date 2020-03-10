@@ -3,7 +3,9 @@ from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Min
+from django.db.models import Min, Sum, Max, Count, Q
+
+import datetime
 
 from .forms import *
 from .models import Material
@@ -11,6 +13,7 @@ from .models import Material
 from constel.objects import Button
 from constel.models import UserType
 from constel.apps.controle_acessos.decorator import permission
+from constel.forms import FormDataInicialFinalFuncionario, FormDataInicialFinal
 
 
 @login_required()
@@ -26,7 +29,7 @@ def view_menu_principal(request):
     button_voltar = Button('index', 'Voltar')
 
     context = {
-        'guia_titulo': 'Constel | Patrimônio',
+        'guia_titulo': 'Constel | Almoxaridado',
         'pagina_titulo': 'Almoxarifado',
         'menu_titulo': 'Menu principal',
         'buttons': [
@@ -53,7 +56,7 @@ def view_menu_cadastros(request):
     button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
 
     context = {
-        'guia_titulo': 'Constel | Patrimônio',
+        'guia_titulo': 'Constel | Almoxaridado',
         'pagina_titulo': 'Almoxarifado',
         'menu_titulo': 'Menu de cadastros',
         'buttons': [
@@ -75,7 +78,7 @@ def view_menu_entradas(request):
     button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
 
     context = {
-        'guia_titulo': 'Constel | Patrimônio',
+        'guia_titulo': 'Constel | Almoxaridado',
         'pagina_titulo': 'Almoxarifado',
         'menu_titulo': 'Menu de entradas',
         'buttons': [
@@ -95,7 +98,7 @@ def view_menu_saidas(request):
     button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
 
     context = {
-        'guia_titulo': 'Constel | Patrimônio',
+        'guia_titulo': 'Constel | Almoxaridado',
         'pagina_titulo': 'Almoxarifado',
         'menu_titulo': 'Menu de saídas',
         'buttons': [
@@ -112,7 +115,7 @@ def view_menu_saidas(request):
 def view_menu_consultas(request):
 
     context = {
-        'guia_titulo': 'Constel | Patrimônio',
+        'guia_titulo': 'Constel | Almoxaridado',
         'pagina_titulo': 'Almoxarifado',
         'menu_titulo': 'Menu de consultas',
     }
@@ -124,13 +127,16 @@ def view_menu_consultas(request):
 @permission('almoxarifado', 'gestor', )
 def view_menu_relatorios(request):
 
+    button_1 = Button('almoxarifado_relatorio_tecnicos', 'Relatório de funcionários')
     button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
 
     context = {
-        'guia_titulo': 'Constel | Patrimônio',
+        'guia_titulo': 'Constel | Almoxaridado',
         'pagina_titulo': 'Almoxarifado',
         'menu_titulo': 'Menu de relatórios',
-        'buttons': [],
+        'buttons': [
+            button_1,
+        ],
         'rollback': button_voltar,
     }
 
@@ -307,6 +313,7 @@ class ViewConsultaMateriais(ListView):
         return context
 
 
+@login_required()
 @permission('almoxarifado', )
 def view_consulta_estoque(request):
 
@@ -327,6 +334,7 @@ def view_consulta_estoque(request):
     return render(request, 'almoxarifado/consulta_estoque.html', context)
 
 
+@login_required()
 @permission('almoxarifado', )
 def view_consulta_ordem(request, tipo):
 
@@ -360,6 +368,7 @@ def view_consulta_ordem(request, tipo):
     return render(request, 'almoxarifado/consulta_ordem.html', context)
 
 
+@login_required()
 @permission('almoxarifado', )
 def view_consulta_ordem_detalhes(request, **kwargs):
 
@@ -385,3 +394,107 @@ def view_consulta_ordem_detalhes(request, **kwargs):
     else:
 
         return HttpResponseRedirect('/almoxarifado/menu-consultas/')
+
+
+@login_required()
+@permission('almoxarifado', )
+def view_relatorio_tecnicos(request):
+
+    data_inicial = request.GET.get('data_inicial', '')
+    data_final = request.GET.get('data_final', '')
+    funcionario = request.GET.get('funcionario', '')
+
+    form = FormDataInicialFinalFuncionario(
+        initial={
+            'data_inicial': data_inicial,
+            'data_final': data_final,
+            'funcionario': funcionario,
+        }
+    )
+
+    query = Q()
+
+    if funcionario != '':
+        query = query & Q(
+            Q(username__icontains=funcionario) |
+            Q(first_name__icontains=funcionario) |
+            Q(last_name__icontains=funcionario))
+
+    if data_inicial != '':
+        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
+        query = query & Q(almoxarifado_retiradas__data__gte=data_inicial)
+
+    if data_final != '':
+        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
+        query = query & Q(almoxarifado_retiradas__data__lte=data_final)
+
+    retiradas = User.objects.filter(query).annotate(
+        total=Count('almoxarifado_retiradas__ordem__id', distinct=True),
+        max_data=Max('almoxarifado_retiradas__data'),
+    ).order_by(
+        '-total'
+    )
+
+    retiradas = retiradas.values(
+        'username',
+        'first_name',
+        'last_name',
+        'max_data',
+        'total',
+    ).exclude(total=0)
+
+    context = {
+        'pagina_titulo': 'Relatório de funcionários',
+        'button_submit_text': 'Filtrar',
+        'form': form,
+        'retiradas': retiradas,
+    }
+
+    return render(request, 'almoxarifado/relatorio_tecnicos.html', context)
+
+
+@login_required
+@permission('patrimonio', 'patrimonio - combustivel', )
+def view_relatorio_tecnicos_detalhe(request, funcionario):
+
+    data_inicial = request.GET.get('data_inicial', '')
+    data_final = request.GET.get('data_final', '')
+
+    form = FormDataInicialFinal(
+        initial={
+            'data_inicial': data_inicial,
+            'data_final': data_final,
+        }
+    )
+
+    query = Q(user_to__username=funcionario)
+
+    if data_inicial != '':
+        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
+        query = query & Q(data__gte=data_inicial)
+
+    if data_final != '':
+        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
+        query = query & Q(data__lte=data_final)
+
+    entregas = MaterialSaida.objects.filter(query)
+
+    entregas = entregas.values(
+        'ordem__id',
+        'data',
+        'user__first_name',
+        'user__last_name',
+        'quantidade',
+        'material__material',
+        'observacao',
+    )
+
+    context = {
+        'pagina_titulo': 'Detalhe',
+        'button_submit_text': 'Filtrar',
+        'form': form,
+        'entregas': entregas,
+        'funcionario': funcionario,
+    }
+
+    return render(request, 'almoxarifado/relatorio_tecnicos_detalhe.html', context)
