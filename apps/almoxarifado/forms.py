@@ -116,3 +116,11 @@ class FormCadastraUsuarioPassivo(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email',)
+
+
+class FormMaterial(forms.Form):
+    """
+    Formulário que permite filtrar um material
+    """
+
+    material = forms.CharField(label='Filtrar por', help_text='Insira alguma informação do material', required=False)

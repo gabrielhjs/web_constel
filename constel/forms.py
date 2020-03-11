@@ -94,7 +94,11 @@ class FormDataInicialFinalFuncionario(forms.Form):
 
     data_inicial = forms.DateField(widget=DateInput(), required=False)
     data_final = forms.DateField(widget=DateInput(), required=False)
-    funcionario = forms.CharField(label='Matrícula', help_text='Insira a matrícula do funcionário', required=False)
+    funcionario = forms.CharField(
+        label='Funcionário',
+        help_text='Insira alguma informação do funcionário',
+        required=False
+    )
 
     def clean(self):
         form_data = self.cleaned_data

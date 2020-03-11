@@ -317,7 +317,23 @@ class ViewConsultaMateriais(ListView):
 @permission('almoxarifado', )
 def view_consulta_estoque(request):
 
-    itens = MaterialQuantidade.objects.filter(quantidade__gt=0).order_by('material__material')
+    material = request.GET.get('material', '')
+
+    form = FormMaterial(
+        initial={
+            'material': material,
+        }
+    )
+
+    query = Q(quantidade__gt=0)
+
+    if material != '':
+        query = query & Q(
+            Q(material__codigo__icontains=material) |
+            Q(material__material__icontains=material)
+        )
+
+    itens = MaterialQuantidade.objects.filter(query).order_by('material__material')
     itens = itens.values(
         'material__codigo',
         'material__material',
@@ -329,6 +345,8 @@ def view_consulta_estoque(request):
         'itens': itens,
         'pagina_titulo': 'Almoxarifado',
         'menu_titulo': 'Estoque',
+        'form': form,
+        'button_submit_text': 'Filtrar',
     }
 
     return render(request, 'almoxarifado/consulta_estoque.html', context)
@@ -364,7 +382,7 @@ def view_consulta_estoque_detalhe(request, material):
 
     context = {
         'saldos': saldos,
-        'material': Material.objects.get(codigo=material)
+        'material': Material.objects.get(codigo=material),
     }
 
     return render(request, 'almoxarifado/consulta_estoque_detalhe.html', context)
@@ -537,9 +555,6 @@ def view_relatorio_tecnicos_detalhe(request, funcionario):
 
 
 def view_relatorio_tecnicos_detalhe_ordem(request, funcionario, ordem):
-
-    data_inicial = request.GET.get('data_inicial', '')
-    data_final = request.GET.get('data_final', '')
 
     materiais = MaterialSaida.objects.filter(ordem=ordem)
 
