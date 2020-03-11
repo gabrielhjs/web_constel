@@ -317,7 +317,7 @@ class ViewConsultaMateriais(ListView):
 @permission('almoxarifado', )
 def view_consulta_estoque(request):
 
-    itens = MaterialQuantidade.objects.filter(quantidade__gt=0).order_by('material')
+    itens = MaterialQuantidade.objects.filter(quantidade__gt=0).order_by('material__material')
     itens = itens.values(
         'material__codigo',
         'material__material',
