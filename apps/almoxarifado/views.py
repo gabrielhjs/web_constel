@@ -355,16 +355,10 @@ def view_consulta_estoque_detalhe(request, material):
             if dia_entrada['data'].date() == dia:
                 saldo_dia += dia_entrada['quantidade']
 
-            if dia_entrada['data'].date() > dia:
-                break
-
         for dia_saida in saidas:
 
             if dia_saida['data'].date() == dia:
                 saldo_dia -= dia_saida['quantidade']
-
-            if dia_saida['data'].date() > dia:
-                break
 
         saldos.append({'dia': dia, 'saldo': saldo_dia})
 
