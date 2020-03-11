@@ -334,6 +334,48 @@ def view_consulta_estoque(request):
     return render(request, 'almoxarifado/consulta_estoque.html', context)
 
 
+def view_consulta_estoque_detalhe(request, material):
+
+    def daterange(start_date, end_date):
+        for n in range(int((end_date - start_date).days)):
+            yield start_date + datetime.timedelta(n)
+
+    entradas = MaterialEntrada.objects.filter(material__codigo=material).values('quantidade', 'data')
+    saidas = MaterialSaida.objects.filter(material__codigo=material).values('quantidade', 'data')
+
+    data_inicial = entradas[0]['data'].date()
+    data_final = datetime.datetime.today().date()
+    saldos = []
+    saldo_dia = 0
+
+    for dia in daterange(data_inicial, data_final):
+
+        for dia_entrada in entradas:
+
+            if dia_entrada['data'].date() == dia:
+                saldo_dia += dia_entrada['quantidade']
+
+            if dia_entrada['data'].date() > dia:
+                break
+
+        for dia_saida in saidas:
+
+            if dia_saida['data'].date() == dia:
+                saldo_dia -= dia_saida['quantidade']
+
+            if dia_saida['data'].date() > dia:
+                break
+
+        saldos.append({'dia': dia, 'saldo': saldo_dia})
+
+    context = {
+        'saldos': saldos,
+        'material': Material.objects.get(codigo=material)
+    }
+
+    return render(request, 'almoxarifado/consulta_estoque_detalhe.html', context)
+
+
 @login_required()
 @permission('almoxarifado', )
 def view_consulta_ordem(request, tipo):

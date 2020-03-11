@@ -68,6 +68,11 @@ urlpatterns = [
         name='almoxarifado_consulta_estoque',
     ),
     path(
+        'almoxarifado/menu-consultas/estoque/<int:material>/',
+        views.view_consulta_estoque_detalhe,
+        name='almoxarifado_consulta_estoque_detalhe',
+    ),
+    path(
         'almoxarifado/menu-consultas/ordens/<int:tipo>/',
         views.view_consulta_ordem,
         name='almoxarifado_consulta_ordens',

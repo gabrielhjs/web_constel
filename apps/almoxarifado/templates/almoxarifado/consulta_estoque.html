@@ -10,7 +10,7 @@
                 <th>Código</th>
                 <th>Material</th>
                 <th>Descrição</th>
-                <th>Quantidade</th>
+                <th colspan="2">Quantidade</th>
             </tr>
         </thead>
         <tbody>
@@ -20,6 +20,11 @@
                 <td>{{ item.material__material }}</td>
                 <td>{{ item.material__descricao }}</td>
                 <td>{{ item.quantidade }}</td>
+                <td>
+                    <a href="{% url 'almoxarifado_consulta_estoque_detalhe' item.material__codigo %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">
+                        <button>Histórico</button>
+                    </a>
+                </td>
             </tr>
         {% endfor %}
     </table>
