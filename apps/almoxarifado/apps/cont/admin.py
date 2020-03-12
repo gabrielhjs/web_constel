@@ -1,3 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+
+
+admin.site.register(Ont)
+admin.site.register(OntEntrada)
+admin.site.register(OntSaida)
+admin.site.register(OntAplicado)
+admin.site.register(Secao)
+admin.site.register(Modelo)

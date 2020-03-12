@@ -30,8 +30,16 @@ class Ont(models.Model):
     ]
     codigo = models.CharField(max_length=20, null=False, blank=False, unique=True, )
     modelo = models.ForeignKey(Modelo, on_delete=models.PROTECT, related_name='ont_modelo')
-    projeto = models.ForeignKey(Secao, on_delete=models.PROTECT, related_name='ont_secao')
+    secao = models.ForeignKey(Secao, on_delete=models.PROTECT, related_name='ont_secao')
     status = models.IntegerField(choices=CHOICES, editable=False, default=0, )
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+
+
+class OntEntradaHistorico(models.Model):
+    ont = models.ForeignKey(Ont, on_delete=models.CASCADE, null=False, blank=False, related_name='historico_ont')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='entrada_historico_ont')
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None

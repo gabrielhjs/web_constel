@@ -24,4 +24,19 @@ urlpatterns = [
         views.view_cadastrar_modelo,
         name='almoxarifado_cont_cadastrar_modelo',
     ),
+    path(
+        'almoxarifado/cont/entrada-ont-1/',
+        views.view_entrada_ont_1,
+        name='almoxarifado_cont_entrada_ont_1',
+    ),
+    path(
+        'almoxarifado/cont/entrada-ont-2/',
+        views.view_entrada_ont_2,
+        name='almoxarifado_cont_entrada_ont_2',
+    ),
+    path(
+        'almoxarifado/cont/entrada-ont-3/',
+        views.view_entrada_ont_3,
+        name='almoxarifado_cont_entrada_ont_3',
+    ),
 ]

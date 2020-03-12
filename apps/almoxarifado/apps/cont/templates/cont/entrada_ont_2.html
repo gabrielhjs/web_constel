@@ -1,0 +1,46 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Cont 2{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+<div class="menu-text"><h1>Modelo: {{ modelo }}</h1></div>
+<div class="menu-text"><h1>Seção: {{ secao }}</h1></div>
+<div class="table-content table-content-enumerated">
+    <table>
+        <tbody>
+        {% for serial in historico %}
+            <tr>
+                <td>{{ serial.ont__codigo|upper }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<form method="post" class="form">
+    {% csrf_token %}
+    {% for field in form %}
+    <div>
+        <p>{{ field.label_tag }}</p>
+        <p>{{ field }}</p>
+        {% if field.help_text %}
+            <p><small>{{ field.help_text }}</small></p>
+        {% endif %}
+        {% for error in field.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        {% if messages %}
+        <ul style="color: #00ff00">
+            {% for message in messages %}
+            <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <div class="menu-button button-green"><button type="submit">{{ button_submit_text }}</button></div>
+</form>
+{% if callback %}
+<div class="menu-button button-red">
+    <a href="{% url callback %}"><button>{{ callback_text }}</button></a>
+</div>
+{% endif %}
+{% endblock %}
