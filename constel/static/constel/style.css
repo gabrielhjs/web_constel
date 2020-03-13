@@ -158,11 +158,11 @@ body {background: #242424; color: white;}
     counter-reset: rowNumber;
 }
 
-.table-content-enumerated table tr {
+.table-content-enumerated table tbody tr {
     counter-increment: rowNumber;
 }
 
-.table-content-enumerated table tr td:first-child::before {
+.table-content-enumerated table tbody tr td:first-child::before {
     content: counter(rowNumber);
     min-width: 1em;
     margin-right: 0.5em;

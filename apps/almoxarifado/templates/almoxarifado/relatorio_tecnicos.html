@@ -21,7 +21,7 @@
             <tr>
                 <td>{{ retirada.username|upper }}</td>
                 <td>{{ retirada.first_name|title }} {{ retirada.last_name|title }}</td>
-                <td>{{ retirada.max_data|date:'d/m/Y' }}</td>
+                <td>{{ retirada.max_data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ retirada.total }}</td>
                 <td>
                     <a href="{% url 'almoxarifado_relatorio_tecnicos_detalhe' retirada.username %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">

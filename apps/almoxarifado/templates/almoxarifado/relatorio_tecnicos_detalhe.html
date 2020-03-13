@@ -21,7 +21,7 @@
         {% for entrega in entregas %}
             <tr>
                 <td>{{ entrega.id }}</td>
-                <td>{{ entrega.data|date:'d/m/Y' }}</td>
+                <td>{{ entrega.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ entrega.user__first_name|title }} {{ entrega.user__last_name|title }}</td>
                 <td>{{ entrega.n_materiais }}</td>
                 <td>

@@ -20,7 +20,7 @@
                 <td>{{ vale.username }}</td>
                 <td>{{ vale.first_name|title }} {{ vale.last_name|title }}</td>
                 <td>{{ vale.n_vales }}</td>
-                <td>{{ vale.max_data|date:'d/m/Y' }}</td>
+                <td>{{ vale.max_data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ vale.total }}</td>
             </tr>
         {% endfor %}

@@ -50,7 +50,7 @@
             <tr>
                 <td>{{ vale.vale }}</td>
                 <td>{{ vale.status }}</td>
-                <td>{{ vale.vale_entrega__data|date:'d/m/Y' }}</td>
+                <td>{{ vale.vale_entrega__data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ vale.vale_entrega__user_to__first_name|default:""|title }} {{ vale.vale_entrega__user_to__last_name|default:""|title }}</td>
                 <td>{{ vale.vale_entrega__combustivel__combustivel|default:"" }}</td>
                 <td>{{ vale.vale_entrega__valor|default:"" }}</td>

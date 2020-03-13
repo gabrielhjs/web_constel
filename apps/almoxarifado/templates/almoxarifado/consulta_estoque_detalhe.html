@@ -20,7 +20,7 @@
         },
         xAxis: {
             categories: [
-                {% for dia in saldos %}'{{ dia.dia|date:'d/m/Y' }}'{% if not forloop.last %}, {% endif %}{% endfor %}
+                {% for dia in saldos %}'{{ dia.dia|date:'d/m/y' }}'{% if not forloop.last %}, {% endif %}{% endfor %}
                ],
             labels : {
                 style: {

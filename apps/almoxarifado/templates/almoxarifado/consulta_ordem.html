@@ -20,7 +20,7 @@
         {% for item in page_obj %}
             <tr>
                 <td>{{ item.id }}</td>
-                <td>{{ item.data|date:'d/m/Y h:m:s' }}</td>
+                <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
                 {% if tipo %}
                 <td>{{ item.user_to_first_name|title }} {{ item.user_to_last_name|title }}</td>

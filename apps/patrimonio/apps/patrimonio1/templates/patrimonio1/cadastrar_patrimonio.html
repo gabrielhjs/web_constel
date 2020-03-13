@@ -21,7 +21,7 @@
                 <td>{{ patrimonio.nome }}</td>
                 <td>{{ patrimonio.descricao }}</td>
                 <td>{{ patrimonio.user.first_name|title }} {{ patrimonio.user.last_name|title }}</td>
-                <td>{{ patrimonio.data|date:'d/m/Y' }}</td>
+                <td>{{ patrimonio.data|date:'d/m/Y H:i:s' }}</td>
             </tr>
         {% endfor %}
     </table>

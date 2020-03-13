@@ -21,11 +21,11 @@
             <tr>
                 <td>{{ patrimonio.patrimonio.nome }}</td>
                 <td>{{ patrimonio.codigo }}</td>
-                <td>{{ patrimonio.data|date:'d/m/Y' }}</td>
+                <td>{{ patrimonio.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ patrimonio.user.first_name|title }} {{ patrimonio.user.last_name|title }}</td>
                 <td>{{ patrimonio.get_status_display }}</td>
                 {% if patrimonio.entrada_saida %}
-                <td>{{ patrimonio.entrada_saida.data|date:'d/m/Y' }}</td>
+                <td>{{ patrimonio.entrada_saida.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ patrimonio.entrada_saida.user_to.first_name|title }} {{ patrimonio.entrada_saida.user_to.last_name|title }}</td>
                 {% else %}
                 <td>-</td>

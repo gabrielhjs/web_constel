@@ -22,7 +22,7 @@
                 <td>{{ material.codigo }}</td>
                 <td>{{ material.material }}</td>
                 <td>{{ material.descricao }}</td>
-                <td>{{ material.data|date:'d/m/Y' }}</td>
+                <td>{{ material.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ material.user.first_name|title }} {{ material.user.last_name|title }}</td>
             </tr>
         {% endfor %}

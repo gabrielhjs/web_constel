@@ -22,9 +22,9 @@
             <tr>
                 <td>{{ talao.talao }}</td>
                 <td>{{ talao.status }}</td>
-                <td>{{ talao.talao_cadastro__data|date:'d/m/Y' }}</td>
+                <td>{{ talao.talao_cadastro__data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ talao.talao_cadastro__user__first_name|title }} {{ talao.talao_cadastro__user__last_name|title }}</td>
-                <td>{{ talao.talao_entrega__data|date:'d/m/Y' }}</td>
+                <td>{{ talao.talao_entrega__data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ talao.talao_entrega__user__first_name|title }} {{ talao.talao_entrega__user__last_name|title }}</td>
                 <td>{{ talao.talao_entrega__user_to__first_name|title }} {{ talao.talao_entrega__user_to__last_name|title }}</td>
                 <td>

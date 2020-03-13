@@ -22,7 +22,7 @@
         {% for vale in vales %}
             <tr>
                 <td>{{ vale.vale }}</td>
-                <td>{{ vale.data|date:'d/m/Y' }}</td>
+                <td>{{ vale.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ vale.user__first_name|title }} {{ vale.user__last_name|title }}</td>
                 <td>{{ vale.combustivel__combustivel|title }}</td>
                 <td>{{ vale.valor }}</td>

@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models import Max, Q
 
 from .models import *
 
@@ -70,25 +71,77 @@ class FormEntradaOnt2(forms.Form):
         if Ont.objects.filter(codigo=serial).exists():
 
             if Ont.objects.get(codigo=serial).status == 0:
-                self.errors['serial'] = ['Serial já em estoque']
+                self.errors['serial'] = ['Serial de Ont já em estoque']
 
                 return form_data
 
         if serial.find('4857544', 0, 7) >= 0:
 
             if len(serial) != 16:
-                self.errors['serial'] = ['Serial Huawei inválido']
+                self.errors['serial'] = ['Serial de Ont Huawei inválido']
 
                 return form_data
 
         elif serial.find('ZNITS', 0, 5) >= 0:
 
             if len(serial) != 12:
-                self.errors['serial'] = ['Serial Zhone inválido']
+                self.errors['serial'] = ['Serial de Ont Zhone inválido']
 
                 return form_data
 
         else:
-            self.errors['serial'] = ['Serial inválido']
+            self.errors['serial'] = ['Serial de Ont inválido']
 
             return form_data
+
+
+class FormSaidaOnt1(forms.Form):
+
+    funcionario = forms.CharField(label='Funcionário')
+
+    def __init__(self, *args, **kwargs):
+        super(FormSaidaOnt1, self).__init__(*args, **kwargs)
+
+        self.fields['funcionario'].widget.attrs.update(
+            {'autofocus': 'autofocus', 'required': 'required'}
+        )
+
+    def clean(self):
+        form_data = super().clean()
+        usuario = form_data['funcionario']
+
+        if not User.objects.filter(username=usuario).exists():
+            self.errors['funcionario'] = ['Funcionário inativo ou não cadastrado no sistema']
+
+        return form_data
+
+
+class FormSaidaOnt2(forms.Form):
+
+    serial = forms.CharField(required=True, widget=NonstickyCharfield())
+
+    def __init__(self, *args, **kwargs):
+        super(FormSaidaOnt2, self).__init__(*args, **kwargs)
+
+        self.fields['serial'].widget.attrs.update(
+            {'autofocus': 'autofocus', 'required': 'required'}
+        )
+
+    def clean(self):
+        form_data = super().clean()
+        serial = form_data['serial'].upper()
+
+        if Ont.objects.filter(codigo=serial).exists():
+            ont = Ont.objects.get(codigo=serial)
+
+            if ont.status == 2:
+                aplicado = OntAplicado.objects.filter(ont__codigo=serial).latest('data')
+                self.errors['serial'] = [
+                    'Ont está aplicada no contrato %d, ' % aplicado.cliente /
+                    'deve ser inserida no estoque para registrar nova saída'
+                ]
+
+        else:
+            self.errors['serial'] = ['Ont não cadastrada no sistema, cadastre-a para registrar a saída']
+
+        return form_data

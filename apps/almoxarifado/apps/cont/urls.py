@@ -39,4 +39,14 @@ urlpatterns = [
         views.view_entrada_ont_3,
         name='almoxarifado_cont_entrada_ont_3',
     ),
+    path(
+        'almoxarifado/cont/saida-ont-1/',
+        views.view_saida_ont_1,
+        name='almoxarifado_cont_saida_ont_1',
+    ),
+    path(
+        'almoxarifado/cont/saida-ont-2/',
+        views.view_saida_ont_2,
+        name='almoxarifado_cont_saida_ont_2',
+    ),
 ]

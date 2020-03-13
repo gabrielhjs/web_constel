@@ -18,7 +18,7 @@
         {% for material in materiais %}
             <tr>
                 <td>{{ material.ordem__id }}</td>
-                <td>{{ material.data|date:'d/m/Y' }}</td>
+                <td>{{ material.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ material.user__first_name|title }} {{ material.user__last_name|title }}</td>
                 <td>{{ material.user_to__first_name|title }} {{ material.user_to__last_name|title }}</td>
                 <td>{{ material.material__material|upper }}</td>

@@ -531,7 +531,7 @@ def view_relatorio_tecnicos_detalhe(request, funcionario):
         data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
         query = query & Q(data__lte=data_final)
 
-    entregas = Ordem.objects.filter(query)
+    entregas = Ordem.objects.filter(query).order_by('-id')
 
     entregas = entregas.values(
         'id',
@@ -556,7 +556,7 @@ def view_relatorio_tecnicos_detalhe(request, funcionario):
 
 def view_relatorio_tecnicos_detalhe_ordem(request, funcionario, ordem):
 
-    materiais = MaterialSaida.objects.filter(ordem=ordem)
+    materiais = MaterialSaida.objects.filter(ordem=ordem).order_by('id')
 
     materiais = materiais.values(
         'ordem__id',
