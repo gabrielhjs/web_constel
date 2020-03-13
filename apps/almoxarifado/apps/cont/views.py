@@ -33,7 +33,7 @@ def view_menu_principal(request):
         'buttons': [
             button_1,
             button_2,
-            button_3,
+            # button_3,
             # button_4,
             # button_5,
         ],
