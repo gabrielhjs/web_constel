@@ -33,7 +33,7 @@ def view_menu_principal(request):
         'buttons': [
             button_1,
             button_2,
-            # button_3,
+            button_3,
             # button_4,
             # button_5,
         ],
@@ -318,31 +318,21 @@ def view_saida_ont_2(request):
     else:
         form = FormSaidaOnt2()
 
-    # ISSO AQUI ESTÁ XUNXADO!!!
-
     carga = []
+    onts = Ont.objects.filter(status=1)
 
-    for x in OntSaida.objects.raw(
-            'SELECT "cont_ontsaida"."id", "cont_ont"."codigo", "auth_user"."username", MAX("cont_ontsaida"."data") AS \
-            "latest_date" \
-            FROM "cont_ontsaida" \
-            INNER JOIN "cont_ont" ON ("cont_ontsaida"."ont_id" = "cont_ont"."id") \
-            INNER JOIN "auth_user" ON ("cont_ontsaida"."user_to_id" = "auth_user"."id") \
-            WHERE "cont_ont"."status" = 1 \
-            GROUP BY "cont_ont"."codigo" \
-            HAVING "auth_user"."username" = \'%s\';' % user_to.username
-    ):
+    for ont in onts:
+        ultima_saida = ont.saida_ont.last()
 
-        carga.append(
-            {
-                'ont': x.ont.codigo,
-                'data': datetime.strptime(x.latest_date, '%Y-%m-%d %H:%M:%S.%f'),
-                'first_name': x.user.first_name,
-                'last_name': x.user.last_name,
-            }
-        )
-
-    #########################################
+        if ultima_saida.user_to == user_to:
+            carga.append(
+                {
+                    'ont': ultima_saida.ont.codigo,
+                    'data': ultima_saida.data,
+                    'first_name': ultima_saida.user.first_name,
+                    'last_name': ultima_saida.user.last_name,
+                }
+            )
 
     funcionario = {
         'username': user_to.username,
