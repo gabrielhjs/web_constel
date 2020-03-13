@@ -330,7 +330,7 @@ def view_saida_ont_2(request):
             INNER JOIN "auth_user" ON ("cont_ontsaida"."user_to_id" = "auth_user"."id") \
             WHERE "cont_ont"."status" = 1 \
             GROUP BY "cont_ont"."codigo" \
-            HAVING "auth_user"."username" = %s;' % user_to.username
+            HAVING "auth_user"."username" = "%%s%%";' % user_to.username
     ):
 
         carga.append(
