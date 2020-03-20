@@ -1,9 +1,11 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
 
 urlpatterns = [
+    path('', include('apps.almoxarifado.apps.cont.api.urls')),
+
     path(
         'almoxarifado/cont/',
         views.view_menu_principal,

@@ -16,6 +16,6 @@ def permission(*group_names):
 
                     return False
 
-        return True
+            return True
 
     return user_passes_test(in_groups, login_url='/acesso-restrito/', redirect_field_name=None)

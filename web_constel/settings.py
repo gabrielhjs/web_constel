@@ -9,11 +9,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'n+u8xajvvog6g!9rja3eqsak$@n5k2or=%+&)rbvr$j&x3weg@'
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'n+u8xajvvog6g!9rja3eqsak$@n5k2or=%+&)rbvr$j&x3weg@'
+# SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['constel.herokuapp.com', 'http://192.168.1.114:8080', ]
 
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +101,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated', )
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
