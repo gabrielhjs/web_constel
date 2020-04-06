@@ -46,11 +46,13 @@ class OntEntradaHistorico(models.Model):
 
 
 class Cliente(models.Model):
-    contrato = models.IntegerField(null=False, blank=False)
-    nome = models.CharField(max_length=255, blank=True, null=True)
-    sinal_ont = models.FloatField()
-    sinal_olt = models.FloatField()
+    porta = models.CharField(max_length=255, default='vazio')
+    estado_link = models.CharField(max_length=255, default='vazio')
+    nivel_ont = models.FloatField(default=0)
+    nivel_olt = models.FloatField(default=0)
+    nivel_olt_tx = models.FloatField(default=0)
     ont = models.ForeignKey(Ont, on_delete=models.PROTECT, related_name='cliente_ont')
+    contrato = models.IntegerField(null=False, blank=False, default=0)
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
@@ -78,10 +80,10 @@ class OntSaida(models.Model):
 
 class OntAplicado(models.Model):
     saida = models.ForeignKey(OntSaida, on_delete=models.CASCADE, default=None, related_name='aplicado_saida_ont')
-    ont = models.ForeignKey(Ont, on_delete=models.CASCADE, null=False, blank=False, related_name='aplicado_ont')
     data = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='aplicado_user')
-    cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
+    ont = models.ForeignKey(Ont, on_delete=models.CASCADE, null=False, blank=False, related_name='aplicado_ont')
+    cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='aplicado_cliente')
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
