@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 from .models import Item
 from apps.almoxarifado.models import Material, MaterialQuantidade
+from ..cont.models import Ont, OntAplicado
 
 
 class FormListaCria(forms.Form):
@@ -39,11 +40,8 @@ class FormItemInsere(forms.Form):
 
     def clean(self):
         form_data = self.cleaned_data
-        for i in form_data:
-            print(i)
 
         if Material.objects.filter(codigo=form_data['material']).exists():
-            print('adasdfsadfasdf')
             form_data['material'] = Material.objects.get(codigo=form_data['material'])
 
             estoque = MaterialQuantidade.objects.get(material=form_data['material']).quantidade
@@ -66,5 +64,37 @@ class FormItemInsere(forms.Form):
 
         else:
             self.errors['material'] = ['Este código de material não está cadastrado!']
+
+        return form_data
+
+
+class FormOntInsere(forms.Form):
+
+    serial = forms.CharField(label='Código', help_text='Código da ONT a ser inserida na lista')
+
+    def __init__(self, user_to, *args, **kwargs):
+        super(FormOntInsere, self).__init__(*args, **kwargs)
+        self.user_to = user_to
+
+        self.fields['serial'].widget.attrs.update(
+            {'autofocus': 'autofocus', 'required': 'required'}
+        )
+
+    def clean(self):
+        form_data = self.cleaned_data
+        serial = form_data['serial'].upper()
+
+        if Ont.objects.filter(codigo=serial).exists():
+            form_data['serial'] = Ont.objects.get(codigo=serial)
+
+            if form_data['serial'].status == 2:
+                aplicado = OntAplicado.objects.filter(ont__codigo=serial).latest('data')
+                self.errors['serial'] = [
+                    'Ont está aplicada no contrato %d, ' % aplicado.cliente /
+                    'deve ser inserida no estoque para registrar nova saída'
+                ]
+
+        else:
+            self.errors['serial'] = ['Ont não cadastrada no sistema, cadastre-a para registrar a saída']
 
         return form_data

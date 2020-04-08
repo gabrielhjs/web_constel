@@ -1,0 +1,60 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Almoxarifado{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="menu-text"><h1>{{ menu_titulo }}</h1></div>
+<p style="font-size: 25px;">ID: {{ user_to.username }}</p>
+<p style="font-size: 25px;">Nome: {{ user_to.first_name }} {{ user_to.last_name }}</p>
+<div class="menu-text"><h1>Carga atual</h1></div>
+<div class="table-content">
+    <table style="margin-top: 0;">
+        <thead>
+            <tr>
+                <td>Serial</td>
+                <td>Data de retirada</td>
+                <td>Responsável</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for serial in carga %}
+            <tr>
+                <td>{{ serial.ont|upper }}</td>
+                <td>{{ serial.data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ serial.first_name|title }} {{ serial.last_name|title }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="menu-text"><h1>Lista de Ont's</h1></div>
+<div class="table-content">
+    <table style="margin-top: 0;">
+        <thead>
+            <tr>
+                <th>Modelo</th>
+                <th>Código</th>
+                <th>Seção</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in lista_itens %}
+            <tr>
+                <td>{{ item.material.modelo.nome|upper }}</td>
+                <td>{{ item.material.codigo|upper }}</td>
+                <td>{{ item.material.secao.nome }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'constel/form.html' %}
+<div class="menu-button button-blue">
+    <a href="{% url 'almoxarifado_cont_saida_lista_itens_entrega' user_to.username %}"><button>Entregar Ont's</button></a>
+</div>
+<div class="menu-button button-red">
+    <a href="{% url 'almoxarifado_cont_saida_lista_itens_limpa' user_to.username %}"><button>Limpar lista</button></a>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_cont_saida_ont_1' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

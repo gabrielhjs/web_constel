@@ -21,14 +21,14 @@ def view_menu_principal(request):
 
     button_1 = Button('almoxarifado_cont_menu_cadastros', 'Cadastros')
     button_2 = Button('almoxarifado_cont_entrada_ont_1', 'Entrada de ONT\'s')
-    button_3 = Button('almoxarifado_cont_saida_ont_1', 'Saída de ONT\'s')
-    button_4 = Button('cont_menu_consultas', 'Consultas')
-    button_5 = Button('cont_menu_relatorios', 'Relatórios')
+    button_3 = Button('almoxarifado_cont_saida_lista', 'Saída de ONT\'s')
+    # button_4 = Button('cont_menu_consultas', 'Consultas')
+    # button_5 = Button('cont_menu_relatorios', 'Relatórios')
     button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
 
     context = {
-        'guia_titulo': 'Constel | Cont 2',
-        'pagina_titulo': 'Cont 2',
+        'guia_titulo': 'Constel | Cont2',
+        'pagina_titulo': 'Cont2',
         'menu_titulo': 'Menu principal',
         'buttons': [
             button_1,
@@ -49,9 +49,9 @@ def view_menu_cadastros(request):
 
     button_1 = Button('almoxarifado_cont_cadastrar_secao', 'Cadastrar seção de ONT')
     button_2 = Button('almoxarifado_cont_cadastrar_modelo', 'Cadastrar modelo de ONT')
-    button_3 = Button('cont_menu_saidas', 'Saídas')
-    button_4 = Button('cont_menu_consultas', 'Consultas')
-    button_5 = Button('cont_menu_relatorios', 'Relatórios')
+    # button_3 = Button('cont_menu_saidas', 'Saídas')
+    # button_4 = Button('cont_menu_consultas', 'Consultas')
+    # button_5 = Button('cont_menu_relatorios', 'Relatórios')
     button_voltar = Button('almoxarifado_cont_menu_principal', 'Voltar')
 
     context = {

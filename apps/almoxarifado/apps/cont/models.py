@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from ...models import Ordem
+
 
 class Modelo(models.Model):
     nome = models.CharField(max_length=255, unique=True, verbose_name='Código')
@@ -68,6 +70,7 @@ class OntEntrada(models.Model):
 
 
 class OntSaida(models.Model):
+    ordem = models.ForeignKey(Ordem, on_delete=models.CASCADE, default=None, related_name='saida_ordem_ont', null=True)
     entrada = models.ForeignKey(OntEntrada, on_delete=models.CASCADE, default=None, related_name='saida_entrada_ont')
     ont = models.ForeignKey(Ont, on_delete=models.CASCADE, null=False, blank=False, related_name='saida_ont')
     data = models.DateTimeField(auto_now=True)
