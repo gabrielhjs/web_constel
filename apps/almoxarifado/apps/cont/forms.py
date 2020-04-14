@@ -81,7 +81,7 @@ class FormEntradaOnt2(forms.Form):
 
                 return form_data
 
-        elif serial.find('ZNITS', 0, 5) >= 0:
+        elif serial.find('ZNTS', 0, 5) >= 0:
 
             if len(serial) != 12:
                 self.errors['serial'] = ['Serial de Ont Zhone inválido']
