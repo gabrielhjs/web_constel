@@ -1,0 +1,30 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Almoxarifado{% endblock %}
+{% block content %}
+<div class="page-title"><h1>{{ pagina_titulo }}</h1></div>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <td>Status</td>
+                <td>Seção</td>
+                <td>Modelo</td>
+                <td>Qtde</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in onts_status_secao_modelo %}
+            <tr>
+                <td>{{ item.status }}</td>
+                <td>{{ item.secao__nome }}</td>
+                <td>{{ item.modelo__nome }}</td>
+                <td>{{ item.codigo__count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_cont_menu_consultas' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

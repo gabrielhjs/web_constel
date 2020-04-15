@@ -1,17 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.paginator import Paginator
-from itertools import chain
-from datetime import datetime
+from django.db.models import Count
 
 from .forms import *
 from .models import Secao, Modelo
 
 from constel.objects import Button
-from constel.models import UserType
 from constel.apps.controle_acessos.decorator import permission
 
 
@@ -19,11 +15,11 @@ from constel.apps.controle_acessos.decorator import permission
 @permission('almoxarifado', )
 def view_menu_principal(request):
 
-    button_1 = Button('almoxarifado_cont_menu_cadastros', 'Cadastros')
-    button_2 = Button('almoxarifado_cont_entrada_ont_1', 'Entrada de ONT\'s')
-    button_3 = Button('almoxarifado_cont_saida_lista', 'Saída de ONT\'s')
-    # button_4 = Button('cont_menu_consultas', 'Consultas')
-    # button_5 = Button('cont_menu_relatorios', 'Relatórios')
+    button_1 = Button('almoxarifado_cont_entrada_ont_1', 'Entrada de ONT\'s')
+    button_2 = Button('almoxarifado_cont_saida_lista', 'Saída de ONT\'s')
+    button_3 = Button('almoxarifado_cont_menu_cadastros', 'Cadastros')
+    button_4 = Button('almoxarifado_cont_menu_consultas', 'Consultas')
+    # button_5 = Button('almoxarifado_cont_menu_relatorios', 'Relatórios')
     button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
 
     context = {
@@ -34,7 +30,7 @@ def view_menu_principal(request):
             button_1,
             button_2,
             button_3,
-            # button_4,
+            button_4,
             # button_5,
         ],
         'rollback': button_voltar,
@@ -49,26 +45,93 @@ def view_menu_cadastros(request):
 
     button_1 = Button('almoxarifado_cont_cadastrar_secao', 'Cadastrar seção de ONT')
     button_2 = Button('almoxarifado_cont_cadastrar_modelo', 'Cadastrar modelo de ONT')
-    # button_3 = Button('cont_menu_saidas', 'Saídas')
-    # button_4 = Button('cont_menu_consultas', 'Consultas')
-    # button_5 = Button('cont_menu_relatorios', 'Relatórios')
     button_voltar = Button('almoxarifado_cont_menu_principal', 'Voltar')
 
     context = {
-        'guia_titulo': 'Constel | Cont 2',
-        'pagina_titulo': 'Cont 2',
-        'menu_titulo': 'Menu principal',
+        'guia_titulo': 'Constel | Cont2',
+        'pagina_titulo': 'Cont2',
+        'menu_titulo': 'Menu de cadastros',
         'buttons': [
             button_1,
             button_2,
-            # button_3,
-            # button_4,
-            # button_5,
         ],
         'rollback': button_voltar,
     }
 
     return render(request, 'constel/menu.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def view_menu_consultas(request):
+
+    button_1 = Button('almoxarifado_cont_consulta_situacao', 'Situação atual')
+    button_voltar = Button('almoxarifado_cont_menu_principal', 'Voltar')
+
+    context = {
+        'guia_titulo': 'Constel | Cont2',
+        'pagina_titulo': 'Cont2',
+        'menu_titulo': 'Menu de consultas',
+        'buttons': [
+            button_1,
+        ],
+        'rollback': button_voltar,
+    }
+
+    return render(request, 'constel/menu.html', context)
+
+
+def view_consulta_situacao(request):
+
+    onts = Ont.objects.all()
+
+    onts_qtde = onts.aggregate(Count('codigo'))
+
+    onts_status = onts.values(
+        'status',
+    ).annotate(
+        Count('codigo')
+    ).order_by(
+        'status',
+    )
+
+    onts_status_secao = onts.values(
+        'status',
+        'secao__nome',
+    ).annotate(
+        Count('codigo')
+    ).order_by(
+        'status',
+        'secao__nome',
+    )
+
+    onts_status_secao_modelo = onts.values(
+        'status',
+        'secao__nome',
+        'modelo__nome',
+    ).annotate(
+        Count('codigo')
+    ).order_by(
+        'status',
+        'secao__nome',
+        'modelo__nome',
+    )
+
+    rowspan = {
+        'secao': len(onts_status_secao_modelo),
+        'status': len(onts_status_secao_modelo) * len(onts_status_secao),
+    }
+
+    context = {
+        'pagina_titulo': 'Situação',
+        'onts_total': onts_qtde,
+        'onts_status': onts_status,
+        'onts_status_secao': onts_status_secao,
+        'onts_status_secao_modelo': onts_status_secao_modelo,
+        'rowspan': rowspan,
+    }
+
+    return render(request, 'cont/consulta_situacao.html', context)
 
 
 @login_required()

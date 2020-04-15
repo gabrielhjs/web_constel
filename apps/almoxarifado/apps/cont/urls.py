@@ -17,6 +17,11 @@ urlpatterns = [
         name='almoxarifado_cont_menu_cadastros',
     ),
     path(
+        'almoxarifado/cont/menu-consultas/',
+        views.view_menu_consultas,
+        name='almoxarifado_cont_menu_consultas',
+    ),
+    path(
         'almoxarifado/cont/menu-cadastros/secao/',
         views.view_cadastrar_secao,
         name='almoxarifado_cont_cadastrar_secao',
@@ -25,6 +30,11 @@ urlpatterns = [
         'almoxarifado/cont/menu-cadastros/modelo/',
         views.view_cadastrar_modelo,
         name='almoxarifado_cont_cadastrar_modelo',
+    ),
+    path(
+        'almoxarifado/cont/menu-consultas/situacao/',
+        views.view_consulta_situacao,
+        name='almoxarifado_cont_consulta_situacao',
     ),
     path(
         'almoxarifado/cont/entrada-ont-1/',
