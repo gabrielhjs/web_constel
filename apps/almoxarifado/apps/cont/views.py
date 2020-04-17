@@ -2,13 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Q, Max
 
 from .forms import *
 from .models import Secao, Modelo
 
 from constel.objects import Button
 from constel.apps.controle_acessos.decorator import permission
+from constel.forms import FormFuncionario
 
 
 @login_required()
@@ -66,6 +67,7 @@ def view_menu_cadastros(request):
 def view_menu_consultas(request):
 
     button_1 = Button('almoxarifado_cont_consulta_situacao', 'Situação atual')
+    button_2 = Button('almoxarifado_cont_consulta_tecnicos_carga', 'Cargas de ONT\'s')
     button_voltar = Button('almoxarifado_cont_menu_principal', 'Voltar')
 
     context = {
@@ -74,6 +76,7 @@ def view_menu_consultas(request):
         'menu_titulo': 'Menu de consultas',
         'buttons': [
             button_1,
+            button_2,
         ],
         'rollback': button_voltar,
     }
@@ -132,6 +135,72 @@ def view_consulta_situacao(request):
     }
 
     return render(request, 'cont/consulta_situacao.html', context)
+
+
+def view_consulta_tecnicos_carga(request):
+
+    funcionario = request.GET.get('funcionario', '')
+
+    form = FormFuncionario(initial={'funcionario': funcionario})
+
+    query = Q()
+
+    if funcionario != '':
+        query = query & Q(
+            Q(username__icontains=funcionario) |
+            Q(first_name__icontains=funcionario) |
+            Q(last_name__icontains=funcionario))
+
+    cargas = User.objects.filter(query).annotate(
+        total=Count('saida_user_to__ont', filter=Q(saida_user_to__ont__status=1), distinct=True),
+        max_data=Max('saida_user_to__data', filter=Q(saida_user_to__ont__status=1)),
+    ).order_by(
+        '-total',
+    )
+
+    cargas = cargas.values(
+        'username',
+        'first_name',
+        'last_name',
+        'max_data',
+        'total',
+    ).exclude(total=0)
+
+    context = {
+        'pagina_titulo': 'Consulta de carga de ONT\'s',
+        'button_submit_text': 'Filtrar',
+        'form': form,
+        'cargas': cargas,
+    }
+
+    return render(request, 'cont/consulta_tecnicos_carga.html', context)
+
+
+def view_consulta_tecnicos_carga_detalhe(request, funcionario):
+
+    carga = OntSaida.objects.values(
+        'ont__codigo',
+        'user__first_name',
+        'user__last_name',
+        'user_to__first_name',
+        'user_to__last_name',
+    ).annotate(
+        max_data=Max('data')
+    ).filter(
+        ont__status=1
+    ).order_by(
+        '-max_data'
+    )
+
+    print(carga)
+
+    context = {
+        'button_submit_text': 'Filtrar',
+        'carga': carga,
+        'funcionario': funcionario,
+    }
+
+    return render(request, 'cont/consulta_tecnicos_carga_detalhes.html', context)
 
 
 @login_required()
@@ -301,119 +370,3 @@ def view_entrada_ont_3(request):
     request.session.pop('cont2_entrada_secao')
 
     return HttpResponseRedirect('/almoxarifado/cont/entrada-ont-1/')
-
-
-@login_required()
-@permission('almoxarifado', )
-def view_saida_ont_1(request):
-
-    if request.method == 'POST':
-        form = FormSaidaOnt1(data=request.POST)
-
-        if form.is_valid():
-            request.session['cont2_saida_funcionario'] = form.cleaned_data['funcionario']
-
-            return HttpResponseRedirect('/almoxarifado/cont/saida-ont-2/')
-    else:
-        form = FormSaidaOnt1()
-
-    context = {
-        'form': form,
-        'button_submit_text': 'Avançar',
-        'callback': 'almoxarifado_cont_menu_principal',
-        'callback_text': 'Cancelar',
-        'pagina_titulo': 'Cont 2',
-        'menu_titulo': 'Saída de ONT\'s',
-    }
-
-    return render(request, 'cont/saida_ont_1.html', context)
-
-
-@login_required()
-@permission('almoxarifado', )
-def view_saida_ont_2(request):
-
-    if request.session.get('cont2_saida_funcionario') is None:
-
-        return HttpResponseRedirect('/almoxarifado/cont/saida-ont-1/')
-
-    user_to = User.objects.get(username=request.session['cont2_saida_funcionario'])
-
-    if request.method == 'POST':
-        form = FormSaidaOnt2(request.POST)
-
-        if form.is_valid():
-
-            serial = form.cleaned_data['serial'].upper()
-            entrada = OntEntrada.objects.filter(ont__codigo=serial).latest('data')
-
-            ont = Ont.objects.get(codigo=serial)
-
-            if ont.status == 0:
-                ont.status = 1
-                ont.save()
-
-                messages.success(request, 'Ont entregue com sucesso')
-
-            elif ont.status == 1:
-                user = OntSaida.objects.filter(ont__codigo=serial).latest('data').user_to
-
-                if user == user_to:
-                    messages.error(request, 'Ont já está na carga do técnico')
-
-                    return HttpResponseRedirect('/almoxarifado/cont/saida-ont-2/')
-
-                else:
-                    messages.success(
-                        request,
-                        'Ont estava na carga de: %s, remanejada com sucesso.' % user.get_full_name().title()
-                    )
-
-            OntSaida(
-                ont=ont,
-                user=request.user,
-                user_to=user_to,
-                entrada=entrada,
-            ).save()
-
-            return HttpResponseRedirect('/almoxarifado/cont/saida-ont-2/')
-
-    else:
-        form = FormSaidaOnt2()
-
-    carga = []
-    onts = Ont.objects.filter(status=1)
-
-    for ont in onts:
-        ultima_saida = ont.saida_ont.last()
-
-        if ultima_saida.user_to == user_to:
-            carga.append(
-                {
-                    'ont': ultima_saida.ont.codigo,
-                    'data': ultima_saida.data,
-                    'first_name': ultima_saida.user.first_name,
-                    'last_name': ultima_saida.user.last_name,
-                }
-            )
-
-    funcionario = {
-        'username': user_to.username,
-        'first_name': user_to.first_name,
-        'last_name': user_to.last_name,
-    }
-
-    print(funcionario)
-
-    context = {
-        'form': form,
-        'button_submit_text': 'Inserir',
-        'callback': 'almoxarifado_cont_saida_ont_1',
-        'callback_text': 'Concluir',
-        'pagina_titulo': 'Cont 2',
-        'menu_titulo': 'Saída de ONT\'s',
-        'funcionario': funcionario,
-        'carga': carga,
-    }
-
-    return render(request, 'cont/saida_ont_2.html', context)

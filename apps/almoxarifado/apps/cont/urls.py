@@ -37,6 +37,16 @@ urlpatterns = [
         name='almoxarifado_cont_consulta_situacao',
     ),
     path(
+        'almoxarifado/cont/menu-consultas/carga/',
+        views.view_consulta_tecnicos_carga,
+        name='almoxarifado_cont_consulta_tecnicos_carga',
+    ),
+    path(
+        'almoxarifado/cont/menu-consultas/carga/<str:funcionario>/',
+        views.view_consulta_tecnicos_carga_detalhe,
+        name='almoxarifado_cont_consulta_tecnicos_carga_detalhes',
+    ),
+    path(
         'almoxarifado/cont/entrada-ont-1/',
         views.view_entrada_ont_1,
         name='almoxarifado_cont_entrada_ont_1',
@@ -50,15 +60,5 @@ urlpatterns = [
         'almoxarifado/cont/entrada-ont-3/',
         views.view_entrada_ont_3,
         name='almoxarifado_cont_entrada_ont_3',
-    ),
-    path(
-        'almoxarifado/cont/saida-ont-1/',
-        views.view_saida_ont_1,
-        name='almoxarifado_cont_saida_ont_1',
-    ),
-    path(
-        'almoxarifado/cont/saida-ont-2/',
-        views.view_saida_ont_2,
-        name='almoxarifado_cont_saida_ont_2',
     ),
 ]

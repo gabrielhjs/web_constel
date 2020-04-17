@@ -1,0 +1,28 @@
+{% extends 'constel/base.html' %}
+{% block title %}Constel | Cont2{% endblock %}
+{% block content %}
+<div class="page-title"><h1>Carga de {{ carga.first.user_to__first_name|title}} {{ carga.first.user_to__last_name|title }}</h1></div>
+<div class="table-content">
+    <table>
+        <thead>
+            <tr>
+                <th>ONT Serial</th>
+                <th>Data de entrega</th>
+                <th>Responsável</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ont in carga %}
+            <tr>
+                <td>{{ ont.ont__codigo }}</td>
+                <td>{{ ont.max_data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ ont.user__first_name|title }} {{ ont.user__last_name|title }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="menu-button menu-back">
+    <a href="{% url 'almoxarifado_cont_consulta_tecnicos_carga' %}"><button>Voltar</button></a>
+</div>
+{% endblock %}

@@ -9,6 +9,9 @@ class Modelo(models.Model):
     descricao = models.TextField(max_length=500)
     data = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.nome
+
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
 
@@ -17,6 +20,9 @@ class Secao(models.Model):
     nome = models.CharField(max_length=255, unique=True)
     descricao = models.TextField(max_length=500)
     data = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.nome
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
@@ -34,6 +40,9 @@ class Ont(models.Model):
     modelo = models.ForeignKey(Modelo, on_delete=models.PROTECT, related_name='ont_modelo')
     secao = models.ForeignKey(Secao, on_delete=models.PROTECT, related_name='ont_secao')
     status = models.IntegerField(choices=CHOICES, editable=False, default=0, )
+
+    def __str__(self):
+        return self.codigo
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None

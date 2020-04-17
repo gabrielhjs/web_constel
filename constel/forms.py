@@ -83,13 +83,28 @@ class FormLogin(forms.Form):
     }
 
 
+class FormFuncionario(forms.Form):
+    """
+    Formulário que permite selecionar um funcionário
+    """
+
+    funcionario = forms.CharField(
+        label='Funcionário',
+        help_text='Insira alguma informação do funcionário',
+        required=False
+    )
+
+
 class DateInput(forms.DateInput):
+    """
+    Widget para inserir calendário nos formulários com datas
+    """
     input_type = 'date'
 
 
 class FormDataInicialFinalFuncionario(forms.Form):
     """
-    Formulário que permite selecionar uma data inicial e uma final
+    Formulário que permite selecionar um funcionário, uma data inicial e uma final
     """
 
     data_inicial = forms.DateField(widget=DateInput(), required=False)
