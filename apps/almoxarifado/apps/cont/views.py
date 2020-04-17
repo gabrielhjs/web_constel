@@ -84,6 +84,8 @@ def view_menu_consultas(request):
     return render(request, 'constel/menu.html', context)
 
 
+@login_required()
+@permission('almoxarifado', )
 def view_consulta_situacao(request):
 
     onts = Ont.objects.all()
@@ -137,6 +139,8 @@ def view_consulta_situacao(request):
     return render(request, 'cont/consulta_situacao.html', context)
 
 
+@login_required()
+@permission('almoxarifado', )
 def view_consulta_tecnicos_carga(request):
 
     funcionario = request.GET.get('funcionario', '')
@@ -176,6 +180,8 @@ def view_consulta_tecnicos_carga(request):
     return render(request, 'cont/consulta_tecnicos_carga.html', context)
 
 
+@login_required()
+@permission('almoxarifado', )
 def view_consulta_tecnicos_carga_detalhe(request, funcionario):
 
     carga = OntSaida.objects.values(
