@@ -20,7 +20,7 @@
         {% for carga in cargas %}
             <tr>
                 <td>{{ carga.username|upper }}</td>
-                <td>{{ carga.first_name|title }} {{ retirada.last_name|title }}</td>
+                <td>{{ carga.first_name|title }} {{ carga.last_name|title }}</td>
                 <td>{{ carga.max_data|date:'d/m/Y H:i:s' }}</td>
                 <td style="font-size: 1.5rem; color: red;">{{ carga.total }}</td>
                 <td>

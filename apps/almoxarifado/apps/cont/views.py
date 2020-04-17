@@ -193,7 +193,8 @@ def view_consulta_tecnicos_carga_detalhe(request, funcionario):
     ).annotate(
         max_data=Max('data')
     ).filter(
-        ont__status=1
+        ont__status=1,
+        user_to__username=funcionario,
     ).order_by(
         '-max_data'
     )
