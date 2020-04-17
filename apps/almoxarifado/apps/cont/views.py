@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count, Q, Max
+from django.core.paginator import Paginator
 
 from .forms import *
 from .models import Secao, Modelo
@@ -170,7 +171,12 @@ def view_consulta_tecnicos_carga(request):
         'total',
     ).exclude(total=0)
 
+    paginator = Paginator(cargas, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
+        'page_obj': page_obj,
         'pagina_titulo': 'Consulta de carga de ONT\'s',
         'button_submit_text': 'Filtrar',
         'form': form,
@@ -199,9 +205,12 @@ def view_consulta_tecnicos_carga_detalhe(request, funcionario):
         '-max_data'
     )
 
-    print(carga)
+    paginator = Paginator(carga, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
+        'page_obj': page_obj,
         'button_submit_text': 'Filtrar',
         'carga': carga,
         'funcionario': funcionario,

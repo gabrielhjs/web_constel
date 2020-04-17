@@ -341,7 +341,12 @@ def view_consulta_estoque(request):
         'quantidade',
     )
 
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
+        'page_obj': page_obj,
         'itens': itens,
         'pagina_titulo': 'Almoxarifado',
         'menu_titulo': 'Estoque',
@@ -497,7 +502,12 @@ def view_relatorio_tecnicos(request):
         'total',
     ).exclude(total=0)
 
+    paginator = Paginator(retiradas, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
+        'page_obj': page_obj,
         'pagina_titulo': 'Relatório de funcionários',
         'button_submit_text': 'Filtrar',
         'form': form,
@@ -543,7 +553,12 @@ def view_relatorio_tecnicos_detalhe(request, funcionario):
         n_materiais=Count('almoxarifado_ordem_saida__id', distinct=True),
     )
 
+    paginator = Paginator(entregas, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
+        'page_obj': page_obj,
         'pagina_titulo': 'Detalhe',
         'button_submit_text': 'Filtrar',
         'form': form,

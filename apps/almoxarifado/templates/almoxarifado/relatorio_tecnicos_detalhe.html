@@ -35,6 +35,7 @@
         </tbody>
     </table>
 </div>
+{% include 'constel/paginator.html' %}
 <div class="menu-button menu-back">
     <a href="{% url 'almoxarifado_relatorio_tecnicos' %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}"><button>Voltar</button></a>
 </div>

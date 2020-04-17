@@ -51,6 +51,7 @@
         {% endfor %}
     </table>
 </div>
+{% include 'constel/paginator.html' %}
 <div class="menu-button button-blue">
     <a href="{% url 'almoxarifado_saida_lista_itens_imprimi' ordem.id %}" target="_blank"><button>Imprimir ficha</button></a>
 </div>
