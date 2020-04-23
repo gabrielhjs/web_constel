@@ -24,11 +24,17 @@
             <div class="col-sm-5">
                 <div class="container">
                     <img class="mt-4" src="{% static 'constel/v2/constel_logo_sem_escrita_colorido.png' %}">
-                    <div class="row align-items-center justify-content-end">
+                    <div class="row align-items-end justify-content-end">
                         <form class="w-100" method="POST">
                             <div class="form-row my-2 justify-content-end">
                                 <div class="col-md-7">
                                     {% csrf_token %}
+                                    <div class="alert alert-success">
+                                        <a class="close" href="#" data-dismiss="alert">×</a>
+                                        Seja bem vindo a nova tela de login do sistema Constel web, 
+                                        em breve as páginas internas do sistema também serão modificadas. 
+                                        Contudo, as funções continuarão as mesmas. Em caso de dúvida contate o administrador.
+                                    </div>
                                     {% for message in messages %}
                                     <div class="alert alert-danger">
                                         <a class="close" href="#" data-dismiss="alert">×</a>
