@@ -1,0 +1,25 @@
+{% extends 'constel/v2/base.html' %}
+{% block body_content %}
+<div class="col-sm-3 bg-dark pt-3">
+    <p class="h5 text-center text-white pt-3">{{ app }} | {{ menu }}</p>
+    <hr style="border-top: 1px solid #999;">
+    <div class="btn-group-vertical btn-block" role="group" aria-label="Basic example">
+        
+        {% for button in menu_buttons %}
+            <a class="btn btn-secondary" role="button" href="{{ button.link }}">
+                {{ button.text }}
+            </a>
+        {% endfor %}
+
+        <a class="btn btn-outline-secondary my-4" role="button" href="{{ button_return.link }}">
+            {{ button_return.text }}
+        </a>
+
+    </div>
+</div>
+<div class="col bg-dark p-0">
+    {% block app_content %}
+    {% endblock %}
+</div>
+{% endblock %}
+    

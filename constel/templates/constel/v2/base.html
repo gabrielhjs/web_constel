@@ -1,0 +1,109 @@
+<!-- 
+    Este é o arquivo base para todas as páginas do sistema.
+    Realiza o carregemento dos scripts e estilos necessários para o funcionamento das páginas,
+    bem como o layout geral das páginas.
+ -->
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+
+<head>
+    <title>Constel Web | {{ app }}</title>
+
+    <!-- Arquivos meta necessários -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap e CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'constel/v2/style.css' %}">
+</head>
+
+<body>
+    
+    <header>
+        <!-- Menu nav do sistema -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="nav">
+
+            <a href="/">
+                <img src="{% static 'constel/v2/constel_logo_sem_escrita_colorido.png' %}">
+            </a>
+        
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSite">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSite">
+
+                <ul class="navbar-nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link {% if app == 'Início' %}active{% endif %} px-3" role="button" href="/">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if app == 'Almoxarifado' %}active{% endif %} px-3" role="button" href="{% url 'almoxarifado_menu_principal' %}">Almoxarifado</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if app == 'Patrimônio' %}active{% endif %} px-3" role="button" href="{% url 'patrimonio_menu_principal' %}">Patrimônio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if app == 'Combustível' %}active{% endif %} px-3" role="button" href="{% url 'gc_menu_principal' %}">Combustível</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if app == 'Cont2' %}active{% endif %} px-3" role="button" href="{% url 'almoxarifado_cont_menu_principal' %}">Cont2</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" role="button" href="/">Administração</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <span class="navbar-text pr-2">
+                            Bem vindo, {{ request.user.first_name|title }}
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-danger px-3" role="button" href="/">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        
+        </nav>
+    </header>
+
+    <!-- Corpo do consteúdo dos aplicativos -->
+    <div class="container-fluid">
+        <div class="row" id="content">
+            {% block body_content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Rodapé do sistema -->
+    <footer>
+            <div class="container-fluid bg-dark" id="footer">
+                <div class="row my-auto">
+                    <div class="col-sm-8">
+
+                    </div>
+                    <div class="col mt-4">
+                        <p class="h6 text-right">Powered by Gabriel Sá</p>
+                    </div>
+                </div>
+            </div>
+    </footer>
+
+    <!-- jquery, popper.js e bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>

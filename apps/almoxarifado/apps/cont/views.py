@@ -386,3 +386,9 @@ def view_entrada_ont_3(request):
     request.session.pop('cont2_entrada_secao')
 
     return HttpResponseRedirect('/almoxarifado/cont/entrada-ont-1/')
+
+
+@login_required()
+@permission('almoxarifado', )
+def view_dashboard(request):
+    pass

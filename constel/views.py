@@ -10,6 +10,8 @@ from .models import UserType, Veiculo
 from .objects import Button
 from .apps.controle_acessos.decorator import permission
 
+from .menu import menu_principal
+
 
 @login_required
 @permission('admin', )
@@ -198,11 +200,14 @@ def view_login(request):
                     else:
                         login(request, user)
                         return HttpResponseRedirect('/')
+                
+                else:
+                    messages.error(request, 'Usuário e/ou senha incorretos!')
 
         else:
             form = FormLogin()
 
-        return render(request, 'constel/login.html', {'form': form})
+        return render(request, 'constel/v2/login.html', {'form': form})
 
 
 @login_required

@@ -1,0 +1,14 @@
+@media (min-width: 576px) {
+    #nav {
+        min-height: 10vh;
+    }
+    
+    
+    #content {
+        min-height: 80vh;
+    }
+    
+    #footer {
+        min-height: 10vh;
+    }
+}

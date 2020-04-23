@@ -1,0 +1,34 @@
+@media (min-width: 576px) {
+
+    #content {
+        min-height: 100vh;
+        min-width: 100vw;
+    }
+
+}
+
+#col-image {
+    display: flex;
+    background-image: linear-gradient(
+        70deg,
+        #F4A460,
+        #8A2BE2
+    );
+}
+
+#col-image div {
+    color: white;
+}
+
+#col-image div h1 {
+    font-size: 5rem;
+    text-align: center;
+}
+
+.row {
+    height: 50vh;
+}
+
+.form {
+    text-align: right;
+}
