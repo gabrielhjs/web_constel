@@ -1,14 +1,24 @@
-@media (min-width: 576px) {
-    #nav {
-        min-height: 10vh;
-    }
-    
-    
-    #content {
-        min-height: 80vh;
-    }
-    
-    #footer {
-        min-height: 10vh;
-    }
+#nav {
+    min-height: 10vh;
+}
+
+#content {
+    min-height: 80vh;
+}
+
+#footer {
+    min-height: 10vh;
+}
+
+.table-content {
+    display: flex;
+}
+
+.table-content table {
+    overflow: auto;
+    position: static;
+}
+
+.table-content table tr {
+    white-space: nowrap;
 }

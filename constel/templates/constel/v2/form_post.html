@@ -1,0 +1,39 @@
+<form method="POST">
+    {% csrf_token %}
+
+    {% for message in messages %}
+        <div class="col-md-12 text-md-center">
+            <div class="alert alert-danger mt-1">
+                <a class="close" href="#" data-dismiss="alert">×</a>
+                {{ message }}
+            </div>
+        </div>
+    {% endfor %}
+
+    {% for field in form %}
+        
+        <div class="form-group row mx-0 px-0">
+            <label for="{{ field.id_for_label }}" class="col-md-2 col-form-label text-md-right">{{ field.html_name|title }}:</label>
+            <div class="col-md-8 mx-0 px-0">
+                {{ field }}
+            </div>
+
+            {% if field.help_text %}
+            <p><small>{{ field.help_text }}</small></p>
+            {% endif %}
+        </div>
+
+        {% for error in field.errors %}
+            <div class="col-md-12 text-md-center">
+                <div class="alert alert-danger mt-1">
+                    <a class="close" href="#" data-dismiss="alert">×</a>
+                    {{ error }}
+                </div>
+            </div>
+        {% endfor %}
+    
+    {% endfor %}
+    <div class="text-center w-md-50">
+        <button type="submit" class="btn btn-success mb-3">{{ form_submit_text }}</button>
+    </div>
+</form>

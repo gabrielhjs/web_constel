@@ -9,6 +9,7 @@ import datetime
 
 from .forms import *
 from .models import Material
+from .menu import menu_principal, menu_cadastros
 
 from constel.objects import Button
 from constel.models import UserType
@@ -44,6 +45,96 @@ def view_menu_principal(request):
     }
 
     return render(request, 'constel/menu.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def index(request):
+    context = menu_principal(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def cadastros(request):
+    context = menu_cadastros(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def cadastra_material(request):
+    menu = menu_cadastros(request)
+
+    if request.method == 'POST':
+        form = FormCadastraMaterial(request.POST)
+
+        if form.is_valid():
+            material = Material(
+                codigo=form.cleaned_data['codigo'],
+                material=form.cleaned_data['material'],
+                descricao=form.cleaned_data['descricao'],
+                user=request.user,
+            )
+            material.save()
+            MaterialQuantidade(
+                material=material,
+                quantidade=0,
+            ).save()
+
+            return HttpResponseRedirect('/almoxarifado/cadastros/material/')
+    else:
+        form = FormCadastraMaterial()
+
+    itens = Material.objects.values(
+        'codigo',
+        'material',
+        'descricao',
+        'data',
+        'user__first_name',
+        'user__last_name',
+    )
+
+    context = {
+        'itens': itens,
+        'form': form,
+        'form_submit_text': 'Cadastrar novo material',
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/cadastra_material.html', context)
+
+
+@login_required()
+@permission('almoxarifado', 'gestor', )
+def cadastra_fornecedor(request):
+    menu = menu_cadastros(request)
+
+    if request.method == 'POST':
+        form = FormCadastraFornecedor(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            return HttpResponseRedirect('/almoxarifado/cadastros/fornecedor/')
+    else:
+        form = FormCadastraFornecedor()
+
+    itens = Fornecedor.objects.values(
+        'nome',
+        'cnpj',
+    ).order_by('nome', 'cnpj')
+
+    context = {
+        'itens': itens,
+        'form': form,
+        'form_submit_text': 'Cadastrar novo fornecedor',
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/cadastra_fornecedor.html', context)
 
 
 @login_required()

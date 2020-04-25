@@ -1,0 +1,24 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_post.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="2">Fornecedores cadastrados</th>
+            </tr>
+            <tr>
+                <th scope="col">CNPJ</th>
+                <th scope="col">Nome</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in itens %}
+            <tr>
+                <td>{{ item.cnpj }}</td>
+                <td>{{ item.nome|title }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

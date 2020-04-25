@@ -5,6 +5,8 @@
         min-width: 100vw;
     }
 
+    
+
 }
 
 #col-image {
@@ -26,7 +28,7 @@
 }
 
 .row {
-    height: 50vh;
+    min-height: 50vh;
 }
 
 .form {

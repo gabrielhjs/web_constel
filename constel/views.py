@@ -243,3 +243,8 @@ def view_logout(request):
 
     logout(request)
     return HttpResponseRedirect('/login/')
+
+
+def indexv2(request):
+
+    return render(request, 'constel/v2/index.html')

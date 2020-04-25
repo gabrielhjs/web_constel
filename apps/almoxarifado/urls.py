@@ -9,12 +9,12 @@ urlpatterns = [
 
     path(
         'almoxarifado/',
-        views.view_menu_principal,
+        views.index,
         name='almoxarifado_menu_principal',
     ),
     path(
-        'almoxarifado/menu-cadastros/',
-        views.view_menu_cadastros,
+        'almoxarifado/cadastros/',
+        views.cadastros,
         name='almoxarifado_menu_cadastros',
     ),
     path(
@@ -28,13 +28,13 @@ urlpatterns = [
         name='almoxarifado_cadastrar_usuario_passivo',
     ),
     path(
-        'almoxarifado/menu-cadastros/material/',
-        views.view_cadastrar_material,
+        'almoxarifado/cadastros/material/',
+        views.cadastra_material,
         name='almoxarifado_cadastrar_material',
     ),
     path(
-        'almoxarifado/menu-cadastros/fornecedor/',
-        views.view_cadastrar_fornecedor,
+        'almoxarifado/cadastros/fornecedor/',
+        views.cadastra_fornecedor,
         name='almoxarifado_cadastrar_fornecedor',
     ),
     path(

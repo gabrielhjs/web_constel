@@ -15,4 +15,6 @@ urlpatterns = [
     path('menu-admin/view-admin/', views.view_admin, name='constel_view_admin'),
     path('consulta/usuarios/next=<str:rollback>', views.view_consulta_funcionarios, name='consulta_funcionarios'),
     path('consulta/veiculos/next=<str:rollback>', views.view_consulta_veiculos, name='consulta_veiculos'),
+
+    path('teste/', views.indexv2, name='teste'),
 ]

@@ -11,7 +11,7 @@ def menu_principal(request):
     menu_buttons = [
         {'link': '/almoxarifado', 'text': 'Almoxarifado'},
         {'link': '/patrimonio', 'text': 'Patrimônio'},
-        {'link': '/admin', 'text': 'Administração'},
+        {'link': '/admin', 'text': 'Administrativo'},
     ]
 
     button_return = {'link': '/', 'text': 'Tela principal'}

@@ -9,12 +9,24 @@ class FormCadastraFornecedor(forms.ModelForm):
         model = Fornecedor
         fields = ['nome', 'cnpj', ]
 
+    def __init__(self, *args, **kwargs):
+        super(FormCadastraFornecedor, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+
 
 class FormCadastraMaterial(forms.ModelForm):
 
     class Meta:
         model = Material
         fields = ['codigo', 'material', 'descricao', 'tipo', ]
+
+    def __init__(self, *args, **kwargs):
+        super(FormCadastraMaterial, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
 
 
 class FormEntradaMaterial(forms.ModelForm):

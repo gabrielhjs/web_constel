@@ -21,13 +21,13 @@
 <body>
     <div class="container-fluid">
         <div id="content" class="row">
-            <div class="col-sm-5">
+            <div class="col-md-5">
                 <div class="container">
                     <img class="mt-4" src="{% static 'constel/v2/constel_logo_sem_escrita_colorido.png' %}">
                     <div class="row align-items-end justify-content-end">
                         <form class="w-100" method="POST">
                             <div class="form-row my-2 justify-content-end">
-                                <div class="col-md-7">
+                                <div class="col-lg-7">
                                     {% csrf_token %}
                                     <div class="alert alert-success">
                                         <a class="close" href="#" data-dismiss="alert">×</a>
@@ -44,23 +44,23 @@
                                 </div>
                             </div>
                             <div class="form-row my-2 justify-content-end">
-                                <div class="col-md-7">
+                                <div class="col-lg-7">
                                     <input type="text" name="username" maxlength="150" required id="id_username"
                                         class="form-control" placeholder="Matrícula">
                                 </div>
                             </div>
                             <div class="form-row my-2 justify-content-end">
-                                <div class="col-md-7">
+                                <div class="col-lg-7">
                                     <input type="password" name="password" required id="id_password"
                                         class="form-control" placeholder="Senha">
                                 </div>
                             </div>
-                            <div class="form-row my-2 justify-content-end">
-                                <div class="col-md-7">
-                                    <a class="btn btn-outline-primary mb-2" href="{% url 'cadastra_usuario' %}">
+                            <div class="form-row lg-2 justify-content-end mb-3">
+                                <div class="col-lg-7 text-right">
+                                    <a class="btn btn-outline-primary" href="{% url 'cadastra_usuario' %}">
                                         Cadastrar-se
                                     </a>
-                                    <button type="submit" class="btn btn-danger mb-2">Logar</button>
+                                    <button type="submit" class="btn btn-danger px-4">Logar</button>
                                 </div>
                             </div>
                         </form>
