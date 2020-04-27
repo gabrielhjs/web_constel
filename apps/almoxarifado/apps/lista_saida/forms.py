@@ -6,9 +6,18 @@ from apps.almoxarifado.models import Material, MaterialQuantidade
 from ..cont.models import Ont, OntAplicado
 
 
-class FormListaCria(forms.Form):
+class FormCria(forms.Form):
 
-    user_to = forms.CharField(label='Funcionário', help_text='Funcionário que está solicitando o material')
+    user_to = forms.CharField(
+        label='Funcionário',
+        widget=forms.TextInput(attrs={'placeholder': 'Insira a matrícula do funcionário'}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(FormCria, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
 
     def clean(self):
         form_data = self.cleaned_data
@@ -21,14 +30,22 @@ class FormListaCria(forms.Form):
         return form_data
 
 
-class FormItemInsere(forms.Form):
+class FormInsere(forms.Form):
 
-    quantidade = forms.IntegerField()
-    material = forms.IntegerField(label='Código', help_text='Código do material a ser inserido na lista')
+    quantidade = forms.IntegerField(
+        widget=forms.TextInput(attrs={'placeholder': 'Insira quantidade'}),
+    )
+    material = forms.IntegerField(
+        label='Código',
+        widget=forms.TextInput(attrs={'placeholder': 'Insira o código do material'}),
+    )
 
     def __init__(self, user_to, *args, **kwargs):
-        super(FormItemInsere, self).__init__(*args, **kwargs)
+        super(FormInsere, self).__init__(*args, **kwargs)
         self.user_to = user_to
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
 
         self.fields['material'].queryset = Material.objects.filter(
             quantidade__quantidade__gt=0
@@ -38,6 +55,7 @@ class FormItemInsere(forms.Form):
             {'autofocus': 'autofocus', 'required': 'required'}
         )
 
+
     def clean(self):
         form_data = self.cleaned_data
 
@@ -45,10 +63,18 @@ class FormItemInsere(forms.Form):
             form_data['material'] = Material.objects.get(codigo=form_data['material'])
 
             estoque = MaterialQuantidade.objects.get(material=form_data['material']).quantidade
+            if Item.objects.filter(lista__user_to__username=self.user_to, material=form_data['material']).exists():
+                lista = Item.objects.get(
+                    lista__user_to__username=self.user_to,
+                    material=form_data['material'],
+                ).quantidade
+            else:
+                lista = 0
+            
             retirada = form_data['quantidade']
 
-            if (estoque - retirada) < 0:
-                self._errors['quantidade'] = ['Não há esta quantidade de material disponível em estoque!']
+            if (estoque - retirada - lista) < 0:
+                self._errors['quantidade'] = ['Não há quantidade disponível em estoque! estoque: (%d)' % estoque]
 
             if Item.objects.filter(material=form_data['material'], lista__user_to__username=self.user_to).exists():
                 lista = Item.objects.get(

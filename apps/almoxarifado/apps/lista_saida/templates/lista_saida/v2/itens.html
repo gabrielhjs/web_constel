@@ -1,0 +1,49 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-response table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="2">Destinatário</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-md-left">
+                <td>Matrícula</td>
+                <td>{{ user_to.username }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Funcionário</td>
+                <td>{{ user_to.first_name|title }} {{ user_to.last_name|title }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0 my-1">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Lista de materiais</th>
+            </tr>
+            <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Material</th>
+                <th scope="col">Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in lista_itens %}
+            <tr>
+                <td>{{ item.material__codigo }}</td>
+                <td>{{ item.material__material }}</td>
+                <td style="color: yellow;">{{ item.quantidade }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/form_post.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-primary px-5 my-3" href="{% url 'almoxarifado_saida_lista_entrega' user_to %}">entregar materiais</a>
+    <a class="btn btn-warning px-5 my-3 ml-3" href="{% url 'almoxarifado_saida_lista_limpa' user_to %}">limpar lista</a>
+</div>
+{% endblock %}

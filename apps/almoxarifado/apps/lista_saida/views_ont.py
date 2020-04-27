@@ -4,9 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.db.models import Count, Q, Max
 
 from .models import OntItem, OntLista
-from .forms import FormListaCria, FormOntInsere
+from .forms import FormCria, FormOntInsere
 from apps.almoxarifado.models import Ordem
 from apps.almoxarifado.apps.pdf.objects import FichaOnts
 from constel.objects import Button
@@ -20,7 +21,7 @@ from ..cont.models import Ont, OntEntrada, OntSaida
 def view_lista_cria(request):
 
     if request.method == 'POST':
-        form = FormListaCria(request.POST)
+        form = FormCria(request.POST)
 
         if form.is_valid():
 
@@ -38,7 +39,7 @@ def view_lista_cria(request):
             )
 
     else:
-        form = FormListaCria()
+        form = FormCria()
 
     context = {
         'form': form,
@@ -94,24 +95,21 @@ def view_item_insere(request, user_to):
 
     else:
         form_insere = FormOntInsere(user_to.username)
-
-    carga = []
-
-    if Ont.objects.filter(status=1).exists():
-        onts = Ont.objects.filter(status=1)
-
-        for ont in onts:
-            ultima_saida = ont.saida_ont.last()
-
-            if ultima_saida.user_to == user_to:
-                carga.append(
-                    {
-                        'ont': ultima_saida.ont.codigo,
-                        'data': ultima_saida.data,
-                        'first_name': ultima_saida.user.first_name,
-                        'last_name': ultima_saida.user.last_name,
-                    }
-                )
+        
+    carga = OntSaida.objects.values(
+        'ont__codigo',
+        'user__first_name',
+        'user__last_name',
+        'user_to__first_name',
+        'user_to__last_name',
+    ).annotate(
+        max_data=Max('data')
+    ).filter(
+        ont__status=1,
+        user_to__username=user_to,
+    ).order_by(
+        '-max_data'
+    )
 
     funcionario = {
         'username': user_to.username,

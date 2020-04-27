@@ -68,6 +68,14 @@ class SerializerOntBaixa(serializers.Serializer):
         serial = attrs.get('serial').upper()
         # modelo = attrs.get('modelo').upper()
 
+        if serial.find('4857544', 0, 7) >= 0:
+            if len(serial) != 16:
+                serial = serial[0:16]
+
+        elif serial.find('ZNTS', 0, 5) >= 0:
+            if len(serial) != 12:
+                serial = serial[0:12]
+
         if not Ont.objects.filter(codigo=serial).exists():
             msg = 'Esta ONT não está cadastrada no sistema, entre em contato com o almoxarifado'
             raise serializers.ValidationError(msg)

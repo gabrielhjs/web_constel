@@ -245,6 +245,11 @@ def view_logout(request):
     return HttpResponseRedirect('/login/')
 
 
+@login_required
 def indexv2(request):
 
-    return render(request, 'constel/v2/index.html')
+    context = {
+        'app': 'Constel',
+    }
+
+    return render(request, 'constel/v2/index.html', context)

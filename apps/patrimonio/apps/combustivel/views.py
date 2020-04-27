@@ -19,7 +19,7 @@ def view_menu_principal(request):
     button_3 = Button('gc_menu_vales', 'Gerenciamento de vales')
     button_4 = Button('gc_menu_consultas', 'Consultas')
     button_5 = Button('gc_menu_relatorios', 'Relatórios')
-    button_voltar = Button('patrimonio_menu_principal', 'Voltar')
+    button_voltar = Button('index', 'Voltar')
 
     context = {
         'guia_titulo': 'Constel | Combustível',

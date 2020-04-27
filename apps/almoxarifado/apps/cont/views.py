@@ -22,7 +22,7 @@ def view_menu_principal(request):
     button_3 = Button('almoxarifado_cont_menu_cadastros', 'Cadastros')
     button_4 = Button('almoxarifado_cont_menu_consultas', 'Consultas')
     # button_5 = Button('almoxarifado_cont_menu_relatorios', 'Relatórios')
-    button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
+    button_voltar = Button('index', 'Voltar')
 
     context = {
         'guia_titulo': 'Constel | Cont2',

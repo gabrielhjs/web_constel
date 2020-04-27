@@ -1,0 +1,40 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="5">{{ funcionario|title }}</th>
+            </tr>
+            <tr>
+                <th scope="col">Ordem</th>
+                <th scope="col">Data de entrega</th>
+                <th scope="col">Responsável</th>
+                <th scope="col" colspan="2">Número de materiais</th>
+                <th scope="col">Observação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.id }}</td>
+                <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                <td style="color: yellow;">{{ item.n_materiais }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                        href="{% url 'almoxarifado_consulta_funcionario_detalhe_ordem' funcionario item.id %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">
+                        materiais
+                    </a>
+                </td>
+                <td>{{ entrega.observacao|lower }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_funcionario' %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">voltar</a>
+</div>
+{% endblock %}

@@ -6,7 +6,7 @@ from constel.apps.controle_acessos.decorator import permission
 
 
 @login_required
-@permission('patrimonio - combustivel', )
+@permission('patrimonio', )
 def view_menu_principal(request):
 
     button_1 = Button('gc_menu_principal', 'Controle de vales')
@@ -36,7 +36,7 @@ def view_menu_principal(request):
 
 
 @login_required
-@permission('patrimonio - combustivel', )
+@permission('patrimonio', )
 def view_menu_cadastros(request):
 
     button_1 = Button('patrimonio_cadastrar_ferramenta', 'Cadastrar ferramenta')
@@ -58,7 +58,7 @@ def view_menu_cadastros(request):
 
 
 @login_required
-@permission('patrimonio - combustivel', )
+@permission('patrimonio', )
 def view_menu_entradas(request):
 
     button_1 = Button('patrimonio_entrada_ferramenta', 'Aquisição de ferramentas')
@@ -80,7 +80,7 @@ def view_menu_entradas(request):
 
 
 @login_required
-@permission('patrimonio - combustivel', )
+@permission('patrimonio', )
 def view_menu_saidas(request):
 
     button_1 = Button('patrimonio_saida_patrimonio', 'Saída de patrimônio')
@@ -102,7 +102,7 @@ def view_menu_saidas(request):
 
 
 @login_required
-@permission('patrimonio - combustivel', )
+@permission('patrimonio', )
 def view_menu_consultas(request):
 
     button_1 = Button('patrimonio_consulta_ferramentas', 'Modelos de ferramentas cadastradas')
@@ -128,7 +128,7 @@ def view_menu_consultas(request):
 
 
 @login_required
-@permission('patrimonio - combustivel', )
+@permission('patrimonio', )
 def view_menu_relatorios(request):
 
     return render(request, 'patrimonio/menu_relatorios.html')

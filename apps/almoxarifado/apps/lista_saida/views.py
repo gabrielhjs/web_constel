@@ -2,21 +2,24 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
+from django.contrib import messages
 
 from .models import *
 from .forms import *
 from apps.almoxarifado.models import MaterialSaida, Ordem
 from apps.almoxarifado.apps.pdf.objects import FichaMateriais
-from constel.objects import Button
 from constel.apps.controle_acessos.decorator import permission
+
+from ...menu import menu_principal
 
 
 @login_required
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_lista_cria(request):
+def lista_cria(request):
+    menu = menu_principal(request)
 
     if request.method == 'POST':
-        form = FormListaCria(request.POST)
+        form = FormCria(request.POST)
 
         if form.is_valid():
 
@@ -30,37 +33,36 @@ def view_lista_cria(request):
                 lista.save()
 
             return HttpResponseRedirect(
-                '/almoxarifado/menu-saidas/lista/itens/' + str(form.cleaned_data['user_to']) + '/'
+                '/almoxarifado/saidas/material/lista/itens/' + str(form.cleaned_data['user_to']) + '/'
             )
 
     else:
-        form = FormListaCria()
+        form = FormCria()
 
     context = {
         'form': form,
-        'pagina_titulo': 'Almoxarifado',
-        'menu_titulo': 'Entrega de materiais',
-        'button_submit_text': 'Avançar',
+        'form_submit_text': 'Avançar',
     }
+    context.update(menu)
 
-    return render(request, 'lista_saida/lista_cria.html', context)
+    return render(request, 'lista_saida/v2/cria.html', context)
 
 
 @login_required()
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_item_insere(request, user_to):
+def lista_insere(request, user_to):
+    menu = menu_principal(request)
 
     if not Lista.objects.filter(user_to__username=user_to).exists():
-
-        return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/')
+        return HttpResponseRedirect('/almoxarifado/saidas/material/lista/')
 
     if request.method == 'POST':
-        form_insere = FormItemInsere(user_to, request.POST)
+        form = FormInsere(user_to, request.POST)
 
-        if form_insere.is_valid():
+        if form.is_valid():
             lista = Lista.objects.get(user_to__username=user_to)
-            material = form_insere.cleaned_data['material']
-            quantidade = form_insere.cleaned_data['quantidade']
+            material = form.cleaned_data['material']
+            quantidade = form.cleaned_data['quantidade']
 
             if Item.objects.filter(lista=lista, material=material).exists():
                 item = Item.objects.get(lista=lista, material=material)
@@ -76,30 +78,36 @@ def view_item_insere(request, user_to):
                 item = Item.objects.create(lista=lista, material=material, quantidade=quantidade)
                 item.save()
 
-            return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/itens/' + user_to + '/')
+            return HttpResponseRedirect('/almoxarifado/saidas/material/lista/itens/' + user_to + '/')
 
     else:
-        form_insere = FormItemInsere(user_to)
+        form = FormInsere(user_to)
+
+    lista = Item.objects.filter(lista__user_to__username=user_to).values(
+        'material__codigo',
+        'material__material',
+        'quantidade',
+    )
+
+    user_to = User.objects.get(username=user_to)
 
     context = {
-        'lista_itens': Item.objects.filter(lista__user_to__username=user_to),
-        'form': form_insere,
-        'user_to': User.objects.get(username=user_to),
-        'pagina_titulo': 'Almoxarifado',
-        'menu_titulo': 'Entrega de materiais',
-        'button_submit_text': 'Adicionar material',
+        'lista_itens': lista,
+        'user_to': user_to,
+        'form': form,
+        'form_submit_text': 'Adicionar material',
     }
+    context.update(menu)
 
-    return render(request, 'lista_saida/lista_itens.html', context)
+    return render(request, 'lista_saida/v2/itens.html', context)
 
 
 @login_required()
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_item_entrega(request, user_to):
+def lista_entrega(request, user_to):
 
     if not Item.objects.filter(lista__user_to__username=user_to).exists():
-
-        return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/itens/' + user_to + '/')
+        return HttpResponseRedirect('/almoxarifado/saidas/material/lista/itens/' + user_to + '/')
 
     else:
         itens = Item.objects.filter(lista__user_to__username=user_to)
@@ -108,6 +116,10 @@ def view_item_entrega(request, user_to):
         user_to_object = User.objects.get(username=user_to)
 
         for item in itens:
+            if (item.material.quantidade.quantidade - item.quantidade) < 0:
+                messages.error(request, 'Não há quantidade disponível em estoque! estoque: (%d)' % item.material.quantidade)
+                return HttpResponseRedirect('/almoxarifado/saidas/material/lista/itens/' + user_to + '/')
+
             saida = MaterialSaida(
                 material=item.material,
                 quantidade=item.quantidade,
@@ -124,19 +136,31 @@ def view_item_entrega(request, user_to):
 
         itens[0].lista.delete()
 
-        return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/itens/concluido/' + str(ordem.id) + '/')
+        return HttpResponseRedirect('/almoxarifado/saidas/material/lista/conclui/' + str(ordem.id) + '/')
 
 
 @login_required
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_item_imprime(request, ordem_id):
+def lista_conclui(request, ordem_id):
+    menu = menu_principal(request)
+
+    context = {
+        'ordem_id': ordem_id,
+    }
+    context.update(menu)
+
+    return render(request, 'lista_saida/v2/conclui.html', context)
+
+
+@login_required
+@permission('almoxarifado', 'almoxarifado - saida', )
+def lista_imprime(request, ordem_id):
 
     if Ordem.objects.filter(id=ordem_id).exists():
         ordem = Ordem.objects.get(id=ordem_id)
 
     else:
-
-        return HttpResponseRedirect('/almoxarifado/menu-consultas/ordens/1/')
+        return HttpResponseRedirect('/almoxarifado/consultas/ordens/saidas/')
 
     ficha = FichaMateriais(ordem)
 
@@ -145,11 +169,10 @@ def view_item_imprime(request, ordem_id):
 
 @login_required
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_item_limpa(request, user_to):
+def lista_limpa(request, user_to):
 
     if not Lista.objects.filter(user_to__username=user_to).exists():
-
-        return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/')
+        return HttpResponseRedirect('/almoxarifado/saidas/material/lista/')
 
     else:
         itens = Item.objects.filter(lista__user_to__username=user_to)
@@ -157,22 +180,4 @@ def view_item_limpa(request, user_to):
         for item in itens:
             item.delete()
 
-        return HttpResponseRedirect('/almoxarifado/menu-saidas/lista/itens/' + user_to + '/')
-
-
-@login_required
-@permission('almoxarifado', 'almoxarifado - saida', )
-def view_item_conclui(request, ordem_id):
-    button_1 = Button('almoxarifado_saida_lista_itens_imprimi', 'Imprimir ficha')
-    button_voltar = Button('almoxarifado_saida_lista', 'Voltar')
-
-    context = {
-        'guia_titulo': 'Constel | Almoxarifado',
-        'pagina_titulo': 'Almoxarifado',
-        'menu_titulo': 'Entrega concluída!',
-        'ordem_id': ordem_id,
-        'button': button_1,
-        'rollback': button_voltar,
-    }
-
-    return render(request, 'lista_saida/menu.html', context)
+        return HttpResponseRedirect('/almoxarifado/saidas/material/lista/itens/' + user_to + '/')

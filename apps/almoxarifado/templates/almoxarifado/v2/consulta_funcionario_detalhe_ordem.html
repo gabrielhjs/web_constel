@@ -1,0 +1,34 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="6">Ordem {{ ordem }}</th>
+            </tr>
+            <tr>
+                <th scope="col">Ordem</th>
+                <th scope="col">Data de entrega</th>
+                <th scope="col">Responsável</th>
+                <th scope="col">Funcionário</th>
+                <th scope="col">Material</th>
+                <th scope="col">Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in itens %}
+            <tr class="text-md-left">
+                <td>{{ item.ordem__id }}</td>
+                <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                <td>{{ item.user_to__first_name|title }} {{ item.user_to__last_name|title }}</td>
+                <td>{{ item.material__material|upper }}</td>
+                <td style="color: yellow;">{{ item.quantidade }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_funcionario_detalhe' funcionario %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">voltar</a>
+</div>
+{% endblock %}

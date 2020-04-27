@@ -13,6 +13,7 @@
     <!-- Arquivos meta necessários -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{% static 'constel/v2/favicon.png' %}" type="image/x-icon">
 
     <!-- Bootstrap e CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -37,8 +38,8 @@
             <div class="collapse navbar-collapse" id="navbarSite">
 
                 <ul class="navbar-nav nav-pills">
-                    <li class="nav-item">
-                        <a class="nav-link {% if app == 'Início' %}active{% endif %} px-3" role="button" href="/">Início</a>
+                    <li class="nav-item mt-4 mt-lg-0 ml-lg-4">
+                        <a class="nav-link {% if app == 'Constel' %}active{% endif %} px-3" role="button" href="/">Início</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if app == 'Almoxarifado' %}active{% endif %} px-3" role="button" href="{% url 'almoxarifado_menu_principal' %}">Almoxarifado</a>
@@ -53,7 +54,7 @@
                         <a class="nav-link {% if app == 'Cont2' %}active{% endif %} px-3" role="button" href="{% url 'almoxarifado_cont_menu_principal' %}">Cont2</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" role="button" href="/">Administração</a>
+                        <a class="nav-link px-3" role="button" href="{% url 'constel_menu_admin' %}">Administração</a>
                     </li>
                 </ul>
 

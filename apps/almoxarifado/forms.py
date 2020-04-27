@@ -1,3 +1,4 @@
+from typing import overload
 from django import forms
 
 from .models import *
@@ -34,6 +35,12 @@ class FormEntradaMaterial(forms.ModelForm):
     class Meta:
         model = MaterialEntrada
         fields = ['material', 'fornecedor', 'quantidade', 'observacao']
+
+    def __init__(self, *args, **kwargs):
+        super(FormEntradaMaterial, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
 
 
 class FormSaidaMaterial(forms.ModelForm):
@@ -135,4 +142,14 @@ class FormMaterial(forms.Form):
     Formulário que permite filtrar um material
     """
 
-    material = forms.CharField(label='Filtrar por', help_text='Insira alguma informação do material', required=False)
+    material = forms.CharField(
+        label='Filtrar por',
+        widget=forms.TextInput(attrs={'placeholder': 'código ou nome'}),
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(FormMaterial, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})

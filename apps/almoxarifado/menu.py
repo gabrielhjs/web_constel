@@ -11,10 +11,9 @@ def menu_principal(request):
     menu_buttons = [
         {'link': '/almoxarifado/cont', 'text': 'Cont2'},
         {'link': '/almoxarifado/cadastros', 'text': 'Cadastros'},
-        {'link': '/almoxarifado/menu-entradas', 'text': 'Entradas'},
-        {'link': '/almoxarifado/menu-saidas', 'text': 'Saídas'},
-        {'link': '/almoxarifado/menu-consultas', 'text': 'Consultas'},
-        {'link': '/almoxarifado/menu-relatorios', 'text': 'Relatórios'},
+        {'link': '/almoxarifado/entradas/material', 'text': 'Entrada de material'},
+        {'link': '/almoxarifado/saidas/material/lista', 'text': 'Saída de material'},
+        {'link': '/almoxarifado/consultas', 'text': 'Consultas'},
     ]
     button_return = {'link': '/', 'text': 'Voltar'}
 
@@ -43,6 +42,30 @@ def menu_cadastros(request):
     context = {
         'app': 'Almoxarifado',
         'menu': 'Cadastros',
+        'menu_buttons': menu_buttons,
+        'button_return': button_return,
+    }
+
+    return context
+
+
+def menu_consultas(request):
+    """
+    Funcão que contém as configurações do menu de consultas do almoxarifado.
+    Retorna um dicionário com as configurações
+    """
+
+    menu_buttons = [
+        {'link': '/almoxarifado/consultas/estoque', 'text': 'Estoque materiais'},
+        {'link': '/almoxarifado/consultas/ordens/entradas', 'text': 'Registro de entradas'},
+        {'link': '/almoxarifado/consultas/ordens/saidas', 'text': 'Registro de saídas'},
+        {'link': '/almoxarifado/consultas/funcionarios/', 'text': 'Funcionários'},
+    ]
+    button_return = {'link': '/almoxarifado', 'text': 'Voltar'}
+
+    context = {
+        'app': 'Almoxarifado',
+        'menu': 'Consultas',
         'menu_buttons': menu_buttons,
         'button_return': button_return,
     }

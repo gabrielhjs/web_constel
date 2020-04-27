@@ -18,9 +18,9 @@
         <tbody>
         {% for serial in carga %}
             <tr>
-                <td>{{ serial.ont|upper }}</td>
-                <td>{{ serial.data|date:'d/m/Y H:i:s' }}</td>
-                <td>{{ serial.first_name|title }} {{ serial.last_name|title }}</td>
+                <td>{{ serial.ont__codigo|upper }}</td>
+                <td>{{ serial.max_data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ serial.user__first_name|title }} {{ ont.user__last_name|title }}</td>
             </tr>
         {% endfor %}
         </tbody>

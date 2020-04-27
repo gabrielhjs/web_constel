@@ -1,0 +1,9 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_post.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_cadastrar_usuario_passivo_lista' callback='lista' %}">
+        Cadastrar técnico
+    </a>
+</div>
+{% endblock %}

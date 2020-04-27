@@ -5,34 +5,34 @@ from . import views, views_ont
 
 urlpatterns = [
     path(
-        'almoxarifado/menu-saidas/lista/',
-        views.view_lista_cria,
+        'almoxarifado/saidas/material/lista/',
+        views.lista_cria,
         name='almoxarifado_saida_lista',
     ),
     path(
-        'almoxarifado/menu-saidas/lista/itens/<str:user_to>/',
-        views.view_item_insere,
+        'almoxarifado/saidas/material/lista/itens/<str:user_to>/',
+        views.lista_insere,
         name='almoxarifado_saida_lista_itens',
     ),
     path(
-        'almoxarifado/menu-saidas/lista/itens/entrega/<str:user_to>/',
-        views.view_item_entrega,
-        name='almoxarifado_saida_lista_itens_entrega',
+        'almoxarifado/saidas/material/lista/entrega/<str:user_to>/',
+        views.lista_entrega,
+        name='almoxarifado_saida_lista_entrega',
     ),
     path(
-        'almoxarifado/menu-saidas/lista/itens/imprimir/<int:ordem_id>/',
-        views.view_item_imprime,
-        name='almoxarifado_saida_lista_itens_imprimi',
+        'almoxarifado/saidas/material/lista/imprimi/<int:ordem_id>/',
+        views.lista_imprime,
+        name='almoxarifado_saida_lista_imprimi',
     ),
     path(
-        'almoxarifado/menu-saidas/lista/itens/limpa/<str:user_to>/',
-        views.view_item_limpa,
-        name='almoxarifado_saida_lista_itens_limpa',
+        'almoxarifado/saidas/material/lista/limpa/<str:user_to>/',
+        views.lista_limpa,
+        name='almoxarifado_saida_lista_limpa',
     ),
     path(
-        'almoxarifado/menu-saidas/lista/itens/concluido/<int:ordem_id>/',
-        views.view_item_conclui,
-        name='almoxarifado_saida_lista_itens_conclui',
+        'almoxarifado/saidas/material/lista/conclui/<int:ordem_id>/',
+        views.lista_conclui,
+        name='almoxarifado_saida_lista_conclui',
     ),
 
     # Urls das listas de saída de Ont

@@ -107,13 +107,19 @@ class FormDataInicialFinalFuncionario(forms.Form):
     Formulário que permite selecionar um funcionário, uma data inicial e uma final
     """
 
-    data_inicial = forms.DateField(widget=DateInput(), required=False)
-    data_final = forms.DateField(widget=DateInput(), required=False)
     funcionario = forms.CharField(
         label='Funcionário',
         help_text='Insira alguma informação do funcionário',
         required=False
     )
+    data_inicial = forms.DateField(widget=DateInput(), required=False)
+    data_final = forms.DateField(widget=DateInput(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(FormDataInicialFinalFuncionario, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
 
     def clean(self):
         form_data = self.cleaned_data
@@ -131,6 +137,12 @@ class FormDataInicialFinal(forms.Form):
 
     data_inicial = forms.DateField(widget=DateInput(), required=False)
     data_final = forms.DateField(widget=DateInput(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(FormDataInicialFinal, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
 
     def clean(self):
         form_data = self.cleaned_data
