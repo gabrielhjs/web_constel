@@ -67,8 +67,12 @@ def cadastra_material(request):
         'user__last_name',
     )
 
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'itens': itens,
+        'page_obj': page_obj,
         'form': form,
         'form_submit_text': 'Cadastrar novo material',
     }
@@ -97,8 +101,12 @@ def cadastra_fornecedor(request):
         'cnpj',
     ).order_by('nome', 'cnpj')
 
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'itens': itens,
+        'page_obj': page_obj,
         'form': form,
         'form_submit_text': 'Cadastrar novo fornecedor',
     }

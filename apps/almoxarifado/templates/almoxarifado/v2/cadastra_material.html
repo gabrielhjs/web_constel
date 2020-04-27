@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for item in itens %}
+        {% for item in page_obj %}
             <tr>
                 <td>{{ item.codigo }}</td>
                 <td>{{ item.material }}</td>
@@ -27,4 +27,5 @@
         {% endfor %}
     </table>
 </div>
+{% include 'constel/v2/pagination.html' %}
 {% endblock %}
