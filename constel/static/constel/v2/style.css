@@ -4,6 +4,8 @@
 
 #content {
     min-height: 80vh;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
 }
 
 #footer {
@@ -21,4 +23,9 @@
 
 .table-content table tbody tr {
     white-space: nowrap;
+}
+
+.scroll {
+    max-height: 80vh;
+    overflow: auto;
 }
