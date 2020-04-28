@@ -19,6 +19,6 @@
     position: static;
 }
 
-.table-content table tr {
+.table-content table tbody tr {
     white-space: nowrap;
 }
