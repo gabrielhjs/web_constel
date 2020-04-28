@@ -60,6 +60,7 @@ def menu_consultas(request):
         {'link': '/almoxarifado/consultas/ordens/entradas', 'text': 'Registro de entradas'},
         {'link': '/almoxarifado/consultas/ordens/saidas', 'text': 'Registro de saídas'},
         {'link': '/almoxarifado/consultas/funcionarios/', 'text': 'Funcionários'},
+        {'link': '/almoxarifado/consultas/fornecedores/', 'text': 'Fornecedores'},
     ]
     button_return = {'link': '/almoxarifado', 'text': 'Voltar'}
 

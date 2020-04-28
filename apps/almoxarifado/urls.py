@@ -88,23 +88,13 @@ urlpatterns = [
         name='almoxarifado_consulta_funcionario_detalhe_ordem',
     ),
     path(
-        'almoxarifado/menu-relatorios/',
-        views.view_menu_relatorios,
-        name='almoxarifado_menu_relatorios',
+        'almoxarifado/consultas/fornecedores/',
+        views.consulta_fornecedor,
+        name='almoxarifado_consulta_fornecedor',
     ),
     path(
-        'almoxarifado/menu-relatorios/tecnicos/',
-        views.view_relatorio_tecnicos,
-        name='almoxarifado_relatorio_tecnicos',
-    ),
-    path(
-        'almoxarifado/menu-relatorios/tecnicos/<str:funcionario>/',
-        views.view_relatorio_tecnicos_detalhe,
-        name='almoxarifado_relatorio_tecnicos_detalhe',
-    ),
-    path(
-        'almoxarifado/menu-relatorios/tecnicos/<str:funcionario>/<int:ordem>/',
-        views.view_relatorio_tecnicos_detalhe_ordem,
-        name='almoxarifado_relatorio_tecnicos_detalhe_ordem',
+        'almoxarifado/consultas/fornecedores/<int:material>/',
+        views.consulta_fornecedor_detalhe,
+        name='almoxarifado_consulta_fornecedor_detalhe',
     ),
 ]

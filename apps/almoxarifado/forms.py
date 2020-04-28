@@ -153,3 +153,21 @@ class FormMaterial(forms.Form):
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class' : 'form-control'})
+
+
+class FormFornecedor(forms.Form):
+    """
+    Formulário que permite filtrar um fornecedor
+    """
+
+    q = forms.CharField(
+        label='Filtrar por',
+        widget=forms.TextInput(attrs={'placeholder': 'cnpj|nome|material'}),
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(FormFornecedor, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})

@@ -2,19 +2,17 @@ import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Count, Max, Min, Q
+from django.db.models import Count, Max, Min, Q, Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic.list import ListView
 
 from constel.apps.controle_acessos.decorator import permission
 from constel.forms import FormDataInicialFinal, FormDataInicialFinalFuncionario
 from constel.models import UserType
-from constel.objects import Button
 
 from .forms import *
 from .menu import menu_cadastros, menu_consultas, menu_principal
-from .models import Material
+from .models import Material, Fornecedor, MaterialEntrada
 
 
 @login_required()
@@ -146,7 +144,7 @@ def entrada_material(request):
             entrada.save()
             material.quantidade.save()
 
-            return HttpResponseRedirect('/almoxarifado/menu-entradas/')
+            return HttpResponseRedirect('/almoxarifado/')
 
     else:
         form = FormEntradaMaterial()
@@ -534,23 +532,86 @@ def consulta_funcionario_detalhe_ordem(request, funcionario, ordem):
 
 
 @login_required()
-@permission('almoxarifado', 'gestor', )
-def view_menu_relatorios(request):
+@permission('almoxarifado', )
+def consulta_fornecedor(request):
+    menu = menu_consultas(request)
 
-    button_1 = Button('almoxarifado_relatorio_tecnicos', 'Relatório de funcionários')
-    button_voltar = Button('almoxarifado_menu_principal', 'Voltar')
+    fornecedor = request.GET.get('q', '')
+
+    form = FormFornecedor(
+        initial={
+            'q': fornecedor,
+        }
+    )
+
+    query = Q(aquisicoes__id__gt=0)
+
+    if fornecedor != '':
+        query = query & Q(
+            Q(nome__icontains=fornecedor) |
+            Q(cnpj__icontains=fornecedor) |
+            Q(aquisicoes__material__material__icontains=fornecedor)
+        )
+
+    itens = Fornecedor.objects.filter(query).annotate(
+        qtde_material=Sum('aquisicoes__quantidade'),
+        qtde_aq=Count('aquisicoes__material'),
+        data_max=Max('aquisicoes__material__data'),
+    ).order_by('nome')
+    itens = itens.values(
+        'nome',
+        'cnpj',
+        'aquisicoes__material__material',
+        'aquisicoes__material__codigo',
+        'data_max',
+        'qtde_aq',
+        'aquisicoes__material__quantidade__quantidade',
+        'qtde_material',
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'guia_titulo': 'Constel | Almoxaridado',
-        'pagina_titulo': 'Almoxarifado',
-        'menu_titulo': 'Menu de relatórios',
-        'buttons': [
-            button_1,
-        ],
-        'rollback': button_voltar,
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'filtrar',
     }
+    context.update(menu)
 
-    return render(request, 'constel/menu.html', context)
+    return render(request, 'almoxarifado/v2/consulta_fornecedor.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def consulta_fornecedor_detalhe(request, material):
+    menu = menu_consultas(request)
+
+    itens = MaterialEntrada.objects.filter(material__codigo=material).values(
+        'fornecedor__nome',
+        'material__quantidade__quantidade',
+        'ordem__id',
+        'quantidade',
+        'user__first_name',
+        'user__last_name',
+        'data',
+    ).order_by('-data')
+
+    material = Material.objects.get(codigo=material)
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'material': material,
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/consulta_fornecedor_detalhe.html', context)
+
 
 
 @login_required()
@@ -603,142 +664,3 @@ def view_cadastrar_usuario_passivo(request, callback=None):
         }
 
     return render(request, 'almoxarifado/cadastra_usuario_passivo.html', context)
-
-
-@login_required()
-@permission('almoxarifado', )
-def view_relatorio_tecnicos(request):
-
-    data_inicial = request.GET.get('data_inicial', '')
-    data_final = request.GET.get('data_final', '')
-    funcionario = request.GET.get('funcionario', '')
-
-    form = FormDataInicialFinalFuncionario(
-        initial={
-            'data_inicial': data_inicial,
-            'data_final': data_final,
-            'funcionario': funcionario,
-        }
-    )
-
-    query = Q()
-
-    if funcionario != '':
-        query = query & Q(
-            Q(username__icontains=funcionario) |
-            Q(first_name__icontains=funcionario) |
-            Q(last_name__icontains=funcionario))
-
-    if data_inicial != '':
-        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
-        query = query & Q(almoxarifado_retiradas__data__gte=data_inicial)
-
-    if data_final != '':
-        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
-        query = query & Q(almoxarifado_retiradas__data__lte=data_final)
-
-    retiradas = User.objects.filter(query).annotate(
-        total=Count('almoxarifado_retiradas__ordem__id', distinct=True),
-        max_data=Max('almoxarifado_retiradas__data'),
-    ).order_by(
-        '-total'
-    )
-
-    retiradas = retiradas.values(
-        'username',
-        'first_name',
-        'last_name',
-        'max_data',
-        'total',
-    ).exclude(total=0)
-
-    paginator = Paginator(retiradas, 50)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {
-        'page_obj': page_obj,
-        'pagina_titulo': 'Relatório de funcionários',
-        'button_submit_text': 'Filtrar',
-        'form': form,
-        'retiradas': retiradas,
-    }
-
-    return render(request, 'almoxarifado/relatorio_tecnicos.html', context)
-
-
-@login_required
-@permission('almoxarifado', )
-def view_relatorio_tecnicos_detalhe(request, funcionario):
-
-    data_inicial = request.GET.get('data_inicial', '')
-    data_final = request.GET.get('data_final', '')
-
-    form = FormDataInicialFinal(
-        initial={
-            'data_inicial': data_inicial,
-            'data_final': data_final,
-        }
-    )
-
-    query = Q(almoxarifado_ordem_saida__user_to__username=funcionario)
-
-    if data_inicial != '':
-        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
-        query = query & Q(data__gte=data_inicial)
-
-    if data_final != '':
-        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
-        query = query & Q(data__lte=data_final)
-
-    entregas = Ordem.objects.filter(query).order_by('-id')
-
-    entregas = entregas.values(
-        'id',
-        'data',
-        'user__first_name',
-        'user__last_name',
-    ).annotate(
-        observacao=Min('almoxarifado_ordem_saida__observacao'),
-        n_materiais=Count('almoxarifado_ordem_saida__id', distinct=True),
-    )
-
-    paginator = Paginator(entregas, 50)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {
-        'page_obj': page_obj,
-        'pagina_titulo': 'Detalhe',
-        'button_submit_text': 'Filtrar',
-        'form': form,
-        'entregas': entregas,
-        'funcionario': funcionario,
-    }
-
-    return render(request, 'almoxarifado/relatorio_tecnicos_detalhe.html', context)
-
-
-def view_relatorio_tecnicos_detalhe_ordem(request, funcionario, ordem):
-
-    materiais = MaterialSaida.objects.filter(ordem=ordem).order_by('id')
-
-    materiais = materiais.values(
-        'ordem__id',
-        'material__material',
-        'quantidade',
-        'data',
-        'user__first_name',
-        'user__last_name',
-        'user_to__first_name',
-        'user_to__last_name',
-    )
-
-    context = {
-        'pagina_titulo': 'Detalhe ordem',
-        'materiais': materiais,
-        'ordem': ordem,
-        'funcionario': funcionario,
-    }
-
-    return render(request, 'almoxarifado/relatorio_tecnicos_detalhe_ordem.html', context)

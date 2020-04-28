@@ -1,0 +1,35 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">{{ material.material|upper }}</th>
+                <th scope="col">Estoque atual</th>
+                <th scope="col" style="color: yellow;">{{ page_obj.0.material__quantidade__quantidade }}</th>
+            </tr>
+            <tr>
+                <th scope="col">Fornecedor</th>
+                <th scope="col">Ordem</th>
+                <th scope="col">Data</th>
+                <th scope="col">Qtde</th>
+                <th scope="col">Responsável</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.fornecedor__nome|title }}</td>
+                <td>{{ item.ordem__id }}</td>
+                <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
+                <td style="color: yellow;">{{ item.quantidade }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_fornecedor' %}?q={% firstof request.GET.q '' %}">voltar</a>
+</div>
+{% endblock %}
