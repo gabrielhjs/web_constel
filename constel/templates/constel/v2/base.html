@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    
+
     <header>
         <!-- Menu nav do sistema -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary fixed-top" id="nav">
@@ -30,7 +30,7 @@
             <a href="/">
                 <img src="{% static 'constel/v2/constel_logo_sem_escrita_colorido.png' %}">
             </a>
-        
+
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSite">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -39,19 +39,24 @@
 
                 <ul class="navbar-nav nav-pills">
                     <li class="nav-item mt-4 mt-lg-0 ml-lg-4">
-                        <a class="nav-link {% if app == 'Constel' %}active{% endif %} px-3" role="button" href="/">Início</a>
+                        <a class="nav-link {% if app == 'Constel' %}active{% endif %} px-3" role="button"
+                            href="/">Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if app == 'Almoxarifado' %}active{% endif %} px-3" role="button" href="{% url 'almoxarifado_menu_principal' %}">Almoxarifado</a>
+                        <a class="nav-link {% if app == 'Almoxarifado' %}active{% endif %} px-3" role="button"
+                            href="{% url 'almoxarifado_menu_principal' %}">Almoxarifado</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if app == 'Patrimônio' %}active{% endif %} px-3" role="button" href="{% url 'patrimonio_menu_principal' %}">Patrimônio</a>
+                        <a class="nav-link {% if app == 'Patrimônio' %}active{% endif %} px-3" role="button"
+                            href="{% url 'patrimonio_menu_principal' %}">Patrimônio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if app == 'Combustível' %}active{% endif %} px-3" role="button" href="{% url 'gc_menu_principal' %}">Combustível</a>
+                        <a class="nav-link {% if app == 'Combustível' %}active{% endif %} px-3" role="button"
+                            href="{% url 'gc_menu_principal' %}">Combustível</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if app == 'Cont2' %}active{% endif %} px-3" role="button" href="{% url 'almoxarifado_cont_menu_principal' %}">Cont2</a>
+                        <a class="nav-link {% if app == 'Cont2' %}active{% endif %} px-3" role="button"
+                            href="{% url 'almoxarifado_cont_menu_principal' %}">Cont2</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link px-3" role="button" href="{% url 'constel_menu_admin' %}">Administração</a>
@@ -65,7 +70,8 @@
                         </span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-outline-danger px-3" role="button" href="{% url 'logout' %}">Logout</a>
+                        <a class="nav-link btn btn-outline-danger px-3" role="button"
+                            href="{% url 'logout' %}">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -83,12 +89,61 @@
     <!-- Rodapé do sistema -->
     <footer>
         <div class="container-fluid bg-dark flex border-top border-secondary fixed-bottom" id="footer">
-            <div class="row my-auto">
-                <div class="col-sm-8">
-
+            <div class="row my-auto align-items-center justify-content-md-end">
+                <div class="col-md-auto mr-4">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="mb-0" style="white-space: nowrap;">Developed by:</h5>
+                        </div>
+                    </div>
+                    <div class="row align-top">
+                        <div class="col">
+                            <h4 class="mb-0" style="white-space: nowrap;">Gabriel Sá</h3>
+                        </div>
+                    </div>
                 </div>
-                <div class="col mt-4">
-                    <p class="h6 text-right">Powered by Gabriel Sá</p>
+                <div class="col-md-auto mr-4">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="mb-0" style="white-space: nowrap;">Developed with:</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col">
+                            <img src="{% static 'constel/v2/logo_python-3.svg' %}" class="img-fluid">
+                        </div>
+                        <div class="col">
+                            <img src="{% static 'constel/v2/logo_django-community.svg' %}" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-auto mr-3">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="mb-0" style="white-space: nowrap;">Designed with:</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <img src="{% static 'constel/v2/logo_bootstrap-5.svg' %}" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-auto mr-3">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="mb-0" style="white-space: nowrap;">Hosting by:</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <img src="{% static 'constel/v2/logo_heroku-1.svg' %}" class="img-fluid">
+                        </div>
+                        <div class="col">
+                            <img src="{% static 'constel/v2/logo_github-2.svg' %}" class="img-fluid">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

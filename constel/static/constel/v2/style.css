@@ -9,7 +9,12 @@
 }
 
 #footer {
-    min-height: 10vh;
+    height: 10vh;
+}
+
+#footer img {
+    height: 30px;
+    opacity: 0.5;
 }
 
 .table-content {
