@@ -2,7 +2,8 @@ import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Count, Max, Min, Q, Sum
+from django.db.models import Count, Max, Min, Q, Sum, OuterRef, Subquery, DateField, F, IntegerField
+from django.db.models.functions import TruncDate
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -177,21 +178,47 @@ def consulta_estoque(request):
         }
     )
 
-    query = Q(quantidade__gt=0)
+    query = Q()
 
     if material != '':
         query = query & Q(
-            Q(material__codigo__icontains=material) |
-            Q(material__material__icontains=material)
+            Q(codigo__icontains=material) |
+            Q(material__icontains=material)
         )
 
-    itens = MaterialQuantidade.objects.filter(query).order_by('material__material')
-    itens = itens.values(
+    sub_query = MaterialSaida.objects.filter(
+        material__id=OuterRef('id'),
+        data__gte=datetime.datetime.today()-datetime.timedelta(days=60)
+    ).values(
         'material__codigo',
-        'material__material',
-        'material__descricao',
-        'quantidade',
+    ).annotate(
+        dia=TruncDate('data', output_field=DateField()),
+        count=Sum('quantidade')
+    ).values(
+        'material__codigo',
+    ).annotate(
+        media=F('count')/Count(F('dia'), distinct=True)
+    ).values(
+        'media',
     )
+
+    itens = Material.objects.filter(
+        query,
+    ).annotate(
+        media=Subquery(sub_query, output_field=IntegerField()),
+    ).values(
+        'codigo',
+        'material',
+        'descricao',
+        'quantidade__quantidade',
+        'media',
+    ).annotate(
+        pt=F('quantidade__quantidade')/F('media')
+    ).exclude(
+        entradas__isnull=True,
+    ).order_by('material')
+
+    print(itens.query)
 
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')
@@ -222,7 +249,7 @@ def consulta_estoque_detalhe(request, material):
     saldos = []
     saldo_dia = 0
 
-    for dia in daterange(data_inicial, data_final):
+    for dia in daterange(data_inicial, data_final + datetime.timedelta(days=1)):
 
         for dia_entrada in entradas:
 
