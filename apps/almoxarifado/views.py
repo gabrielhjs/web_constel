@@ -208,7 +208,7 @@ def consulta_estoque(request):
         media=Sum(
             'quantidade', output_field=FloatField()
         )/ExpressionWrapper(
-                Max('data', output_field=DurationField()) - \
+                1 + Max('data', output_field=DurationField()) - \
                 Min('data', output_field=DurationField()),
             output_field=FloatField()
         )
