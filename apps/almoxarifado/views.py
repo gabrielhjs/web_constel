@@ -2,7 +2,20 @@ import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Count, Max, Min, Q, Sum, OuterRef, Subquery, DateField, F, IntegerField
+from django.db.models import (
+    Count,
+    Max,
+    Min,
+    Q,
+    Sum,
+    OuterRef,
+    Subquery,
+    F,
+    IntegerField,
+    DurationField,
+    ExpressionWrapper,
+    FloatField,
+)
 from django.db.models.functions import TruncDate
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -188,16 +201,17 @@ def consulta_estoque(request):
 
     sub_query = MaterialSaida.objects.filter(
         material__id=OuterRef('id'),
-        data__gte=datetime.datetime.today()-datetime.timedelta(days=60)
+        # data__gte=datetime.datetime.today()-datetime.timedelta(days=60)
     ).values(
         'material__codigo',
     ).annotate(
-        dia=TruncDate('data', output_field=DateField()),
-        count=Sum('quantidade')
-    ).values(
-        'material__codigo',
-    ).annotate(
-        media=F('count')/Count(F('dia'), distinct=True)
+        media=Sum(
+            'quantidade', output_field=FloatField()
+        )/ExpressionWrapper(
+                Max('data', output_field=DurationField()) - \
+                Min('data', output_field=DurationField()),
+            output_field=FloatField()
+        )
     ).values(
         'media',
     )
@@ -217,8 +231,6 @@ def consulta_estoque(request):
     ).exclude(
         entradas__isnull=True,
     ).order_by('material')
-
-    print(itens.query)
 
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')
