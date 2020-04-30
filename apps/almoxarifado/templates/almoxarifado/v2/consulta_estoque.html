@@ -20,15 +20,15 @@
         <tbody>
             {% for item in page_obj %}
             <tr class="text-md-left">
-                <td>{{ item.material__codigo }}</td>
-                <td>{{ item.material__material|truncatechars:40 }}</td>
-                <td>{{ item.material__descricao|truncatechars:100 }}</td>
-                <td style="font-size: 1.2em;">{{item.material__quantidade__quantidade }}</td>
+                <td>{{ item.codigo }}</td>
+                <td>{{ item.material|truncatechars:40 }}</td>
+                <td>{{ item.descricao|truncatechars:100 }}</td>
+                <td style="font-size: 1.2em;">{{item.quantidade__quantidade }}</td>
                 <td style="font-size: 1.2em; color: yellow;">{% if item.media %}&darr; {% endif %}{{ item.media|default_if_none:'' }}</td>
                 <td style="font-size: 1.2em; color: {% if item.pt <= 15 %}Red{% elif item.pt <= 30 %}Yellow{% else %}Lime{% endif %};">{{ item.pt|default_if_none:'' }}</td>
                 <td>
                     <a class="btn btn-primary btn-sm"
-                        href="{% url 'almoxarifado_consulta_estoque_detalhe' item.material__codigo %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">
+                        href="{% url 'almoxarifado_consulta_estoque_detalhe' item.codigo %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">
                         gráfico
                     </a>
                 </td>
