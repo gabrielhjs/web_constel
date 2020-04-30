@@ -15,6 +15,7 @@ from django.db.models import (
     DurationField,
     ExpressionWrapper,
     FloatField,
+    DateField,
 )
 from django.db.models.functions import TruncDate
 from django.http import HttpResponseRedirect
@@ -201,19 +202,13 @@ def consulta_estoque(request):
 
     sub_query = MaterialSaida.objects.filter(
         material__id=OuterRef('id'),
-        # data__gte=datetime.datetime.today()-datetime.timedelta(days=60)
+        data__gte=datetime.datetime.today()-datetime.timedelta(days=30)
     ).values(
         'material__codigo',
     ).annotate(
-        media=Sum(
-            'quantidade', output_field=FloatField()
-        )/ExpressionWrapper(
-                1 + Max('data', output_field=DurationField()) - \
-                Min('data', output_field=DurationField()),
-            output_field=FloatField()
-        )
+        media=Sum('quantidade')/30
     ).values(
-        'media',
+        'media'
     )
 
     itens = Material.objects.filter(
