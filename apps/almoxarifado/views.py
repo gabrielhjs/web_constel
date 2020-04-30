@@ -200,32 +200,23 @@ def consulta_estoque(request):
             Q(material__icontains=material)
         )
 
-    sub_query = MaterialSaida.objects.filter(
-        material__id=OuterRef('id'),
+    itens = MaterialSaida.objects.filter(
         data__gte=datetime.datetime.today()-datetime.timedelta(days=30)
     ).values(
         'material__codigo',
     ).annotate(
         media=Sum('quantidade')/30
     ).values(
-        'media'
-    )
-
-    itens = Material.objects.filter(
-        query,
-    ).annotate(
-        media=Subquery(sub_query, output_field=IntegerField()),
-    ).values(
-        'codigo',
-        'material',
-        'descricao',
-        'quantidade__quantidade',
         'media',
+        'material__codigo',
+        'material__material',
+        'material__descricao',
+        'material__quantidade__quantidade',
     ).annotate(
-        pt=F('quantidade__quantidade')/F('media')
+        pt=F('material__quantidade__quantidade')/F('media')
     ).exclude(
-        entradas__isnull=True,
-    ).order_by('material')
+        material__entradas__isnull=True,
+    ).order_by('material__material')
 
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')
