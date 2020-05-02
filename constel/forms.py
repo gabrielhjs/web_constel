@@ -13,18 +13,50 @@ class FormCadastraUsuario(UserCreationForm):
     username = forms.IntegerField(
         required=True,
         label='Matrícula',
-        help_text='Insira o número da sua matrícula (crachá)'
+        widget=forms.TextInput(attrs={'placeholder': 'sua matrícula (crachá)'}),
     )
-    first_name = forms.CharField(max_length=30, help_text='Obrigatório.', label='Nome')
-    last_name = forms.CharField(max_length=100, help_text='Obrigatório.', label='Sobrenome')
-    email = forms.EmailField(max_length=254, help_text='Obrigatório. Informe um endereço válido de email.')
-    modelo = forms.CharField(max_length=30, label='Modelo do veículo', help_text='Obrigatório.')
-    placa = forms.CharField(max_length=8, label='Placa do veículo', help_text='Obrigatório.')
-    cor = forms.CharField(max_length=100, label='Cor do veículo', help_text='Obrigatório.')
+    first_name = forms.CharField(
+        max_length=30,
+        label='Nome',
+        widget=forms.TextInput(attrs={'placeholder': 'obrigatório'}),
+    )
+    last_name = forms.CharField(
+        max_length=100,
+        label='Sobrenome',
+        widget=forms.TextInput(attrs={'placeholder': 'obrigatório'}),
+    )
+    email = forms.EmailField(
+        max_length=254,
+        widget=forms.TextInput(attrs={'placeholder': 'Informe um endereço válido de email'}),
+    )
+    modelo = forms.CharField(
+        max_length=30,
+        required=False,
+        label='Modelo do veículo',
+        widget=forms.TextInput(attrs={'placeholder': 'obrigatório'}),
+    )
+    placa = forms.CharField(
+        max_length=8,
+        required=False,
+        label='Placa do veículo',
+        widget=forms.TextInput(attrs={'placeholder': 'obrigatório'}),
+    )
+    cor = forms.CharField(
+        max_length=100,
+        required=False,
+        label='Cor do veículo',
+        widget=forms.TextInput(attrs={'placeholder': 'obrigatório'}),
+    )
 
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
+
+    def __init__(self, *args, **kwargs):
+        super(FormCadastraUsuario, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class FormCadastraUsuarioPassivo(forms.ModelForm):

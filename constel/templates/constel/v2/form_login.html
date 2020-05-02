@@ -1,0 +1,45 @@
+<!-- 
+    Este é o arquivo do formulario de login do sistema.
+-->
+{% extends 'constel/v2/base_login.html' %}
+{% block form_content %}
+    <form class="w-100" method="POST">
+        <div class="form-row my-2 justify-content-end">
+            <div class="col-lg-7">
+                {% csrf_token %}
+                <div class="alert alert-success">
+                    <a class="close" href="#" data-dismiss="alert">×</a>
+                    Seja bem vindo a nova tela de login do sistema Constel web, 
+                    em breve as páginas internas do sistema também serão modificadas. 
+                    Contudo, as funções continuarão as mesmas. Em caso de dúvida contate o administrador.
+                </div>
+                {% for message in messages %}
+                <div class="alert alert-danger">
+                    <a class="close" href="#" data-dismiss="alert">×</a>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-row my-2 justify-content-end">
+            <div class="col-lg-7">
+                <input type="text" name="username" maxlength="150" required id="id_username"
+                    class="form-control" placeholder="Matrícula">
+            </div>
+        </div>
+        <div class="form-row my-2 justify-content-end">
+            <div class="col-lg-7">
+                <input type="password" name="password" required id="id_password"
+                    class="form-control" placeholder="Senha">
+            </div>
+        </div>
+        <div class="form-row lg-2 justify-content-end mb-3">
+            <div class="col-lg-7 text-right">
+                <a class="btn btn-outline-primary" href="{% url 'cadastra_usuario' %}">
+                    Cadastrar-se
+                </a>
+                <button type="submit" class="btn btn-danger px-4">Logar</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

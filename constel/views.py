@@ -96,14 +96,10 @@ def view_cadastrar_usuario(request):
 
     context = {
         'form': form,
-        'callback': 'login',
-        'button_submit_text': 'Cadastrar-se',
-        'callback_text': 'Cancelar',
-        'pagina_titulo': 'Constel',
-        'menu_titulo': 'Cadastro de funcionário',
+        'form_submit_text': 'Cadastrar-se',
     }
 
-    return render(request, 'constel/cadastra_usuario.html', context)
+    return render(request, 'constel/v2/form_cadastro.html', context)
 
 
 @login_required
@@ -207,7 +203,7 @@ def view_login(request):
         else:
             form = FormLogin()
 
-        return render(request, 'constel/v2/login.html', {'form': form})
+        return render(request, 'constel/v2/form_login.html', {'form': form})
 
 
 @login_required

@@ -1,0 +1,47 @@
+<!-- 
+    Este é o arquivo do formulario de login do sistema.
+-->
+{% extends 'constel/v2/base_login.html' %}
+{% block form_content %}
+<form method="POST">
+    {% csrf_token %}
+
+    {% for message in messages %}
+        <div class="col-md-12 text-md-center">
+            <div class="alert alert-danger mt-1">
+                <a class="close" href="#" data-dismiss="alert">×</a>
+                {{ message }}
+            </div>
+        </div>
+    {% endfor %}
+
+    {% for field in form %}
+        
+        <div class="form-group row mx-0 my-2 px-0 justify-content-end">
+            <label for="{{ field.id_for_label }}" class="col-md-5 col-form-label text-md-right">{{ field.label_tag }}</label>
+            <div class="col-md-7 mx-0 px-0">
+                {{ field }}
+            </div>
+
+            {% if field.help_text %}
+            <div class="col-md-10">
+                <p><small class="form-text text-muted">{{ field.help_text }}</small></p>
+            </div>
+            {% endif %}
+        </div>
+
+        {% for error in field.errors %}
+            <div class="col-lg-12 text-md-center">
+                <div class="alert alert-danger mt-1">
+                    <a class="close" href="#" data-dismiss="alert">×</a>
+                    {{ error }}
+                </div>
+            </div>
+        {% endfor %}
+    
+    {% endfor %}
+    <div class="text-right w-md-50">
+        <button type="submit" class="btn btn-success mb-3 px-5">{{ form_submit_text }}</button>
+    </div>
+</form>
+{% endblock %}

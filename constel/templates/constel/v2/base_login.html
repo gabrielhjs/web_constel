@@ -1,0 +1,63 @@
+<!-- 
+    Este é o arquivo da página de login do sistema.
+-->
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+
+<head>
+    <title>Constel Web | Login</title>
+
+    <!-- Arquivos meta necessários -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap e CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'constel/v2/login.css' %}">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div id="content" class="row rowb">
+            <div class="col-md-4">
+                <div class="container">
+                    <img class="mt-4" src="{% static 'constel/v2/constel_logo_sem_escrita_colorido.png' %}">
+                    <div class="row rowb align-items-end justify-content-end">
+                        {% block form_content %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+            <div id="col-image" class="col">
+                <div class="container">
+                    <div class="row rowb align-items-end justify-content-center">
+                        <div>
+                            <h1>constel web.</h1>
+                            <p class="h3 text-center">Sistema de gestão</p>
+                        </div>
+                    </div>
+                    <div class="row rowb align-items-end justify-content-end">
+                        <p class="h5">Powered by Gabriel Sá</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- jquery, popper.js e bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>

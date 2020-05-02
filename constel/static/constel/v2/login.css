@@ -2,7 +2,7 @@
 
     #content {
         min-height: 100vh;
-        min-width: 100vw;
+        # min-width: 100vw;
     }
 
     
@@ -27,10 +27,14 @@
     text-align: center;
 }
 
-.row {
+.rowb {
     min-height: 50vh;
 }
 
 .form {
     text-align: right;
 }
+
+ul {
+    list-style-type: '-  ';
+  }
