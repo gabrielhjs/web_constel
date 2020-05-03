@@ -18,7 +18,9 @@
             </div>
 
             {% if field.help_text %}
-            <p><small>{{ field.help_text }}</small></p>
+            <div class="col-md-10">
+                <p><small class="form-text text-muted">{{ field.help_text }}</small></p>
+            </div>
             {% endif %}
         </div>
 

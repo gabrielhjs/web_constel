@@ -38,33 +38,33 @@ urlpatterns = [
     # Urls das listas de saída de Ont
 
     path(
-        'almoxarifado/cont/menu-saidas/lista/',
-        views_ont.view_lista_cria,
+        'almoxarifado/cont/saidas/lista/',
+        views_ont.lista_cria,
         name='almoxarifado_cont_saida_lista',
     ),
     path(
-        'almoxarifado/cont/menu-saidas/lista/itens/<str:user_to>/',
-        views_ont.view_item_insere,
-        name='almoxarifado_cont_saida_lista_itens',
+        'almoxarifado/cont/saidas/lista/<str:user_to>/',
+        views_ont.view_insere,
+        name='almoxarifado_cont_saida_lista',
     ),
     path(
-        'almoxarifado/cont/menu-saidas/lista/itens/entrega/<str:user_to>/',
-        views_ont.view_item_entrega,
-        name='almoxarifado_cont_saida_lista_itens_entrega',
+        'almoxarifado/cont/saidas/lista/entrega/<str:user_to>/',
+        views_ont.view_entrega,
+        name='almoxarifado_cont_saida_lista_entrega',
     ),
     path(
-        'almoxarifado/cont/menu-saidas/lista/itens/imprimir/<int:ordem_id>/',
-        views_ont.view_item_imprime,
-        name='almoxarifado_cont_saida_lista_itens_imprimi',
+        'almoxarifado/cont/menu-saidas/lista/imprimir/<int:ordem_id>/',
+        views_ont.view_imprime,
+        name='almoxarifado_cont_saida_lista_imprimi',
     ),
     path(
-        'almoxarifado/cont/menu-saidas/lista/itens/limpa/<str:user_to>/',
-        views_ont.view_item_limpa,
-        name='almoxarifado_cont_saida_lista_itens_limpa',
+        'almoxarifado/cont/menu-saidas/lista/limpa/<str:user_to>/',
+        views_ont.view_limpa,
+        name='almoxarifado_cont_saida_lista_limpa',
     ),
     path(
-        'almoxarifado/cont/menu-saidas/lista/itens/concluido/<int:ordem_id>/',
-        views_ont.view_item_conclui,
-        name='almoxarifado_cont_saida_lista_itens_conclui',
+        'almoxarifado/cont/saidas/lista/conclui/<int:ordem_id>/',
+        views_ont.view_conclui,
+        name='almoxarifado_cont_saida_lista_conclui',
     ),
 ]

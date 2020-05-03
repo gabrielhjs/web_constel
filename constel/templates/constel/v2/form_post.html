@@ -12,14 +12,16 @@
 
     {% for field in form %}
         
-        <div class="form-group row mx-0 px-0">
+        <div class="form-group row mx-0 px-0 mt-3">
             <label for="{{ field.id_for_label }}" class="col-md-2 col-form-label text-md-right">{{ field.label_tag|title }}</label>
             <div class="col-md-8 mx-0 px-0">
                 {{ field }}
             </div>
 
             {% if field.help_text %}
-            <p><small>{{ field.help_text }}</small></p>
+            <div class="col-md-12">
+                <p><small class="form-text text-center">{{ field.help_text }}</small></p>
+            </div>
             {% endif %}
         </div>
 

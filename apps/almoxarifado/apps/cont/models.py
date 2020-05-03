@@ -5,7 +5,7 @@ from ...models import Ordem
 
 
 class Modelo(models.Model):
-    nome = models.CharField(max_length=255, unique=True, verbose_name='Código')
+    nome = models.CharField(max_length=255, unique=True)
     descricao = models.TextField(max_length=500)
     data = models.DateTimeField(auto_now=True)
 

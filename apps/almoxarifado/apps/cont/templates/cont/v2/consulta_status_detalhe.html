@@ -1,0 +1,27 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="2">Lista de ONT's</th>
+            </tr>
+            <tr>
+                <th scope="col">Serial</th>
+                <th scope="col">Data de entrada</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.codigo }}</td>
+                <td>{{ item.max_data|date:'d/m/Y H:i:s' }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_cont_consulta_situacao' %}">voltar</a>
+</div>
+{% endblock %}

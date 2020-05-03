@@ -1,0 +1,36 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="7">Forncedores</th>
+            </tr>
+            <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Funcionário</th>
+                <th scope="col">Última retirada</th>
+                <th scope="col">Carga</th>
+                <th scope="col">#</th>   
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.username|upper }}</td>
+                <td>{{ item.first_name|title }} {{ item.last_name|title }}</td>
+                <td>{{ item.max_data|date:'d/m/Y H:i:s' }}</td>
+                <td style="font-size: 1.2em; color: yellow;">{{ item.total }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                        href="{% url 'almoxarifado_cont_consulta_tecnicos_carga_detalhes' item.username %}?funcionario={% firstof request.GET.funcionario '' %}">
+                        ONT's
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

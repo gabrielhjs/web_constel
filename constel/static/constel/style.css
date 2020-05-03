@@ -161,9 +161,3 @@ body {background: #242424; color: white;}
 .table-content-enumerated table tbody tr {
     counter-increment: rowNumber;
 }
-
-.table-content-enumerated table tbody tr td:first-child::before {
-    content: counter(rowNumber);
-    min-width: 1em;
-    margin-right: 0.5em;
-}

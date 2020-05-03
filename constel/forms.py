@@ -126,6 +126,12 @@ class FormFuncionario(forms.Form):
         required=False
     )
 
+    def __init__(self, *args, **kwargs):
+        super(FormFuncionario, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+
 
 class DateInput(forms.DateInput):
     """

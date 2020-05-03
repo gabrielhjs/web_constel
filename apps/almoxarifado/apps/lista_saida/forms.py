@@ -106,6 +106,9 @@ class FormOntInsere(forms.Form):
             {'autofocus': 'autofocus', 'required': 'required'}
         )
 
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+
     def clean(self):
         form_data = self.cleaned_data
         serial = form_data['serial'].upper()

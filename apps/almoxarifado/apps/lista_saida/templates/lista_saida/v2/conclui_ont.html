@@ -1,0 +1,11 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-success px-5 my-3" href="{% url 'almoxarifado_cont_saida_lista_imprimi' ordem_id %}" target="_blank">
+        imprimir ficha
+    </a>
+    <a class="btn btn-danger px-5 my-3 ml-3" href="{% url 'almoxarifado_cont_saida_lista' %}">
+        voltar
+    </a>
+</div>
+{% endblock %}

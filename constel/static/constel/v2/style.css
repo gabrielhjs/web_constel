@@ -34,3 +34,17 @@
     max-height: 80vh;
     overflow: auto;
 }
+
+.enumerated table {
+    counter-reset: rowNumber;
+}
+
+.enumerated table tbody tr  {
+    counter-increment: rowNumber;
+    }
+
+.enumerated table tbody tr td:first-child::before {
+    content: counter(rowNumber);
+    min-width: 1em;
+    margin-right: 0.5em;
+}

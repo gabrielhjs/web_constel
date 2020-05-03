@@ -1,0 +1,35 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %} 
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="5">Status geral</th>
+            </tr>
+            <tr>
+                <th scope="col">Status</th>
+                <th scope="col">Seção</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Qtde</th>
+                <th scope="col">#</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in onts_status_secao_modelo %}
+            <tr class="text-md-left">
+                <td>{{ item.status }}</td>
+                <td>{{ item.secao__nome }}</td>
+                <td>{{ item.modelo__nome }}</td>
+                <td>{{ item.codigo__count }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                        href="{% url 'almoxarifado_cont_consulta_situacao_detalhe' item.status item.secao__id item.modelo__id %}">
+                        ONT's
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

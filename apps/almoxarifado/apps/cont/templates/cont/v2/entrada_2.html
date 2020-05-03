@@ -1,0 +1,28 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %} 
+{% include 'constel/v2/form_post.html' %}
+<div class="row mx-0 mb-3 justify-content-center">
+    <a href="/almoxarifado/cont/entrada-3" class="btn btn-primary px-4">Concluir</a>
+</div>
+<div class="table-responsive table-content enumerated">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col">Modelo: {{ modelo }}</th>
+                <th scope="col">Seção: {{ secao }}</th>
+            </tr>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Serial</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in historico %}
+            <tr class="text-md-left">
+                <td></td>
+                <td>{{ item.ont__codigo|upper }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% endblock %}

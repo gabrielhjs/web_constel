@@ -14,11 +14,13 @@ from constel.objects import Button
 from constel.apps.controle_acessos.decorator import permission
 
 from ..cont.models import Ont, OntEntrada, OntSaida
+from ..cont.menu import menu_principal
 
 
 @login_required
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_lista_cria(request):
+def lista_cria(request):
+    menu = menu_principal(request)
 
     if request.method == 'POST':
         form = FormCria(request.POST)
@@ -35,7 +37,7 @@ def view_lista_cria(request):
                 lista.save()
 
             return HttpResponseRedirect(
-                '/almoxarifado/cont/menu-saidas/lista/itens/' + str(form.cleaned_data['user_to']) + '/'
+                '/almoxarifado/cont/saidas/lista/' + str(form.cleaned_data['user_to']) + '/'
             )
 
     else:
@@ -43,21 +45,22 @@ def view_lista_cria(request):
 
     context = {
         'form': form,
-        'pagina_titulo': 'Cont2',
-        'menu_titulo': 'Entrega de Ont\'s',
-        'button_submit_text': 'Avançar',
+        'form_submit_text': 'Avançar',
     }
+    context.update(menu)
 
-    return render(request, 'lista_saida/ont_lista_cria.html', context)
+    return render(request, 'lista_saida/v2/cria.html', context)
 
 
 @login_required()
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_item_insere(request, user_to):
+def view_insere(request, user_to):
+    menu = menu_principal(request)
+
     user_to = User.objects.get(username=user_to)
 
     if not OntLista.objects.filter(user_to=user_to).exists():
-        return HttpResponseRedirect('/almoxarifado/cont/menu-saidas/lista/')
+        return HttpResponseRedirect('/almoxarifado/cont/saidas/lista/')
 
     if request.method == 'POST':
         form_insere = FormOntInsere(user_to.username, request.POST)
@@ -75,7 +78,7 @@ def view_item_insere(request, user_to):
                 if user == user_to:
                     messages.error(request, 'Ont já está na carga do técnico')
 
-                    return HttpResponseRedirect('/almoxarifado/cont/menu-saidas/lista/itens/' + user_to.username + '/')
+                    return HttpResponseRedirect('/almoxarifado/cont/saidas/lista/' + user_to.username + '/')
 
                 else:
                     messages.success(
@@ -91,22 +94,18 @@ def view_item_insere(request, user_to):
                 item = OntItem.objects.create(lista=lista, material=ont)
                 item.save()
 
-            return HttpResponseRedirect('/almoxarifado/cont/menu-saidas/lista/itens/' + user_to.username + '/')
+            return HttpResponseRedirect('/almoxarifado/cont/saidas/lista/' + user_to.username + '/')
 
     else:
         form_insere = FormOntInsere(user_to.username)
         
-    carga = OntSaida.objects.values(
-        'ont__codigo',
-        'user__first_name',
-        'user__last_name',
-        'user_to__first_name',
-        'user_to__last_name',
-    ).annotate(
-        max_data=Max('data')
-    ).filter(
+    carga = OntSaida.objects.filter(
         ont__status=1,
         user_to__username=user_to,
+    ).values(
+        'ont__codigo',
+    ).annotate(
+        max_data=Max('data')
     ).order_by(
         '-max_data'
     )
@@ -117,26 +116,30 @@ def view_item_insere(request, user_to):
         'last_name': user_to.last_name,
     }
 
+    lista = OntItem.objects.filter(
+        lista__user_to__username=user_to
+    ).values(
+        'material__codigo',
+    )
+
     context = {
-        'lista_itens': OntItem.objects.filter(lista__user_to__username=user_to),
+        'lista_itens': lista,
         'form': form_insere,
+        'form_submit_text': 'Adicionar ONT',
         'user_to': funcionario,
-        'pagina_titulo': 'Cont2',
-        'button_submit_text': 'Adicionar ONT',
-        'menu_titulo': 'Saída de ONT\'s',
-        'funcionario': funcionario,
         'carga': carga,
     }
+    context.update(menu)
 
-    return render(request, 'lista_saida/ont_lista_itens.html', context)
+    return render(request, 'lista_saida/v2/itens_ont.html', context)
 
 
 @login_required()
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_item_entrega(request, user_to):
+def view_entrega(request, user_to):
 
     if not OntItem.objects.filter(lista__user_to__username=user_to).exists():
-        return HttpResponseRedirect('/almoxarifado/cont/menu-saidas/lista/')
+        return HttpResponseRedirect('/almoxarifado/cont/saidas/lista/')
 
     else:
         itens = OntItem.objects.filter(lista__user_to__username=user_to)
@@ -161,12 +164,12 @@ def view_item_entrega(request, user_to):
 
         itens[0].lista.delete()
 
-        return HttpResponseRedirect('/almoxarifado/cont/menu-saidas/lista/itens/concluido/' + str(ordem.id) + '/')
+        return HttpResponseRedirect('/almoxarifado/cont/saidas/lista/conclui/' + str(ordem.id) + '/')
 
 
 @login_required
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_item_imprime(request, ordem_id):
+def view_imprime(request, ordem_id):
 
     if Ordem.objects.filter(id=ordem_id).exists():
         ordem = Ordem.objects.get(id=ordem_id)
@@ -181,11 +184,11 @@ def view_item_imprime(request, ordem_id):
 
 @login_required
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_item_limpa(request, user_to):
+def view_limpa(request, user_to):
 
     if not OntLista.objects.filter(user_to__username=user_to).exists():
 
-        return HttpResponseRedirect('/almoxarifado/cont/menu-saidas/lista/')
+        return HttpResponseRedirect('/almoxarifado/cont/saidas/lista/')
 
     else:
         itens = OntItem.objects.filter(lista__user_to__username=user_to)
@@ -193,22 +196,17 @@ def view_item_limpa(request, user_to):
         for item in itens:
             item.delete()
 
-        return HttpResponseRedirect('/almoxarifado/cont/menu-saidas/lista/itens/' + user_to + '/')
+        return HttpResponseRedirect('/almoxarifado/cont/saidas/lista/' + user_to + '/')
 
 
 @login_required
 @permission('almoxarifado', 'almoxarifado - saida', )
-def view_item_conclui(request, ordem_id):
-    button_1 = Button('almoxarifado_cont_saida_lista_itens_imprimi', 'Imprimir ficha')
-    button_voltar = Button('almoxarifado_cont_saida_lista', 'Voltar')
+def view_conclui(request, ordem_id):
+    menu = menu_principal(request)
 
     context = {
-        'guia_titulo': 'Constel | Cont2',
-        'pagina_titulo': 'Cont2',
-        'menu_titulo': 'Entrega concluída!',
         'ordem_id': ordem_id,
-        'button': button_1,
-        'rollback': button_voltar,
     }
+    context.update(menu)
 
-    return render(request, 'lista_saida/menu.html', context)
+    return render(request, 'lista_saida/v2/conclui_ont.html', context)

@@ -9,12 +9,24 @@ class FormCadastraModelo(forms.ModelForm):
         model = Modelo
         fields = ['nome', 'descricao', ]
 
+    def __init__(self, *args, **kwargs):
+        super(FormCadastraModelo, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+
 
 class FormCadastraSecao(forms.ModelForm):
 
     class Meta:
         model = Secao
         fields = ['nome', 'descricao', ]
+
+    def __init__(self, *args, **kwargs):
+        super(FormCadastraSecao, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
 
 
 class FormEntradaOnt1(forms.Form):
@@ -41,6 +53,9 @@ class FormEntradaOnt1(forms.Form):
             help_text='Atividade de destino das ONT\'s a serem inseridas',
         )
 
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+
 
 class NonstickyCharfield(forms.TextInput):
     """Custom text input widget that's "non-sticky"
@@ -62,6 +77,9 @@ class FormEntradaOnt2(forms.Form):
         self.fields['serial'].widget.attrs.update(
             {'autofocus': 'autofocus', 'required': 'required'}
         )
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class' : 'form-control'})
 
     def clean(self):
         form_data = super().clean()
