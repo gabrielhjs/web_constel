@@ -11,12 +11,12 @@ class AdimOnt(admin.ModelAdmin):
 
 class AdminOntEntrada(admin.ModelAdmin):
     search_fields = ('data', 'ont__codigo')
-    list_display = ('data', 'ont__codigo', 'user__username')
+    list_display = ('data', 'ont', 'user')
 
 
 class AdminOntSaida(admin.ModelAdmin):
     search_fields = ('data', 'ont__codigo')
-    list_display = ('data', 'ont__codigo', 'user_to__username')
+    list_display = ('data', 'ont', 'user_to')
 
 
 admin.site.register(Ont, AdimOnt)
