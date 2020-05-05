@@ -85,13 +85,6 @@ class FormEntradaOnt2(forms.Form):
         form_data = super().clean()
         serial = form_data['serial'].upper()
 
-        if Ont.objects.filter(codigo=serial).exists():
-
-            if Ont.objects.get(codigo=serial).status == 0:
-                self.errors['serial'] = ['Serial de Ont já em estoque']
-
-                return form_data
-
         if serial.find('4857544', 0, 7) >= 0:
 
             if len(serial) != 16:

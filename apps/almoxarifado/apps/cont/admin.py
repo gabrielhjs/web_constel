@@ -10,13 +10,18 @@ class AdimOnt(admin.ModelAdmin):
 
 
 class AdminOntEntrada(admin.ModelAdmin):
-    search_fields = ('data', 'ont__codigo', 'user__username', 'user__first_name', 'user__las_name', )
-    list_display = ('data', 'ont', 'user', )
+    search_fields = ('data', 'ont__codigo')
+    list_display = ('data', 'ont', 'user')
+
+
+class AdminOntSaida(admin.ModelAdmin):
+    search_fields = ('data', 'ont__codigo', 'user_to')
+    list_display = ('data', 'ont', 'user_to')
 
 
 admin.site.register(Ont, AdimOnt)
-admin.site.register(OntEntrada)
-admin.site.register(OntSaida)
+admin.site.register(OntEntrada, AdminOntEntrada)
+admin.site.register(OntSaida, AdminOntSaida)
 admin.site.register(OntAplicado)
 admin.site.register(Secao)
 admin.site.register(Modelo)

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q, Max
+from django.db.models import Count, Q, Max, F
 from django.core.paginator import Paginator
 
 from .forms import *
@@ -148,10 +148,27 @@ def entrada_2(request):
             serial = form.cleaned_data['serial'].upper()
             if Ont.objects.filter(codigo=serial).exists():
                 ont = Ont.objects.get(codigo=serial)
-                ont.status = 0
-                ont.save()
 
-                messages.success(request, 'Ont (RE)inserida no estoque com sucesso!')
+                if ont.status == 0 or ont.secao != secao or ont.modelo != modelo:
+
+                    if ont.status != 0:
+                        ont.status = 0
+                        OntEntrada(ont=ont, user=request.user).save()
+                        messages.success(request, 'Ont (RE)inserida no estoque com sucesso')
+
+                    if ont.secao != secao:
+                        ont.secao = secao
+                        messages.success(request, 'Seção da ONT alterada')
+
+                    if ont.modelo != modelo:
+                        ont.modelo = modelo
+                        messages.success(request, 'Modelo da ONT alterado!')
+                
+                    ont.save()
+                    OntEntradaHistorico(ont=ont, user=request.user).save()
+
+                else:
+                    messages.error(request, 'Serial de Ont já em estoque')
 
             else:
                 ont = Ont(
@@ -164,8 +181,8 @@ def entrada_2(request):
 
                 messages.success(request, 'Ont cadastrada e inserida no estoque com sucesso!')
 
-            OntEntrada(ont=ont, user=request.user).save()
-            OntEntradaHistorico(ont=ont, user=request.user).save()
+                OntEntrada(ont=ont, user=request.user).save()
+                OntEntradaHistorico(ont=ont, user=request.user).save()
 
             return HttpResponseRedirect('/almoxarifado/cont/entrada-2/')
 
@@ -246,8 +263,12 @@ def consulta_status_detalhe(request, status, secao, modelo):
 
     itens = Ont.objects.filter(
         status=status,
-        secao__id=secao,
-        modelo__id=modelo,
+    ).annotate(
+        l_secao_id=Max('secao__id'),
+        l_modelo_id=Max('modelo__id'),
+    ).filter(
+        l_secao_id=secao,
+        l_modelo_id=modelo,
     ).values(
         'codigo',
     ).annotate(
