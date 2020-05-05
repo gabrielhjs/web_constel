@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q, Max, F
+from django.db.models import Count, Q, Max
 from django.core.paginator import Paginator
 
 from .forms import *
@@ -263,12 +263,9 @@ def consulta_status_detalhe(request, status, secao, modelo):
 
     itens = Ont.objects.filter(
         status=status,
-    ).annotate(
-        l_secao_id=Max('secao__id'),
-        l_modelo_id=Max('modelo__id'),
     ).filter(
-        l_secao_id=secao,
-        l_modelo_id=modelo,
+        secao__id=secao,
+        modelo__id=modelo,
     ).values(
         'codigo',
     ).annotate(
@@ -306,20 +303,31 @@ def consulta_tecnicos_carga(request):
             Q(first_name__icontains=funcionario) |
             Q(last_name__icontains=funcionario))
 
-    cargas = User.objects.filter(query).annotate(
-        total=Count('saida_user_to__ont', filter=Q(saida_user_to__ont__status=1), distinct=True),
-        max_data=Max('saida_user_to__data', filter=Q(saida_user_to__ont__status=1)),
-    ).order_by(
-        '-total',
+    sub_query = OntSaida.objects.filter(
+        ont__status=1
+    ).values(
+        'ont__codigo',
+    ).annotate(
+        max_id=Max('id'),
+    ).values(
+        'max_id'
     )
 
-    itens = cargas.values(
+    itens = User.objects.filter(
+        query,
+        saida_user_to__id__in=sub_query,
+    ).annotate(
+        total=Count('saida_user_to__data', distinct=True),
+        max_data=Max('saida_user_to__data'),
+    ).values(
         'username',
         'first_name',
         'last_name',
         'max_data',
         'total',
-    ).exclude(total=0)
+    ).order_by(
+        '-total',
+    )
 
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')
@@ -340,7 +348,20 @@ def consulta_tecnicos_carga(request):
 def consulta_tecnicos_carga_detalhe(request, funcionario):
     menu = menu_consultas(request)
 
-    carga = OntSaida.objects.values(
+    sub_query = OntSaida.objects.filter(
+        ont__status=1
+    ).values(
+        'ont__codigo',
+    ).annotate(
+        max_id=Max('id'),
+    ).values(
+        'max_id'
+    )
+
+    carga = OntSaida.objects.filter(
+        user_to__username=funcionario,
+        id__in=sub_query,
+    ).values(
         'ont__codigo',
         'user__first_name',
         'user__last_name',
@@ -348,9 +369,6 @@ def consulta_tecnicos_carga_detalhe(request, funcionario):
         'user_to__last_name',
     ).annotate(
         max_data=Max('data')
-    ).filter(
-        ont__status=1,
-        user_to__username=funcionario,
     ).order_by(
         '-max_data'
     )

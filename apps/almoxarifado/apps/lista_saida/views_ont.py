@@ -98,10 +98,20 @@ def view_insere(request, user_to):
 
     else:
         form_insere = FormOntInsere(user_to.username)
+
+    sub_query = OntSaida.objects.filter(
+        ont__status=1
+    ).values(
+        'ont__codigo',
+    ).annotate(
+        max_id=Max('id'),
+    ).values(
+        'max_id'
+    )
         
     carga = OntSaida.objects.filter(
-        ont__status=1,
         user_to__username=user_to,
+        id__in=sub_query,
     ).values(
         'ont__codigo',
     ).annotate(
