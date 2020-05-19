@@ -32,18 +32,22 @@ def view_ont_baixa(request):
     List all code snippets, or create a new snippet.
     """
     if request.method == 'POST':
-        serializer = SerializerOntBaixa(data=request.data)
+        serializer = SerializerOntBaixa(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
 
-            serial = serializer.validated_data.get('serial').upper()
-            saida_ont = OntSaida.objects.filter(ont__codigo=serial).latest('data')
+            response = []
 
-            response = {
-                'user_to': saida_ont.user_to.username,
-                'user_to_first_name': saida_ont.user_to.first_name,
-                'user_to_last_name': saida_ont.user_to.last_name,
-            }
+            for item in serializer.validated_data:
+
+                serial = item.get('serial').upper()
+                saida_ont = OntSaida.objects.filter(ont__codigo=serial).latest('data')
+
+                response.append({
+                    'user_to': saida_ont.user_to.username,
+                    'user_to_first_name': saida_ont.user_to.first_name,
+                    'user_to_last_name': saida_ont.user_to.last_name,
+                })
 
             return Response(response, status=status.HTTP_201_CREATED)
 
