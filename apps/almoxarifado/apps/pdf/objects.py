@@ -110,7 +110,7 @@ class FichaMateriais(FPDF):
         self.set_xy(self.l_margin * 2, self.h - 40 + self.th * 2)
         self.cell(self.w/2 - self.r_margin * 3, self.th * 2, responsavel.title(), align='C')
         self.set_xy(self.w/2 + self.r_margin, self.h - 40)
-        self.cell(self.w / 2 - self.r_margin * 3, self.th * 2, 'Técnico', align='C')
+        self.cell(self.w / 2 - self.r_margin * 3, self.th * 2, 'Colaborador', align='C')
         self.set_xy(self.w/2 + self.r_margin, self.h - 40 + self.th * 2)
         self.cell(self.w / 2 - self.r_margin * 3, self.th * 2, tecnico.title(), align='C')
 
@@ -216,7 +216,7 @@ class FichaOnts(FPDF):
         self.set_xy(self.l_margin * 2, self.h - 40 + self.th * 2)
         self.cell(self.w/2 - self.r_margin * 3, self.th * 2, responsavel.title(), align='C')
         self.set_xy(self.w/2 + self.r_margin, self.h - 40)
-        self.cell(self.w / 2 - self.r_margin * 3, self.th * 2, 'Técnico', align='C')
+        self.cell(self.w / 2 - self.r_margin * 3, self.th * 2, 'Colaborador', align='C')
         self.set_xy(self.w/2 + self.r_margin, self.h - 40 + self.th * 2)
         self.cell(self.w / 2 - self.r_margin * 3, self.th * 2, tecnico.title(), align='C')
 

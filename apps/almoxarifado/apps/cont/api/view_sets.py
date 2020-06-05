@@ -6,7 +6,11 @@ from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
 
-from .serializers import AuthTokenSerializer, UserSerializer, SerializerOntBaixa
+from .serializers import (
+    AuthTokenSerializer,
+    UserSerializer,
+    SerializerOntBaixa
+)
 from ..models import OntSaida
 
 
