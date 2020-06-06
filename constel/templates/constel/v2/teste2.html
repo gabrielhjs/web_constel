@@ -1,0 +1,49 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_post.html' %}
+<h1>Teste</h1>
+
+<script>
+
+    var loc = window.location
+    var wsStart = 'ws://'
+
+    if (loc.protocol == 'https:') {
+        wsStart = 'wss://'
+    }
+
+    var endpoit = wsStart + "127.0.0.1:8000/"
+    var socket = new WebSocket(endpoit)
+
+    socket.onmessage = function(e) {
+        console.log("message", e)
+
+        if (JSON.parse(e.data) == "True") {
+            var contratos = {
+                'type': 'contratos',
+                'contratos': ['1281105', '1420228']
+            }
+            socket.send(JSON.stringify(contratos))
+        }
+
+        console.log(JSON.parse(e.data))
+
+    }
+    socket.onopen = function(e) {
+        console.log("open", e)
+        var dados = {
+            'type': 'login',
+            'username': "{{ username }}",
+            'password': "{{ password }}"
+        }
+        socket.send(JSON.stringify(dados))
+
+    }
+    socket.onerror = function(e) {
+        console.log("error", e)
+    }
+    socket.onclose = function(e) {
+        console.log("close", e)
+    }
+</script>
+{% endblock %}

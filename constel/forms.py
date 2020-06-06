@@ -189,3 +189,16 @@ class FormDataInicialFinal(forms.Form):
             self.errors['data_inicial'] = ['A data inicial não pode ser mais recente que a data final']
 
         return form_data
+
+
+class FormLoginPsw(forms.Form):
+    """
+    Formulário de login de usuário no psw
+    """
+
+    username = forms.CharField(max_length=150, label='Chave da Copel')
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    widgets = {
+        'password': forms.PasswordInput(),
+    }

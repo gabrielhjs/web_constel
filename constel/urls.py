@@ -16,5 +16,5 @@ urlpatterns = [
     path('consulta/usuarios/next=<str:rollback>', views.view_consulta_funcionarios, name='consulta_funcionarios'),
     path('consulta/veiculos/next=<str:rollback>', views.view_consulta_veiculos, name='consulta_veiculos'),
 
-    path('teste/', views.indexv2, name='teste'),
+    path('teste/', views.teste, name='teste'),
 ]

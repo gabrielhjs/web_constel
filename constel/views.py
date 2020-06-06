@@ -5,7 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from .forms import FormCadastraUsuario, FormLogin, FormCadastraUsuarioPassivo, FormCadastrarVeiculo
+from .forms import (
+    FormCadastraUsuario,
+    FormLogin,
+    FormCadastraUsuarioPassivo,
+    FormCadastrarVeiculo,
+    FormLoginPsw
+)
 from .models import UserType, Veiculo
 from .objects import Button
 from .apps.controle_acessos.decorator import permission
@@ -249,3 +255,22 @@ def indexv2(request):
     }
 
     return render(request, 'constel/v2/index.html', context)
+
+
+def teste(request):
+
+    if request.method == 'POST':
+        form = FormLogin(request.POST)
+
+        if form.is_valid():
+            context = {
+                'username': form.cleaned_data['username'],
+                'password': form.cleaned_data['password'],
+            }
+
+            return render(request, 'constel/v2/teste2.html', context)
+
+    else:
+        form = FormLogin()
+
+    return render(request, 'constel/v2/teste.html', {'form': form})
