@@ -70,6 +70,15 @@ class SerializerContrato(serializers.Serializer):
 
     def save(self):
         serial = self.validated_data.get('serial').upper()
+
+        if serial.find('4857544', 0, 7) >= 0:
+            if len(serial) != 16:
+                serial = serial[0:16]
+
+        elif serial.find('ZNTS', 0, 5) >= 0:
+            if len(serial) != 12:
+                serial = serial[0:12]
+
         ont = Ont.objects.get(codigo=serial)
         ont_saida = OntSaida.objects.filter(ont__codigo=serial).latest('data')
         user = User.objects.get(username=self.validated_data.get('username'))
