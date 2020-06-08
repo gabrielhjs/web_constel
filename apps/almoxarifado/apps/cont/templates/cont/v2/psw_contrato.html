@@ -39,8 +39,6 @@
     socket.onmessage = function(e) {
         var mensagem = JSON.parse(e.data)
         var dados
-        
-        console.log(mensagem)
 
         if (mensagem.tipo == "status") {
             console.log("contwe2:", mensagem.dados)
@@ -146,7 +144,7 @@
     }
     socket.onclose = function(e) {
         console.log("cont2: conexão finalizada", e)
-        //window.location.replace("http://" + window.location.host + "/teste/");
+        window.location.replace("http://" + window.location.host + "/almoxarifado/cont/baixa/psw-login");
     }
 </script>
 

@@ -19,7 +19,7 @@ class SerializerContrato(serializers.Serializer):
 
     def validate(self, attrs):
         if attrs.get('token') != settings.CONTWE2_TOKEN:
-            msg = 'Token inv\'alido'
+            msg = 'Token inválido'
             raise serializers.ValidationError({'token': [msg]})
 
         serial = attrs.get('serial').upper()
