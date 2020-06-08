@@ -403,8 +403,8 @@ def baixa_login_psw(request):
 
     if request.method == 'POST':
         initial = {
-            'username': request.session.get('psw_username', None),
-            'password': request.session.get('psw_password', None),
+            'username': request.session.get('psw_username', ''),
+            'password': request.session.get('psw_password', ''),
         }
         form = FormPswLogin(request.POST, initial=initial)
 

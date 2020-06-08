@@ -32,6 +32,8 @@ class SerializerContrato(serializers.Serializer):
             if len(serial) != 12:
                 serial = serial[0:12]
 
+        attrs['serial'] = serial
+
         if not Ont.objects.filter(codigo=serial).exists():
             msg = 'ONT não cadastrada no sistema'
             raise serializers.ValidationError({'serial': msg})
@@ -71,16 +73,9 @@ class SerializerContrato(serializers.Serializer):
     def save(self):
         serial = self.validated_data.get('serial').upper()
 
-        if serial.find('4857544', 0, 7) >= 0:
-            if len(serial) != 16:
-                serial = serial[0:16]
-
-        elif serial.find('ZNTS', 0, 5) >= 0:
-            if len(serial) != 12:
-                serial = serial[0:12]
-
         ont = Ont.objects.get(codigo=serial)
-        ont_saida = OntSaida.objects.filter(ont__codigo=serial).latest('data')
+        print(serial)
+        ont_saida = OntSaida.objects.filter(ont=ont).latest('data')
         user = User.objects.get(username=self.validated_data.get('username'))
 
         cliente = Cliente(
@@ -89,7 +84,7 @@ class SerializerContrato(serializers.Serializer):
             nivel_ont=self.validated_data.get('nivel_ont'),
             nivel_olt=self.validated_data.get('nivel_olt'),
             nivel_olt_tx=self.validated_data.get('nivel_olt_tx'),
-            ont=ont_saida.ont,
+            ont=ont,
             contrato=self.validated_data.get('contrato')
         )
         cliente.save()
@@ -97,7 +92,7 @@ class SerializerContrato(serializers.Serializer):
         OntAplicado(
             saida=ont_saida,
             user=user,
-            ont=ont_saida.ont,
+            ont=ont,
             cliente=cliente,
         ).save()
 

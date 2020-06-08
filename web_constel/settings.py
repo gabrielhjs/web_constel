@@ -15,7 +15,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['constel.herokuapp.com', 'http://192.168.1.226:8080', ]
+ALLOWED_HOSTS = ['constel.herokuapp.com', ]
 
 
 # Application definition
@@ -134,8 +134,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 LOGIN_URL = '/login'
 
 CONTWE2_TOKEN = "zi3AvF41SP7MUBMkUw8Z"
-# CONTWE2_TOKEN = "abc"
 CONTWE2_URL = 'wss://contwe2.herokuapp.com/ws/'
+
+# CONTWE2_TOKEN = "abc"
 # CONTWE2_URL = 'ws://127.0.0.1:8080/ws/'
 
 django_heroku.settings(locals())
