@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path('', include('apps.almoxarifado.apps.cont.api.urls')),
+    path('', include('apps.almoxarifado.apps.cont.api2.urls')),
 
     path(
         'almoxarifado/cont/',
@@ -65,5 +66,15 @@ urlpatterns = [
         'almoxarifado/cont/entrada-3/',
         views.entrada_3,
         name='almoxarifado_cont_entrada_ont_3',
+    ),
+    path(
+        'almoxarifado/cont/baixa/psw-login',
+        views.baixa_login_psw,
+        name='almoxarifado_cont_baixa_psw_login',
+    ),
+    path(
+        'almoxarifado/cont/baixa/psw-contrato',
+        views.baixa_busca_contrato,
+        name='almoxarifado_cont_baixa_psw_contrato',
     ),
 ]

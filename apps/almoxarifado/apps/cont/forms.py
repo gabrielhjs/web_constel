@@ -155,3 +155,36 @@ class FormSaidaOnt2(forms.Form):
             self.errors['serial'] = ['Ont não cadastrada no sistema, cadastre-a para registrar a saída']
 
         return form_data
+
+
+class FormPswLogin(forms.Form):
+    """
+    Formulário de login de usuário no psw
+    """
+
+    username = forms.CharField(max_length=150, label='Chave da Copel')
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    widgets = {
+        'password': forms.PasswordInput(),
+    }
+
+    def __init__(self, *args, **kwargs):
+        super(FormPswLogin, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormPswContrato(forms.Form):
+    """
+    Formulário de busca de contrato no psw
+    """
+
+    contrato = forms.IntegerField(label='Contrato')
+
+    def __init__(self, *args, **kwargs):
+        super(FormPswContrato, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})

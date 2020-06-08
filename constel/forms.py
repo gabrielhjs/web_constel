@@ -130,7 +130,7 @@ class FormFuncionario(forms.Form):
         super(FormFuncionario, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class DateInput(forms.DateInput):
@@ -157,7 +157,7 @@ class FormDataInicialFinalFuncionario(forms.Form):
         super(FormDataInicialFinalFuncionario, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         form_data = self.cleaned_data
@@ -180,7 +180,7 @@ class FormDataInicialFinal(forms.Form):
         super(FormDataInicialFinal, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         form_data = self.cleaned_data
@@ -189,16 +189,3 @@ class FormDataInicialFinal(forms.Form):
             self.errors['data_inicial'] = ['A data inicial não pode ser mais recente que a data final']
 
         return form_data
-
-
-class FormLoginPsw(forms.Form):
-    """
-    Formulário de login de usuário no psw
-    """
-
-    username = forms.CharField(max_length=150, label='Chave da Copel')
-    password = forms.CharField(widget=forms.PasswordInput)
-
-    widgets = {
-        'password': forms.PasswordInput(),
-    }

@@ -4,12 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count, Q, Max
 from django.core.paginator import Paginator
+from django.conf import settings
 
 from .forms import *
 from .models import Secao, Modelo
 from .menu import menu_principal, menu_cadastros, menu_consultas
 
-from constel.objects import Button
 from constel.apps.controle_acessos.decorator import permission
 from constel.forms import FormFuncionario
 
@@ -149,7 +149,7 @@ def entrada_2(request):
             if Ont.objects.filter(codigo=serial).exists():
                 ont = Ont.objects.get(codigo=serial)
 
-                if ont.status == 0 or ont.secao != secao or ont.modelo != modelo:
+                if ont.status != 0 or ont.secao != secao or ont.modelo != modelo:
 
                     if ont.status != 0:
                         ont.status = 0
@@ -397,3 +397,59 @@ def consulta_tecnicos_carga_detalhe(request, funcionario):
 @permission('almoxarifado', )
 def view_dashboard(request):
     pass
+
+
+def baixa_login_psw(request):
+    menu = menu_principal(request)
+
+    if request.method == 'POST':
+        initial = {
+            'username': request.session.get('psw_username', None),
+            'password': request.session.get('psw_password', None),
+        }
+        form = FormPswLogin(request.POST, initial=initial)
+
+        if form.is_valid():
+            request.session['psw_username'] = form.cleaned_data['username']
+            request.session['psw_password'] = form.cleaned_data['password']
+
+            return HttpResponseRedirect('/almoxarifado/cont/baixa/psw-contrato')
+
+    else:
+        form = FormPswLogin()
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Logar',
+    }
+    context.update(menu)
+
+    return render(request, 'cont/v2/psw_login.html', context)
+
+
+def baixa_busca_contrato(request):
+    menu = menu_principal(request)
+
+    psw_username = request.session.get('psw_username', None),
+    psw_password = request.session.get('psw_password', None),
+
+    if psw_username is None or psw_password is None:
+        return HttpResponseRedirect('/almoxarifado/cont/baixa/psw-login')
+
+    if request.method == 'POST':
+        form = FormPswContrato(request.POST)
+
+    else:
+        form = FormPswContrato()
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Buscar',
+        'psw_username': request.session.get('psw_username'),
+        'psw_password': request.session.get('psw_password'),
+        'ws_url': settings.CONTWE2_URL,
+        'ws_token': settings.CONTWE2_TOKEN,
+    }
+    context.update(menu)
+
+    return render(request, 'cont/v2/psw_contrato.html', context)

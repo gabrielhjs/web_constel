@@ -1,5 +1,6 @@
 {% extends 'constel/v2/app.html' %}
 {% block app_content %}
+{% load static %}
 
 <div class="table-responsive table-content">
     <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
@@ -23,41 +24,72 @@
 </div>
 {% include 'constel/v2/form_post.html' %}
 
+
 <script>
-    var endpoit = "ws://127.0.0.1:8000/ws/"
+    var endpoit = "{{ ws_url }}"
+    var token = "{{ ws_token }}"
     var socket = new WebSocket(endpoit)
 
     var formData = $("form")
     var id_contrato = $("#id_contrato")
     var tabela = $("#dados")
 
+    id_contrato.attr('disabled', true)
+
     socket.onmessage = function(e) {
-        var mensagem = JSON.parse(e.data);
-        console.log(mensagem)
+        var mensagem = JSON.parse(e.data)
         var dados
-        if (mensagem.tipo == "logado") {
+        
+        console.log(mensagem)
+
+        if (mensagem.tipo == "status") {
+            console.log("contwe2:", mensagem.dados)
+        }
+
+        else if (mensagem.tipo == "logado") {
+            id_contrato.attr('disabled', false)
+            
             if (mensagem.data == "erro") {
                  window.location.replace("http://" + window.location.host + "/teste/");
             }
-            
+
             formData.submit(function(event){
                 event.preventDefault()
                 dados = {
                     'tipo': 'contrato',
                     'dados': id_contrato.val(),
-                    'username': '{{ user }}'
+                    'username': '{{ user }}',
+                    'token': token
                 }
                 socket.send(JSON.stringify(dados))
                 tabela.append("<tr class='"+id_contrato.val()+"'><td>"+id_contrato.val()+"</td><td colspan='3' style='color: DarkOrange'>Buscando...</td><td colspan='2' style='color: DarkOrange'>Buscando...</td></tr>")
                 id_contrato.val('')
                 id_contrato.focus()
             })
-            
-        }
 
-        if (mensagem.tipo == "contrato") {
+        }
+        else if (mensagem.tipo == "contrato") {
             var linha = $("."+mensagem.dados.contrato).last()
-            if (mensagem.dados.dados_baixa.status == 201) {
+            
+            if (mensagem.status == "erro") {
+                linha.html(
+                    "<td>"+
+                    mensagem.dados.contrato+
+                    "</td><td colspan='3'>"+
+                    mensagem.dados+
+                    "</td><td colspan='2'></td>"
+                )
+            }
+            else if (mensagem.dados.dados.serial == undefined) {
+                linha.html(
+                    "<td>"+
+                    mensagem.dados.contrato+
+                    "</td><td colspan='3' style='color: Tomato'> o PSW não retornou os dados do contrato"+
+                    "</td><td colspan='2'></td>"
+                )
+            }
+
+            else if (mensagem.dados.dados_baixa.status == 201) {
                 linha.html(
                     "<td>"+
                     mensagem.dados.contrato+
@@ -74,13 +106,11 @@
                     "</td>"
                 )
             }
-
-            else{
+            else {
                 var erros = ""
                 for (erro in mensagem.dados.dados_baixa.dados) {
-                    erros += " " + mensagem.dados.dados_baixa.dados[erro][0]
+                    erros += mensagem.dados.dados_baixa.dados[erro][0] + " "
                 }
-
                 linha.html(
                     "<td>"+
                     mensagem.dados.contrato+
@@ -98,22 +128,24 @@
         }
     }
     socket.onopen = function(e) {
-        console.log("open", e)
+        console.log("cont2: conexão iniciada")
+        
         var dados = {
             'tipo': 'login',
             'dados': {
                 'username': "{{ psw_username }}",
                 'password': "{{ psw_password }}"
-            }
+            },
+            'token': token
         }
         socket.send(JSON.stringify(dados))
 
     }
     socket.onerror = function(e) {
-        console.log("error", e)
+        console.log("cont2: erro", e)
     }
     socket.onclose = function(e) {
-        console.log("close", e)
+        console.log("cont2: conexão finalizada", e)
         //window.location.replace("http://" + window.location.host + "/teste/");
     }
 </script>

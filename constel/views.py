@@ -9,14 +9,11 @@ from .forms import (
     FormCadastraUsuario,
     FormLogin,
     FormCadastraUsuarioPassivo,
-    FormCadastrarVeiculo,
-    FormLoginPsw
+    FormCadastrarVeiculo
 )
 from .models import UserType, Veiculo
 from .objects import Button
 from .apps.controle_acessos.decorator import permission
-
-from .menu import menu_principal
 
 
 @login_required
@@ -201,7 +198,8 @@ def view_login(request):
 
                     else:
                         login(request, user)
-                        return HttpResponseRedirect('/')
+
+                        return HttpResponseRedirect(request.GET.get('next', '/'))
                 
                 else:
                     messages.error(request, 'Usuário e/ou senha incorretos!')
@@ -255,22 +253,3 @@ def indexv2(request):
     }
 
     return render(request, 'constel/v2/index.html', context)
-
-
-def teste(request):
-
-    if request.method == 'POST':
-        form = FormLogin(request.POST)
-
-        if form.is_valid():
-            context = {
-                'username': form.cleaned_data['username'],
-                'password': form.cleaned_data['password'],
-            }
-
-            return render(request, 'constel/v2/teste2.html', context)
-
-    else:
-        form = FormLogin()
-
-    return render(request, 'constel/v2/teste.html', {'form': form})

@@ -119,7 +119,7 @@ class FormOntInsere(forms.Form):
             if form_data['serial'].status == 2:
                 aplicado = OntAplicado.objects.filter(ont__codigo=serial).latest('data')
                 self.errors['serial'] = [
-                    'Ont está aplicada no contrato %d, ' % aplicado.cliente /
+                    f'Ont está aplicada no contrato {aplicado.cliente.contrato}, ' +
                     'deve ser inserida no estoque para registrar nova saída'
                 ]
 

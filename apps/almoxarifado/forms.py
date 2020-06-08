@@ -14,7 +14,7 @@ class FormCadastraFornecedor(forms.ModelForm):
         super(FormCadastraFornecedor, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class FormCadastraMaterial(forms.ModelForm):
@@ -27,7 +27,7 @@ class FormCadastraMaterial(forms.ModelForm):
         super(FormCadastraMaterial, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class FormEntradaMaterial(forms.ModelForm):
@@ -40,7 +40,7 @@ class FormEntradaMaterial(forms.ModelForm):
         super(FormEntradaMaterial, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class FormSaidaMaterial(forms.ModelForm):
@@ -152,7 +152,7 @@ class FormMaterial(forms.Form):
         super(FormMaterial, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class FormFornecedor(forms.Form):
@@ -170,4 +170,4 @@ class FormFornecedor(forms.Form):
         super(FormFornecedor, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})

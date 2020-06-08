@@ -6,11 +6,7 @@ from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
 
-from .serializers import (
-    AuthTokenSerializer,
-    UserSerializer,
-    SerializerOntBaixa
-)
+from .serializers import AuthTokenSerializer, UserSerializer, SerializerOntBaixa
 from ..models import OntSaida
 
 
@@ -36,22 +32,18 @@ def view_ont_baixa(request):
     List all code snippets, or create a new snippet.
     """
     if request.method == 'POST':
-        serializer = SerializerOntBaixa(data=request.data, many=True)
+        serializer = SerializerOntBaixa(data=request.data)
         if serializer.is_valid():
             serializer.save()
 
-            response = []
+            serial = serializer.validated_data.get('serial').upper()
+            saida_ont = OntSaida.objects.filter(ont__codigo=serial).latest('data')
 
-            for item in serializer.validated_data:
-
-                serial = item.get('serial').upper()
-                saida_ont = OntSaida.objects.filter(ont__codigo=serial).latest('data')
-
-                response.append({
-                    'user_to': saida_ont.user_to.username,
-                    'user_to_first_name': saida_ont.user_to.first_name,
-                    'user_to_last_name': saida_ont.user_to.last_name,
-                })
+            response = {
+                'user_to': saida_ont.user_to.username,
+                'user_to_first_name': saida_ont.user_to.first_name,
+                'user_to_last_name': saida_ont.user_to.last_name,
+            }
 
             return Response(response, status=status.HTTP_201_CREATED)
 

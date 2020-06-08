@@ -2,6 +2,7 @@
 Módulo que contém as configurações dos menus gerais do sistema
 """
 
+
 def menu_principal(request):
     """
     Funcão que contém as configurações do menu principal do Cont2.
@@ -12,6 +13,7 @@ def menu_principal(request):
         {'link': '/almoxarifado/cont/cadastros', 'text': 'Cadastros'},
         {'link': '/almoxarifado/cont/entrada-1', 'text': 'Entrada de ONT\'s'},
         {'link': '/almoxarifado/cont/saidas/lista', 'text': 'Saída de ONT\'s'},
+        {'link': '/almoxarifado/cont/baixa/psw-login', 'text': 'Aplicação de ONT\'s'},
         {'link': '/almoxarifado/cont/consultas', 'text': 'Consultas'},
     ]
     button_return = {'link': '/', 'text': 'Voltar'}
