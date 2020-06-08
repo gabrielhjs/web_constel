@@ -232,8 +232,6 @@ def consulta_status(request):
 
     onts = Ont.objects.all()
 
-    onts_qtde = onts.aggregate(Count('codigo'))
-
     onts_status_secao_modelo = onts.values(
         'status',
         'secao__nome',
@@ -399,6 +397,7 @@ def view_dashboard(request):
     pass
 
 
+@login_required()
 def baixa_login_psw(request):
     menu = menu_principal(request)
 
@@ -427,6 +426,7 @@ def baixa_login_psw(request):
     return render(request, 'cont/v2/psw_login.html', context)
 
 
+@login_required()
 def baixa_busca_contrato(request):
     menu = menu_principal(request)
 
