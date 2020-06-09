@@ -105,54 +105,29 @@ class FormEntradaOnt2(forms.Form):
             return form_data
 
 
-class FormSaidaOnt1(forms.Form):
-
-    funcionario = forms.CharField(label='Funcionário')
-
-    def __init__(self, *args, **kwargs):
-        super(FormSaidaOnt1, self).__init__(*args, **kwargs)
-
-        self.fields['funcionario'].widget.attrs.update(
-            {'autofocus': 'autofocus', 'required': 'required'}
-        )
-
-    def clean(self):
-        form_data = super().clean()
-        usuario = form_data['funcionario']
-
-        if not User.objects.filter(username=usuario).exists():
-            self.errors['funcionario'] = ['Funcionário inativo ou não cadastrado no sistema']
-
-        return form_data
-
-
-class FormSaidaOnt2(forms.Form):
+class FormOntDefeito(forms.Form):
 
     serial = forms.CharField(required=True, widget=NonstickyCharfield())
 
     def __init__(self, *args, **kwargs):
-        super(FormSaidaOnt2, self).__init__(*args, **kwargs)
+        super(FormOntDefeito, self).__init__(*args, **kwargs)
 
         self.fields['serial'].widget.attrs.update(
             {'autofocus': 'autofocus', 'required': 'required'}
         )
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         form_data = super().clean()
         serial = form_data['serial'].upper()
 
         if Ont.objects.filter(codigo=serial).exists():
-            ont = Ont.objects.get(codigo=serial)
-
-            if ont.status == 2:
-                aplicado = OntAplicado.objects.filter(ont__codigo=serial).latest('data')
-                self.errors['serial'] = [
-                    'Ont está aplicada no contrato %d, ' % aplicado.cliente /
-                    'deve ser inserida no estoque para registrar nova saída'
-                ]
+            form_data['serial'] = Ont.objects.get(codigo=serial)
 
         else:
-            self.errors['serial'] = ['Ont não cadastrada no sistema, cadastre-a para registrar a saída']
+            self.errors['serial'] = ['Ont não cadastrada no sistema, cadastre-a para registrá-la como com defeito']
 
         return form_data
 

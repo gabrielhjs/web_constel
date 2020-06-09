@@ -7,8 +7,8 @@ from django.core.paginator import Paginator
 from django.conf import settings
 
 from .forms import *
-from .models import Secao, Modelo
-from .menu import menu_principal, menu_cadastros, menu_consultas
+from .models import Secao, Modelo, OntDefeitoHistorico
+from .menu import menu_principal, menu_cadastros, menu_consultas, menu_defeitos
 
 from constel.apps.controle_acessos.decorator import permission
 from constel.forms import FormFuncionario
@@ -135,7 +135,6 @@ def entrada_2(request):
     menu = menu_principal(request)
 
     if request.session.get('cont2_entrada_modelo') is None or request.session.get('cont2_entrada_secao') is None:
-
         return HttpResponseRedirect('/almoxarifado/cont/entrada-1/')
 
     modelo = Modelo.objects.get(id=request.session['cont2_entrada_modelo'])
@@ -453,3 +452,52 @@ def baixa_busca_contrato(request):
     context.update(menu)
 
     return render(request, 'cont/v2/psw_contrato.html', context)
+
+
+def defeito(request):
+    context = menu_defeitos(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+def defeito_registra(request):
+    menu = menu_defeitos(request)
+
+    if request.method == 'POST':
+        form = FormOntDefeito(request.POST)
+
+        if form.is_valid():
+            ont = form.cleaned_data['serial']
+
+            OntDefeito(ont=ont, user=request.user).save()
+            OntDefeitoHistorico(ont=ont, user=request.user).save()
+            ont.status = 3
+            ont.save()
+
+            messages.success(request, 'Ont com defeito inserida!')
+
+            return HttpResponseRedirect('/almoxarifado/cont/defeito/entrada')
+
+    else:
+        form = FormOntDefeito()
+
+    historico = OntDefeitoHistorico.objects.filter(user=request.user).order_by('-id').values(
+        'ont__codigo',
+    )
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Inserir',
+        'historico': historico,
+    }
+    context.update(menu)
+
+    return render(request, 'cont/v2/defeito_entrada.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def defeito_registra_limpa(request):
+    OntDefeitoHistorico.objects.filter(user=request.user).delete()
+
+    return HttpResponseRedirect('/almoxarifado/cont/defeito/entrada')

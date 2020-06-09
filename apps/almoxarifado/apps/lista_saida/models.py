@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from apps.almoxarifado.models import Material
+from apps.almoxarifado.models import Material, Fornecedor
 from ..cont.models import Ont
 
 
@@ -35,6 +35,23 @@ class OntLista(models.Model):
 class OntItem(models.Model):
     lista = models.ForeignKey(OntLista, on_delete=models.CASCADE, related_name='cont_lista_itens')
     material = models.ForeignKey(Ont, on_delete=models.CASCADE, related_name='cont_material_listas')
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+
+
+class OntDefeitoLista(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='cont_defeito_lista_saida')
+    fornecedor = models.OneToOneField(Fornecedor, on_delete=models.PROTECT, related_name='cont_defeito_lista_retirada')
+    data = models.DateTimeField(auto_now=True, verbose_name='Lista criada em')
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+
+
+class OntDefeitoItem(models.Model):
+    lista = models.ForeignKey(OntDefeitoLista, on_delete=models.CASCADE, related_name='cont_defeito_lista_itens')
+    material = models.ForeignKey(Ont, on_delete=models.CASCADE, related_name='cont_defeito_material_listas')
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None

@@ -108,11 +108,21 @@ class FormSaidaMateriais2(forms.ModelForm):
     def clean(self):
         form_data = self.cleaned_data
 
-        estoque = MaterialQuantidade.objects.get(material=form_data['material']).quantidade
+        if not Material.objects.get(codigo=form_data['material']).exists():
+            self._errors['material'] = ['Material não cadastrado no sistema!']
+
+            return form_data
+
+        if not MaterialQuantidade.objects.get(codigo=form_data['material']).exists():
+            self._errors['material'] = ['Não há registro de aquisição deste material!']
+
+            return form_data
+
+        estoque = MaterialQuantidade.objects.get(material__codigo=form_data['material']).quantidade
         retirada = form_data['quantidade']
 
         if (estoque - retirada) < 0:
-            self._errors['quantidade'] = ['Não há esta quantidade de material disponível em estoque!']
+            self._errors['quantidade'] = [f'Não há quantidade de material disponível em estoque! (estoque: {estoque})']
 
         return form_data
 

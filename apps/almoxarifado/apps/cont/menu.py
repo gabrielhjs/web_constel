@@ -14,6 +14,7 @@ def menu_principal(request):
         {'link': '/almoxarifado/cont/entrada-1', 'text': 'Entrada de ONT\'s'},
         {'link': '/almoxarifado/cont/saidas/lista', 'text': 'Saída de ONT\'s'},
         {'link': '/almoxarifado/cont/baixa/psw-login', 'text': 'Aplicação de ONT\'s'},
+        {'link': '/almoxarifado/cont/defeito', 'text': 'Gestão de ONT\'s com defeito'},
         {'link': '/almoxarifado/cont/consultas', 'text': 'Consultas'},
     ]
     button_return = {'link': '/', 'text': 'Voltar'}
@@ -65,6 +66,28 @@ def menu_consultas(request):
     context = {
         'app': 'Cont2',
         'menu': 'Consultas',
+        'menu_buttons': menu_buttons,
+        'button_return': button_return,
+    }
+
+    return context
+
+
+def menu_defeitos(request):
+    """
+    Funcão que contém as configurações do menu de onts com defeito do Cont2.
+    Retorna um dicionário com as configurações
+    """
+
+    menu_buttons = [
+        {'link': '/almoxarifado/cont/defeito/entrada', 'text': 'ONT\'s com defeito'},
+        {'link': '/almoxarifado/cont/defeito/saidas/lista', 'text': 'Devolução de ONT\'s'},
+    ]
+    button_return = {'link': '/almoxarifado/cont', 'text': 'Voltar'}
+
+    context = {
+        'app': 'Cont2',
+        'menu': 'Defeitos',
         'menu_buttons': menu_buttons,
         'button_return': button_return,
     }

@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 from .models import Item
-from apps.almoxarifado.models import Material, MaterialQuantidade
+from apps.almoxarifado.models import Material, MaterialQuantidade, Fornecedor
 from ..cont.models import Ont, OntAplicado
 
 
@@ -54,7 +54,6 @@ class FormInsere(forms.Form):
         self.fields['quantidade'].widget.attrs.update(
             {'autofocus': 'autofocus', 'required': 'required'}
         )
-
 
     def clean(self):
         form_data = self.cleaned_data
@@ -125,5 +124,30 @@ class FormOntInsere(forms.Form):
 
         else:
             self.errors['serial'] = ['Ont não cadastrada no sistema, cadastre-a para registrar a saída']
+
+        return form_data
+
+
+class FormOntDefeitoFornecedor(forms.Form):
+
+    fornecedor = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        super(FormOntDefeitoFornecedor, self).__init__(*args, **kwargs)
+
+        fornecedor = Fornecedor.objects.all().order_by('nome')
+        fornecedor_name = [(i.id, f'{i.cnpj} - {i.nome.title()}') for i in fornecedor]
+        self.fields['fornecedor'] = forms.ChoiceField(
+            choices=fornecedor_name,
+            label='Fornecedor',
+        )
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        form_data = self.cleaned_data
+
+        form_data['fornecedor'] = Fornecedor.objects.get(id=form_data['fornecedor'])
 
         return form_data

@@ -4,16 +4,15 @@ from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.db.models import Count, Q, Max
+from django.db.models import Max
 
 from .models import OntItem, OntLista
 from .forms import FormCria, FormOntInsere
 from apps.almoxarifado.models import Ordem
 from apps.almoxarifado.apps.pdf.objects import FichaOnts
-from constel.objects import Button
 from constel.apps.controle_acessos.decorator import permission
 
-from ..cont.models import Ont, OntEntrada, OntSaida
+from ..cont.models import OntEntrada, OntSaida
 from ..cont.menu import menu_principal
 
 
