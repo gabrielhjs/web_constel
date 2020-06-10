@@ -17,7 +17,14 @@
         <tbody>
             {% for item in onts_status_secao_modelo %}
             <tr class="text-md-left">
-                <td>{{ item.status }}</td>
+                <td>
+                    {% if item.status == 0 %}Estoque
+                    {% elif item.status == 1 %}Campo
+                    {% elif item.status == 2 %}Aplicada
+                    {% elif item.status == 3 %}Defeito: Estoque
+                    {% elif item.status == 4 %}Defeito: Devolvida
+                    {% endif %}
+                </td>
                 <td>{{ item.secao__nome }}</td>
                 <td>{{ item.modelo__nome }}</td>
                 <td>{{ item.codigo__count }}</td>

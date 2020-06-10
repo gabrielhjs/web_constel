@@ -4,18 +4,27 @@
     <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
         <thead>
             <tr>
-                <th scope="col" colspan="2">Lista de ONT's</th>
+                <th scope="col" colspan="5">Lista de ONT's</th>
             </tr>
             <tr>
-                <th scope="col">Serial</th>
-                <th scope="col">Data de entrada</th>
+                <th scope="col" rowspan="2">Serial</th>
+                <th scope="col" colspan="4">Datas</th>
+            </tr>
+            <tr>
+                <th scope="col">Entrada</th>
+                <th scope="col">Saída</th>
+                <th scope="col">Aplicação</th>
+                <th scope="col">Devolução</th>
             </tr>
         </thead>
         <tbody>
             {% for item in page_obj %}
             <tr class="text-md-left">
                 <td>{{ item.codigo }}</td>
-                <td>{{ item.max_data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.max_entrada|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.max_saida|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.max_aplicada|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.max_devolucao|date:'d/m/Y H:i:s' }}</td>
             </tr>
             {% endfor %}
     </table>

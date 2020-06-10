@@ -266,9 +266,15 @@ def consulta_status_detalhe(request, status, secao, modelo):
     ).values(
         'codigo',
     ).annotate(
-        max_data=Max('entrada_ont__data')
+        max_entrada=Max('entrada_ont__data'),
+        max_saida=Max('saida_ont__data'),
+        max_aplicada=Max('aplicado_ont__data'),
+        max_devolucao=Max('devolucao_ont__data'),
     ).order_by(
-        'max_data',
+        'max_entrada',
+        'max_saida',
+        'max_aplicada',
+        'max_devolucao',
     )
     
     paginator = Paginator(itens, 50)

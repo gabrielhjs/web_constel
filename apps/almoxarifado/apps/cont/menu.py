@@ -80,8 +80,8 @@ def menu_defeitos(request):
     """
 
     menu_buttons = [
-        {'link': '/almoxarifado/cont/defeito/entrada', 'text': 'ONT\'s com defeito'},
-        {'link': '/almoxarifado/cont/defeito/saidas/lista', 'text': 'Devolução de ONT\'s'},
+        {'link': '/almoxarifado/cont/defeito/entrada', 'text': 'Registrar ONT\'s com defeito'},
+        {'link': '/almoxarifado/cont/defeito/saidas/lista', 'text': 'Registrar devolução de ONT\'s'},
     ]
     button_return = {'link': '/almoxarifado/cont', 'text': 'Voltar'}
 
