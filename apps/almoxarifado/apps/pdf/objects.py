@@ -1,7 +1,7 @@
 from fpdf import FPDF
 from io import BytesIO
 from apps.almoxarifado.models import MaterialEntrada, MaterialSaida
-from ..cont.models import OntSaida
+from ..cont.models import OntSaida, OntDefeitoDevolucao
 
 
 class FichaMateriais(FPDF):
