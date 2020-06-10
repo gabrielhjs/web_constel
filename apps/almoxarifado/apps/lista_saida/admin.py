@@ -6,3 +6,5 @@ from .models import *
 
 admin.site.register(Lista)
 admin.site.register(Item)
+admin.site.register(OntDefeitoLista)
+admin.site.register(OntDefeitoItem)
