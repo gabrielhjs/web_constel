@@ -82,14 +82,14 @@ urlpatterns = [
         views.defeito,
         name='almoxarifado_cont_defeito',
     ),
-    path(
-        'almoxarifado/cont/defeito/entrada',
-        views.defeito_registra,
-        name='almoxarifado_cont_defeito_entrada',
-    ),
-    path(
-        'almoxarifado/cont/defeito/entrada/limpa',
-        views.defeito_registra_limpa,
-        name='almoxarifado_cont_defeito_entrada_lima',
-    ),
+    # path(
+    #     'almoxarifado/cont/defeito/entrada',
+    #     views.defeito_registra,
+    #     name='almoxarifado_cont_defeito_entrada',
+    # ),
+    # path(
+    #     'almoxarifado/cont/defeito/entrada/limpa',
+    #     views.defeito_registra_limpa,
+    #     name='almoxarifado_cont_defeito_entrada_lima',
+    # ),
 ]
