@@ -1,5 +1,6 @@
 import os
 import django_heroku
+import dj_database_url
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -93,7 +94,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'asd')
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['constel.herokuapp.com', ]
+DATABASES['default'] = dj_database_url.config()
+
+ALLOWED_HOSTS = ['constel.herokuapp.com', '0.0.0.0', 'localhost', '127.0.0.1']
 
 CONTWE2_TOKEN = os.environ.get('CONTWE2_TOKEN')
 CONTWE2_URL = os.environ.get('CONTWE2_URL')
