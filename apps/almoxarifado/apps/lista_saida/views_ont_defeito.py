@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
 from django.contrib import messages
 
-from .models import OntDefeitoItem, OntDefeitoLista
+from .models import DefeitoOntItem, DefeitoOntLista
 from .forms import FormOntDefeitoFornecedor, FormOntInsere
 from apps.almoxarifado.models import Ordem, Fornecedor
 from apps.almoxarifado.apps.pdf.objects import FichaOntsDefeito
@@ -25,8 +25,8 @@ def lista_cria(request):
         if form.is_valid():
             fornecedor = form.cleaned_data['fornecedor']
 
-            if not OntDefeitoLista.objects.filter(fornecedor=fornecedor).exists():
-                lista = OntDefeitoLista.objects.create(
+            if not DefeitoOntLista.objects.filter(fornecedor=fornecedor).exists():
+                lista = DefeitoOntLista.objects.create(
                     user=request.user,
                     fornecedor=fornecedor,
                 )
@@ -57,26 +57,26 @@ def view_insere(request, fornecedor):
 
     fornecedor = Fornecedor.objects.get(id=fornecedor)
 
-    if not OntDefeitoLista.objects.filter(fornecedor=fornecedor).exists():
+    if not DefeitoOntLista.objects.filter(fornecedor=fornecedor).exists():
         return HttpResponseRedirect('/almoxarifado/cont/defeito/saidas/lista/')
 
     if request.method == 'POST':
         form_insere = FormOntInsere(fornecedor.id, request.POST)
 
         if form_insere.is_valid():
-            lista = OntDefeitoLista.objects.get(fornecedor=fornecedor)
+            lista = DefeitoOntLista.objects.get(fornecedor=fornecedor)
             ont = form_insere.cleaned_data['serial']
 
             if ont.status != 3:
                 messages.error(request, 'Ont não consta como com defeito')
 
-            elif OntDefeitoItem.objects.filter(lista=lista, material=ont).exists():
-                item = OntDefeitoItem.objects.get(lista=lista, material=ont)
+            elif DefeitoOntItem.objects.filter(lista=lista, material=ont).exists():
+                item = DefeitoOntItem.objects.get(lista=lista, material=ont)
                 item.delete()
                 messages.success(request, 'Ont retirada da lista com sucesso')
 
             else:
-                item = OntDefeitoItem.objects.create(lista=lista, material=ont)
+                item = DefeitoOntItem.objects.create(lista=lista, material=ont)
                 item.save()
                 messages.success(request, 'Ont adicionada à lista com sucesso')
 
@@ -91,7 +91,7 @@ def view_insere(request, fornecedor):
         'id': fornecedor.id,
     }
 
-    lista = OntDefeitoItem.objects.filter(
+    lista = DefeitoOntItem.objects.filter(
         lista__fornecedor=fornecedor
     ).values(
         'material__codigo',
@@ -116,11 +116,11 @@ def view_entrega(request, fornecedor):
 
     fornecedor = Fornecedor.objects.get(id=fornecedor)
 
-    if not OntDefeitoItem.objects.filter(lista__fornecedor=fornecedor).exists():
+    if not DefeitoOntItem.objects.filter(lista__fornecedor=fornecedor).exists():
         return HttpResponseRedirect('/almoxarifado/cont/defeito/saidas/lista/')
 
     else:
-        itens = OntDefeitoItem.objects.filter(lista__fornecedor=fornecedor)
+        itens = DefeitoOntItem.objects.filter(lista__fornecedor=fornecedor)
         ordem = Ordem.objects.create(tipo=1, user=request.user)
         ordem.save()
 
@@ -165,11 +165,11 @@ def view_limpa(request, fornecedor):
 
     fornecedor = Fornecedor.objects.get(id=fornecedor)
 
-    if not OntDefeitoLista.objects.filter(forneedor=fornecedor).exists():
+    if not DefeitoOntLista.objects.filter(forneedor=fornecedor).exists():
         return HttpResponseRedirect('/almoxarifado/cont/saidas/lista/')
 
     else:
-        itens = OntDefeitoLista.objects.filter(lista__fornecedor=fornecedor)
+        itens = DefeitoOntLista.objects.filter(lista__fornecedor=fornecedor)
 
         for item in itens:
             item.delete()

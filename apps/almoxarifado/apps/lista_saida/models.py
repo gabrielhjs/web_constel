@@ -40,7 +40,7 @@ class OntItem(models.Model):
     objects = None
 
 
-class OntDefeitoLista(models.Model):
+class DefeitoOntLista(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='cont_defeito_lista_saida')
     fornecedor = models.OneToOneField(Fornecedor, on_delete=models.PROTECT, related_name='cont_defeito_lista_retirada')
     data = models.DateTimeField(auto_now=True, verbose_name='Lista criada em')
@@ -49,8 +49,8 @@ class OntDefeitoLista(models.Model):
     objects = None
 
 
-class OntDefeitoItem(models.Model):
-    lista = models.ForeignKey(OntDefeitoLista, on_delete=models.CASCADE, related_name='cont_defeito_lista_itens')
+class DefeitoOntItem(models.Model):
+    lista = models.ForeignKey(DefeitoOntLista, on_delete=models.CASCADE, related_name='cont_defeito_lista_itens')
     material = models.ForeignKey(Ont, on_delete=models.CASCADE, related_name='cont_defeito_material_listas')
 
     # Default fields (apenas para não gerar alertas na IDE)
