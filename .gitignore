@@ -3,7 +3,6 @@
 .vscode/
 venv_web_constel/
 *__pycache__/
-*migrate_backup/
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__

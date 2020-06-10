@@ -55,3 +55,7 @@ class DefeitoOntItem(models.Model):
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
+
+
+class TabelaTeste2(models.Model):
+    nome = models.CharField(max_length=255)
