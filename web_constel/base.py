@@ -88,3 +88,14 @@ LOGIN_URL = '/login'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'asd')
+
+DEBUG = False
+
+ALLOWED_HOSTS = ['constel.herokuapp.com', ]
+
+CONTWE2_TOKEN = os.environ.get('CONTWE2_TOKEN')
+CONTWE2_URL = os.environ.get('CONTWE2_URL')
+
+django_heroku.settings(locals())
