@@ -115,6 +115,7 @@ class OntDefeitoDevolucao(models.Model):
         Ordem,
         on_delete=models.CASCADE,
         default=None,
+        blank=True,
         related_name='devolucao_ordem_ont',
         null=True
     )
