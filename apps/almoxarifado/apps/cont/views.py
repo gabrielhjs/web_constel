@@ -487,9 +487,12 @@ def defeito_registra(request):
     else:
         form = FormOntDefeito()
 
-    historico = OntDefeitoHistorico.objects.filter(user=request.user).order_by('-id').values(
-        'ont__codigo',
-    )
+    if OntDefeitoHistorico.objects.filter(user=request.user).exists():
+        historico = OntDefeitoHistorico.objects.filter(user=request.user).values(
+            'ont__codigo',
+        ).order_by('-id')
+    else:
+        historico = []
 
     context = {
         'form': form,
