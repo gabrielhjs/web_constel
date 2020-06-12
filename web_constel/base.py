@@ -92,6 +92,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'asd')
 
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = (‘HTTP_X_FORWARDED_PROTO’, ‘https’)
+
 DEBUG = False
 
 # DATABASES['default'] = dj_database_url.config()
