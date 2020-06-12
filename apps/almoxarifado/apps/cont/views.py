@@ -443,8 +443,9 @@ def consulta_ont_detalhe(request, serial):
         'user__first_name',
         'user__last_name',
     ).annotate(
-        user_to__first_name=Value(None, output_field=CharField()),
-        user_to__last_name=Value(None, output_field=CharField()),
+        user_to=Value(None, IntegerField()),
+        # user_to__first_name=Value(None, output_field=CharField()),
+        # user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada", output_field=CharField()),
         cliente__contrato=Value(None, output_field=IntegerField()),
         cliente__nivel_ont=Value(None, output_field=FloatField()),
@@ -454,8 +455,9 @@ def consulta_ont_detalhe(request, serial):
         'data',
         'user__first_name',
         'user__last_name',
-        'user_to__first_name',
-        'user_to__last_name',
+        'user_to'
+        # 'user_to__first_name',
+        # 'user_to__last_name',
     ).annotate(
         tipo=Value("Saída", output_field=CharField()),
         cliente__contrato=Value(None, output_field=IntegerField()),
@@ -470,8 +472,9 @@ def consulta_ont_detalhe(request, serial):
         'cliente__contrato',
         'cliente__nivel_ont',
     ).annotate(
-        user_to__first_name=Value(None, output_field=CharField()),
-        user_to__last_name=Value(None, output_field=CharField()),
+        user_to=Value(None, IntegerField()),
+        # user_to__first_name=Value(None, output_field=CharField()),
+        # user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Aplicação", output_field=CharField()),
     )
     ont_defeito = ont.defeito_ont.values(
@@ -480,8 +483,9 @@ def consulta_ont_detalhe(request, serial):
         'user__first_name',
         'user__last_name',
     ).annotate(
-        user_to__first_name=Value(None, output_field=CharField()),
-        user_to__last_name=Value(None, output_field=CharField()),
+        user_to=Value(None, IntegerField()),
+        # user_to__first_name=Value(None, output_field=CharField()),
+        # user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada: Defeito", output_field=CharField()),
         cliente__contrato=Value(None, output_field=IntegerField()),
         cliente__nivel_ont=Value(None, output_field=FloatField()),
@@ -492,8 +496,9 @@ def consulta_ont_detalhe(request, serial):
         'user__first_name',
         'user__last_name',
     ).annotate(
-        user_to__first_name=Value(None, output_field=CharField()),
-        user_to__last_name=Value(None, output_field=CharField()),
+        user_to=Value(None, IntegerField()),
+        # user_to__first_name=Value(None, output_field=CharField()),
+        # user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Devolução: Defeito", output_field=CharField()),
         cliente__contrato=Value(None, output_field=IntegerField()),
         cliente__nivel_ont=Value(None, output_field=FloatField()),
