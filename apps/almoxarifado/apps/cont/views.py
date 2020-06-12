@@ -507,6 +507,7 @@ def consulta_ont_detalhe(request, serial):
         entradas.union(
             saidas,
             # aplicacoes,
+            ont_defeito,
             all=True
         ).values(
             'ont__codigo',
