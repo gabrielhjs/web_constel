@@ -56,10 +56,10 @@
                 <td>{{ item.ont__codigo|upper }}</td>
                 <td>{{ item.tipo }}</td>
                 <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
-                <td>{{ item.user }}</td>
-                <td>{{ item.user_to }}</td>
-                <td>{{ item.cliente__contrato }}</td>
-                <td>{{ item.cliente__nivel_ont }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                <td>{{ item.user_to__first_name|default_if_none:"-"|title }} {{ item.user_to__last_name|default_if_none:""|title }}</td>
+                <td>{{ item.cliente__contrato|default_if_none:"-" }}</td>
+                <td>{{ item.cliente__nivel_ont|default_if_none:"-" }}</td>
             </tr>
             {% endfor %}
     </table>
