@@ -505,9 +505,10 @@ def consulta_ont_detalhe(request, serial):
             'data',
             'user__first_name',
             'user__last_name',
-            # 'user_to',
-            # 'cliente__contrato',
-            # 'cliente__nivel_ont',
+            'user_to__first_name',
+            'user_to__last_name',
+            'cliente__contrato',
+            'cliente__nivel_ont',
             'tipo',
         ).order_by('-data'),
         50
