@@ -500,7 +500,10 @@ def consulta_ont_detalhe(request, serial):
     )
 
     paginator = Paginator(
-        entradas.values(
+        entradas.union(
+            saidas,
+            all=True
+        ).values(
             'ont__codigo',
             'data',
             'user__first_name',
