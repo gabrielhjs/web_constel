@@ -462,18 +462,22 @@ def consulta_ont_detalhe(request, serial):
         cliente__nivel_ont=Value(None, output_field=FloatField()),
     )
 
-    aplicacoes = ont.aplicado_ont.values(
+    aplicacoes = ont.aplicado_ont.annotate(
+        user_to__first_name=Value(None, output_field=CharField()),
+        user_to__last_name=Value(None, output_field=CharField()),
+        tipo=Value("Aplicação", output_field=CharField()),
+    ).values(
         'ont__codigo',
         'data',
         'user__first_name',
         'user__last_name',
+        'user_to__first_name',
+        'user_to__last_name',
         'cliente__contrato',
         'cliente__nivel_ont',
-    ).annotate(
-        user_to__first_name=Value(None, output_field=CharField()),
-        user_to__last_name=Value(None, output_field=CharField()),
-        tipo=Value("Aplicação", output_field=CharField()),
+        'tipo'
     )
+
     ont_defeito = ont.defeito_ont.values(
         'ont__codigo',
         'data',
