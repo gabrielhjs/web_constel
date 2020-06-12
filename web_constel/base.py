@@ -1,6 +1,5 @@
 import os
 import django_heroku
-import dj_database_url
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -92,12 +91,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'asd')
 
+# DEBUG = True
+# ALLOWED_HOSTS = ["*"]
+
 SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 DEBUG = False
-
-# DATABASES['default'] = dj_database_url.config()
 
 ALLOWED_HOSTS = ['constel.herokuapp.com', '0.0.0.0', 'localhost', '127.0.0.1']
 
