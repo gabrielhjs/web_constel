@@ -502,7 +502,8 @@ def consulta_ont_detalhe(request, serial):
     entradas = ont.entrada_ont.values(
         'ont__codigo',
         'data',
-        'user'
+        'user__first_name',
+        'user__last_name',
     ).annotate(
         user_to=Value(None, output_field=IntegerField()),
         tipo=Value("Entrada", output_field=CharField()),
@@ -512,7 +513,8 @@ def consulta_ont_detalhe(request, serial):
     saidas = ont.saida_ont.values(
         'ont__codigo',
         'data',
-        'user',
+        'user__first_name',
+        'user__last_name',
         'user_to',
     ).annotate(
         tipo=Value("Saída", output_field=CharField()),
@@ -560,7 +562,8 @@ def consulta_ont_detalhe(request, serial):
         ).values(
             'ont__codigo',
             'data',
-            'user',
+            'user__first_name',
+            'user__last_name',
             'user_to',
             'cliente__contrato',
             'cliente__nivel_ont',
