@@ -376,35 +376,6 @@ def consulta_tecnicos_carga_detalhe(request, funcionario):
         '-max_data'
     )
 
-    carga2 = OntSaida.objects.filter(
-        user_to__username=funcionario,
-        id__in=sub_query,
-    )
-
-    if funcionario == "9023309928":
-        ordem = Ordem.objects.create(tipo=1, user=request.user)
-        ordem.save()
-        fornecedor = Fornecedor.objects.get(cnpj=4368865000166)
-
-        for x in carga2:
-            ont = x.ont
-            ont_defeito = OntDefeito(ont=ont, user=request.user)
-            ont.status = 3
-
-            ont.save()
-            ont_defeito.save()
-
-            OntDefeitoDevolucao(
-                ordem=ordem,
-                ont=ont,
-                user=request.user,
-                fornecedor=fornecedor,
-                defeito=ont_defeito,
-            ).save()
-
-            ont.status = 4
-            ont.save()
-
     funcionario = User.objects.get(username=funcionario)
 
     funcionario = {
