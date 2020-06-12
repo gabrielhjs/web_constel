@@ -53,6 +53,16 @@ urlpatterns = [
         name='almoxarifado_cont_consulta_tecnicos_carga_detalhes',
     ),
     path(
+        'almoxarifado/cont/consultas/ont/',
+        views.consulta_ont,
+        name='almoxarifado_cont_consulta_ont',
+    ),
+    path(
+        'almoxarifado/cont/consultas/ont/<str:serial>/',
+        views.consulta_ont_detalhe,
+        name='almoxarifado_cont_consulta_ont_detalhe',
+    ),
+    path(
         'almoxarifado/cont/entrada-1/',
         views.entrada_1,
         name='almoxarifado_cont_entrada_ont_1',

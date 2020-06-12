@@ -1,0 +1,71 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-response table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="2">Detalhes da ONT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-md-left">
+                <td>Serial</td>
+                <td>{{ ont.codigo|upper }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Seção</td>
+                <td>{{ ont.secao.nome|title }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Modelo</td>
+                <td>{{ ont.modelo.nome|title }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Status atual</td>
+                <td>
+                    {% if ont.status == 0 %}Estoque
+                    {% elif ont.status == 1 %}Campo
+                    {% elif ont.status == 2 %}Aplicada
+                    {% elif ont.status == 3 %}Defeito: Estoque
+                    {% elif ont.status == 4 %}Defeito: Devolvida
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="7">Histórico detalhado</th>
+            </tr>
+            <tr>
+                <th scope="col">Serial</th>
+                <th scope="col">Operação</th>
+                <th scope="col">Data</th>
+                <th scope="col">Responsável</th>
+                <th scope="col">Favorecido</th>
+                <th scope="col">Contrato</th>
+                <th scope="col">Sinal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.ont__codigo|upper }}</td>
+                <td>{{ item.tipo }}</td>
+                <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.user }}</td>
+                <td>{{ item.user_to }}</td>
+                <td>{{ item.cliente__contrato }}</td>
+                <td>{{ item.cliente__nivel_ont }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_cont_consulta_ont' %}?serial={% firstof request.GET.serial '' %}">voltar</a>
+</div>
+{% endblock %}

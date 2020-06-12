@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q, Max
+from django.db.models import Count, Q, Max, Value, CharField, IntegerField
 from django.core.paginator import Paginator
 from django.conf import settings
 
@@ -394,6 +394,122 @@ def consulta_tecnicos_carga_detalhe(request, funcionario):
     context.update(menu)
 
     return render(request, 'cont/v2/consulta_tecnicos_carga_detalhe.html', context)
+
+
+def consulta_ont(request):
+    menu = menu_consultas(request)
+
+    serial = request.GET.get('serial', '')
+
+    form = FormSerial(initial={'serial': serial})
+
+    query = Q()
+
+    if serial != '':
+        query = query & Q(
+            Q(codigo__icontains=serial))
+
+    onts = Ont.objects.filter(query).values(
+        'codigo',
+        'secao',
+        'modelo',
+        'status',
+    ).order_by(
+        'status',
+    )
+
+    paginator = Paginator(onts, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, "cont/v2/consulta_ont.html", context)
+
+
+def consulta_ont_detalhe(request, serial):
+    menu = menu_consultas(request)
+
+    ont = Ont.objects.get(codigo=serial)
+
+    entradas = ont.entrada_ont.values(
+        'ont__codigo',
+        'data',
+        'user',
+    ).annotate(
+        user_to=Value("-", output_field=CharField()),
+        tipo=Value("Entrada", output_field=CharField()),
+        cliente__contrato=Value("-", output_field=CharField()),
+        cliente__nivel_ont=Value("-", output_field=CharField()),
+    )
+    saidas = ont.saida_ont.values(
+        'ont__codigo',
+        'data',
+        'user',
+        'user_to',
+    ).annotate(
+        tipo=Value("Saída", output_field=CharField()),
+        cliente__contrato=Value("-", output_field=CharField()),
+        cliente__nivel_ont=Value("-", output_field=CharField()),
+    )
+
+    aplicacoes = ont.aplicado_ont.values(
+        'ont__codigo',
+        'data',
+        'user',
+        'cliente__contrato',
+        'cliente__nivel_ont',
+    ).annotate(
+        user_to=Value("-", output_field=CharField()),
+        tipo=Value("Aplicação", output_field=CharField()),
+    )
+    ont_defeito = ont.defeito_ont.values(
+        'ont__codigo',
+        'data',
+        'user',
+    ).annotate(
+        user_to=Value("-", output_field=CharField()),
+        tipo=Value("Entrada: Defeito", output_field=CharField()),
+        cliente__contrato=Value("-", output_field=CharField()),
+        cliente__nivel_ont=Value("-", output_field=CharField()),
+    )
+    ont_devolucao = ont.devolucao_ont.values(
+        'ont__codigo',
+        'data',
+        'user',
+    ).annotate(
+        user_to=Value("-", output_field=CharField()),
+        tipo=Value("Devolução: Defeito", output_field=CharField()),
+        cliente__contrato=Value("-", output_field=CharField()),
+        cliente__nivel_ont=Value("-", output_field=CharField()),
+    )
+
+    paginator = Paginator(
+        entradas.union(
+            saidas,
+            aplicacoes,
+            ont_defeito,
+            ont_devolucao,
+            all=True
+        ).order_by('-data'),
+        50
+    )
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'ont': ont,
+    }
+    context.update(menu)
+
+    return render(request, "cont/v2/consulta_ont_detalhe.html", context)
 
 
 @login_required()

@@ -1,0 +1,43 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="7">ONT's</th>
+            </tr>
+            <tr>
+                <th scope="col">Serial</th>
+                <th scope="col">Seção</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Status atual</th>
+                <th scope="col">#</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.codigo|upper }}</td>
+                <td>{{ item.secao|upper }}</td>
+                <td>{{ item.modelo|upper }}</td>
+                <td>
+                    {% if item.status == 0 %}Estoque
+                    {% elif item.status == 1 %}Campo
+                    {% elif item.status == 2 %}Aplicada
+                    {% elif item.status == 3 %}Defeito: Estoque
+                    {% elif item.status == 4 %}Defeito: Devolvida
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                        href="{% url 'almoxarifado_cont_consulta_ont_detalhe' item.codigo %}?serial={% firstof request.GET.serial '' %}">
+                        Detalhe
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

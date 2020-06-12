@@ -163,3 +163,17 @@ class FormPswContrato(forms.Form):
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormSerial(forms.Form):
+    """
+    Formulário de busca de serial
+    """
+
+    serial = forms.CharField(label='Serial')
+
+    def __init__(self, *args, **kwargs):
+        super(FormSerial, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
