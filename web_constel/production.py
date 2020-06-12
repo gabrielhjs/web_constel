@@ -1,11 +1,12 @@
-from ..base import *
+from .base import *
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = False
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-DATABASES['default'] = dj_database_url.config()
+DEBUG = False
 
 ALLOWED_HOSTS = ['constel.herokuapp.com', '0.0.0.0', 'localhost', '127.0.0.1']
 
