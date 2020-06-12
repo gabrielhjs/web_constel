@@ -556,8 +556,7 @@ def consulta_ont_detalhe(request, serial):
             saidas,
             aplicacoes,
             ont_defeito,
-            ont_devolucao,
-            all=True,
+            ont_devolucao
         ).values(
             'ont__codigo',
             'data',
