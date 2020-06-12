@@ -490,7 +490,13 @@ def consulta_ont_detalhe(request, serial):
     )
 
     paginator = Paginator(
-        entradas.order_by('-data'),
+        entradas.union(
+            saidas,
+            # aplicacoes,
+            # ont_defeito,
+            # ont_devolucao,
+            all=True
+        ).order_by('-data'),
         50
     )
 
