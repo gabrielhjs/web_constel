@@ -411,8 +411,8 @@ def consulta_ont(request):
 
     onts = Ont.objects.filter(query).values(
         'codigo',
-        'secao',
-        'modelo',
+        'secao__nome',
+        'modelo__nome',
         'status',
     ).order_by(
         'status',

@@ -19,8 +19,8 @@
             {% for item in page_obj %}
             <tr class="text-md-left">
                 <td>{{ item.codigo|upper }}</td>
-                <td>{{ item.secao|upper }}</td>
-                <td>{{ item.modelo|upper }}</td>
+                <td>{{ item.secao__nome|upper }}</td>
+                <td>{{ item.modelo__nome|upper }}</td>
                 <td>
                     {% if item.status == 0 %}Estoque
                     {% elif item.status == 1 %}Campo
