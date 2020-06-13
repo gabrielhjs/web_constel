@@ -471,7 +471,7 @@ def consulta_ont_detalhe(request, serial):
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
         tipo=Value("Aplicação", output_field=CharField()),
-        contrato=ExpressionWrapper(F('cliente__porta'), output_field=CharField()),
+        contrato=ExpressionWrapper(F('cliente__contrato'), output_field=CharField()),
         nivel_ont=ExpressionWrapper(F('cliente__estado_link'), output_field=CharField()),
     )
 
