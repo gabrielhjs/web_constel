@@ -170,7 +170,7 @@ class FormSerial(forms.Form):
     Formulário de busca de serial
     """
 
-    serial = forms.CharField(label='Serial')
+    serial = forms.CharField(label='Serial', required=False)
 
     def __init__(self, *args, **kwargs):
         super(FormSerial, self).__init__(*args, **kwargs)

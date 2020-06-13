@@ -14,7 +14,7 @@ from django.db.models import (
     IntegerField,
     DurationField,
     ExpressionWrapper,
-    FloatField,
+    DecimalField,
     DateField,
 )
 from django.db.models.functions import TruncDate
@@ -200,13 +200,37 @@ def consulta_estoque(request):
             Q(material__icontains=material)
         )
 
+    data_fim = datetime.datetime.now()
+    data_intervalo = 30
+    data_inicio = data_fim - datetime.timedelta(days=data_intervalo)
+
+    subquery1 = MaterialSaida.objects.filter(
+        material=OuterRef('pk'),
+        data__gte=data_inicio
+    ).values(
+        'material__material'
+    ).annotate(
+        total=ExpressionWrapper(Sum(F('quantidade')), output_field=DecimalField())
+    ).annotate(
+        media=F('total')/30.0
+    ).values(
+        'media'
+    )
+
+    # print(query1)
+
     itens = Material.objects.filter(
         query,
+    ).annotate(
+        media=Subquery(subquery1)
     ).values(
         'codigo',
         'material',
         'descricao',
         'quantidade__quantidade',
+        'media',
+    ).annotate(
+        pt=ExpressionWrapper(F('quantidade__quantidade')/F('media'), output_field=IntegerField())
     ).exclude(
         entradas__isnull=True,
     ).order_by('material')

@@ -24,7 +24,7 @@
                 <td>{{ item.material|truncatechars:40 }}</td>
                 <td>{{ item.descricao|truncatechars:100 }}</td>
                 <td style="font-size: 1.2em;">{{item.quantidade__quantidade }}</td>
-                <td style="font-size: 1.2em; color: yellow;">{% if item.media %}&darr; {% endif %}{{ item.media|default_if_none:'' }}</td>
+                <td style="font-size: 1.2em; color: yellow;">{% if item.media %}&darr; {% endif %}{{ item.media|default_if_none:''|floatformat:-2 }}</td>
                 <td style="font-size: 1.2em; color: {% if item.pt <= 15 %}Red{% elif item.pt <= 30 %}Yellow{% else %}Lime{% endif %};">{{ item.pt|default_if_none:'' }}</td>
                 <td>
                     <a class="btn btn-primary btn-sm"
