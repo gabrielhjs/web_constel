@@ -473,7 +473,7 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Aplicação", output_field=CharField()),
-        contrato=ExpressionWrapper(F('id'), output_field=DecimalField()),
+        contrato=ExpressionWrapper('id', output_field=DecimalField(decimal_places=2)),
         nivel_ont=Value(None, output_field=DecimalField()),
     )
 
