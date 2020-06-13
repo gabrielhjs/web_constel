@@ -445,7 +445,7 @@ def consulta_ont_detalhe(request, serial):
     ).annotate(
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
-        # tipo=Value("Entrada", output_field=CharField()),
+        tipo=Value("Entrada", output_field=CharField()),
         contrato=Value(0, output_field=IntegerField()),
         nivel_ont=Value(0, output_field=FloatField()),
     )
@@ -457,7 +457,7 @@ def consulta_ont_detalhe(request, serial):
     ).annotate(
         user_to_first_name=ExpressionWrapper(F('user_to__first_name'), output_field=CharField()),
         user_to_last_name=ExpressionWrapper(F('user_to__last_name'), output_field=CharField()),
-        # tipo=Value("Saída", output_field=CharField()),
+        tipo=Value("Saída", output_field=CharField()),
         contrato=Value(0, output_field=IntegerField()),
         nivel_ont=Value(0, output_field=FloatField()),
     )
@@ -470,7 +470,7 @@ def consulta_ont_detalhe(request, serial):
     ).annotate(
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
-        # tipo=Value("Aplicação", output_field=CharField()),
+        tipo=Value("Aplicação", output_field=CharField()),
         contrato=ExpressionWrapper(F('cliente__contrato'), output_field=IntegerField()),
         nivel_ont=ExpressionWrapper(F('cliente__nivel_ont'), output_field=FloatField()),
     )
@@ -483,7 +483,7 @@ def consulta_ont_detalhe(request, serial):
     ).annotate(
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
-        # tipo=Value("Entrada", output_field=CharField()),
+        tipo=Value("Entrada", output_field=CharField()),
         contrato=Value(0, output_field=IntegerField()),
         nivel_ont=Value(0, output_field=FloatField()),
     )
@@ -496,7 +496,7 @@ def consulta_ont_detalhe(request, serial):
     ).annotate(
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
-        # tipo=Value("Entrada", output_field=CharField()),
+        tipo=Value("Entrada", output_field=CharField()),
         contrato=Value(0, output_field=IntegerField()),
         nivel_ont=Value(0, output_field=FloatField()),
     )
@@ -517,7 +517,7 @@ def consulta_ont_detalhe(request, serial):
             'user_to_last_name',
             'contrato',
             'nivel_ont',
-            # 'tipo',
+            'tipo',
         ).order_by('-data'),
         50
     )
