@@ -483,7 +483,7 @@ def consulta_ont_detalhe(request, serial):
     ).annotate(
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
-        tipo=Value("Entrada", output_field=CharField()),
+        tipo=Value("Defeito: Entrada", output_field=CharField()),
         contrato=Value(0, output_field=IntegerField()),
         nivel_ont=Value(0, output_field=FloatField()),
     )
@@ -496,7 +496,7 @@ def consulta_ont_detalhe(request, serial):
     ).annotate(
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
-        tipo=Value("Entrada", output_field=CharField()),
+        tipo=Value("Defeito: Devolução", output_field=CharField()),
         contrato=Value(0, output_field=IntegerField()),
         nivel_ont=Value(0, output_field=FloatField()),
     )
