@@ -473,8 +473,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Aplicação", output_field=CharField()),
-        contrato=Value(None, output_field=CharField()),
-        nivel_ont=Value(None, output_field=CharField()),
+        contrato=ExpressionWrapper(F('cliente__contrato'), CharField()),
+        nivel_ont=ExpressionWrapper(F('cliente__nivel_ont'), CharField()),
     )
 
     ont_defeito = ont.defeito_ont.values(
