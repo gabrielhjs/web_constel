@@ -471,8 +471,8 @@ def consulta_ont_detalhe(request, serial):
         # 'cliente__contrato',
         # 'cliente__nivel_ont',
     ).annotate(
-        user_to__first_name=Value(None, output_field=CharField()),
-        user_to__last_name=Value(None, output_field=CharField()),
+        user_to__first_name=Value('asd', output_field=CharField()),
+        user_to__last_name=Value('asd', output_field=CharField()),
         tipo=Value("Aplicação", output_field=CharField()),
         nivel_ont=Value(None, output_field=CharField()),
     )
