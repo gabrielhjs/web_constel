@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q, Max, Value, CharField, IntegerField, FloatField, F, ExpressionWrapper
+from django.db.models import Count, Q, Max, Value, CharField, IntegerField, DecimalField, F, ExpressionWrapper
 from django.core.paginator import Paginator
 from django.conf import settings
 
@@ -446,8 +446,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada", output_field=CharField()),
-        contrato=Value(None, output_field=CharField()),
-        nivel_ont=Value(None, output_field=CharField()),
+        contrato=Value(None, output_field=DecimalField()),
+        nivel_ont=Value(None, output_field=DecimalField()),
     )
     saidas = ont.saida_ont.values(
         'ont__codigo',
@@ -458,8 +458,8 @@ def consulta_ont_detalhe(request, serial):
         'user_to__last_name',
     ).annotate(
         tipo=Value("Saida", output_field=CharField()),
-        contrato=Value(None, output_field=CharField()),
-        nivel_ont=Value(None, output_field=CharField()),
+        contrato=Value(None, output_field=DecimalField()),
+        nivel_ont=Value(None, output_field=DecimalField()),
     )
 
     aplicacoes = ont.aplicado_ont.values(
@@ -473,8 +473,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Aplicação", output_field=CharField()),
-        contrato=ExpressionWrapper(F('cliente__contrato'), CharField()),
-        nivel_ont=ExpressionWrapper(F('cliente__nivel_ont'), CharField()),
+        contrato=Value(None, output_field=DecimalField()),
+        nivel_ont=Value(None, output_field=DecimalField()),
     )
 
     ont_defeito = ont.defeito_ont.values(
@@ -486,8 +486,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada: Defeito", output_field=CharField()),
-        contrato=Value(None, output_field=CharField()),
-        nivel_ont=Value(None, output_field=CharField()),
+        contrato=Value(None, output_field=DecimalField()),
+        nivel_ont=Value(None, output_field=DecimalField()),
     )
 
     ont_devolucao = ont.devolucao_ont.values(
@@ -499,8 +499,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Devolução: Defeito", output_field=CharField()),
-        contrato=Value(None, output_field=CharField()),
-        nivel_ont=Value(None, output_field=CharField()),
+        contrato=Value(None, output_field=DecimalField()),
+        nivel_ont=Value(None, output_field=DecimalField()),
     )
 
     paginator = Paginator(
