@@ -2,12 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q, Max, Value, CharField, IntegerField, DecimalField, F, ExpressionWrapper
+from django.db.models import Count, Q, Max, Value, CharField, IntegerField, FloatField, DecimalField
 from django.core.paginator import Paginator
 from django.conf import settings
 
 from .forms import *
-from .models import Secao, Modelo, OntDefeitoHistorico
+from .models import Secao, Modelo, OntDefeitoHistorico, Cliente
 from .menu import menu_principal, menu_cadastros, menu_consultas, menu_defeitos
 
 from constel.apps.controle_acessos.decorator import permission
@@ -446,8 +446,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada", output_field=CharField()),
-        contrato=Value(None, output_field=DecimalField()),
-        nivel_ont=Value(None, output_field=DecimalField()),
+        cliente__porta=Value(None, output_field=CharField()),
+        nivel_ont=Value(None, output_field=CharField()),
     )
     saidas = ont.saida_ont.values(
         'ont__codigo',
@@ -458,8 +458,8 @@ def consulta_ont_detalhe(request, serial):
         'user_to__last_name',
     ).annotate(
         tipo=Value("Saida", output_field=CharField()),
-        contrato=Value(None, output_field=DecimalField()),
-        nivel_ont=Value(None, output_field=DecimalField()),
+        cliente__porta=Value(None, output_field=CharField()),
+        nivel_ont=Value(None, output_field=CharField()),
     )
 
     aplicacoes = ont.aplicado_ont.values(
@@ -467,14 +467,14 @@ def consulta_ont_detalhe(request, serial):
         'data',
         'user__first_name',
         'user__last_name',
+        'cliente__porta',
         # 'cliente__contrato',
         # 'cliente__nivel_ont',
     ).annotate(
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Aplicação", output_field=CharField()),
-        contrato=ExpressionWrapper('id', output_field=DecimalField(decimal_places=2)),
-        nivel_ont=Value(None, output_field=DecimalField()),
+        nivel_ont=Value(None, output_field=CharField()),
     )
 
     ont_defeito = ont.defeito_ont.values(
@@ -486,8 +486,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada: Defeito", output_field=CharField()),
-        contrato=Value(None, output_field=DecimalField()),
-        nivel_ont=Value(None, output_field=DecimalField()),
+        cliente__porta=Value(None, output_field=CharField()),
+        nivel_ont=Value(None, output_field=CharField()),
     )
 
     ont_devolucao = ont.devolucao_ont.values(
@@ -499,17 +499,16 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Devolução: Defeito", output_field=CharField()),
-        contrato=Value(None, output_field=DecimalField()),
-        nivel_ont=Value(None, output_field=DecimalField()),
+        cliente__porta=Value(None, output_field=CharField()),
+        nivel_ont=Value(None, output_field=CharField()),
     )
 
     paginator = Paginator(
         entradas.union(
             saidas,
-            aplicacoes,
+            # aplicacoes,
             ont_defeito,
             ont_devolucao,
-            aplicacoes,
             all=True
         ).values(
             'ont__codigo',
@@ -518,7 +517,7 @@ def consulta_ont_detalhe(request, serial):
             'user__last_name',
             'user_to__first_name',
             'user_to__last_name',
-            'contrato',
+            'cliente__porta',
             'nivel_ont',
             'tipo',
         ).order_by('-data'),
