@@ -515,7 +515,7 @@ def consulta_ont_detalhe(request, serial):
             'user__last_name',
             'user_to_first_name',
             'user_to_last_name',
-            'porta',
+            'contrato',
             'nivel_ont',
             'tipo',
         ).order_by('-data'),
