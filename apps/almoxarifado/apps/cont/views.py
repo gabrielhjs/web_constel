@@ -446,8 +446,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada", output_field=CharField()),
-        # cliente__contrato=Value(None, output_field=IntegerField()),
-        # cliente__nivel_ont=Value(None, output_field=FloatField()),
+        contrato=Value(None, output_field=CharField()),
+        nivel_ont=Value(None, output_field=CharField()),
     )
     saidas = ont.saida_ont.values(
         'ont__codigo',
@@ -458,8 +458,8 @@ def consulta_ont_detalhe(request, serial):
         'user_to__last_name',
     ).annotate(
         tipo=Value("Saida", output_field=CharField()),
-        # cliente__contrato=Value(None, output_field=IntegerField()),
-        # cliente__nivel_ont=Value(None, output_field=FloatField()),
+        contrato=Value(None, output_field=CharField()),
+        nivel_ont=Value(None, output_field=CharField()),
     )
 
     aplicacoes = ont.aplicado_ont.values(
@@ -473,6 +473,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Aplicação", output_field=CharField()),
+        contrato=Value(None, output_field=CharField()),
+        nivel_ont=Value(None, output_field=CharField()),
     )
 
     ont_defeito = ont.defeito_ont.values(
@@ -484,8 +486,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada: Defeito", output_field=CharField()),
-        # cliente__contrato=Value(None, output_field=IntegerField()),
-        # cliente__nivel_ont=Value(None, output_field=FloatField()),
+        contrato=Value(None, output_field=CharField()),
+        nivel_ont=Value(None, output_field=CharField()),
     )
 
     ont_devolucao = ont.devolucao_ont.values(
@@ -497,8 +499,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Devolução: Defeito", output_field=CharField()),
-        # cliente__contrato=Value(None, output_field=IntegerField()),
-        # cliente__nivel_ont=Value(None, output_field=FloatField()),
+        contrato=Value(None, output_field=CharField()),
+        nivel_ont=Value(None, output_field=CharField()),
     )
 
     paginator = Paginator(
@@ -516,8 +518,8 @@ def consulta_ont_detalhe(request, serial):
             'user__last_name',
             'user_to__first_name',
             'user_to__last_name',
-            # 'cliente__contrato',
-            # 'cliente__nivel_ont',
+            'contrato',
+            'nivel_ont',
             'tipo',
         ).order_by('-data'),
         50
