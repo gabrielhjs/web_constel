@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -536,8 +538,30 @@ def consulta_ont_detalhe(request, serial):
 
 @login_required()
 @permission('almoxarifado', )
-def view_dashboard(request):
-    pass
+def consulta_dashboard(request):
+    menu = menu_consultas(request)
+
+    status = Ont.objects.values(
+        'status',
+        'secao',
+    ).annotate(
+        quantidade=Count(F('codigo'))
+    )
+
+    lista = {str(1): []}
+
+    for item in status:
+        lista[str(item['status'])].append({"ele": item['secao'], "val": item['quantidade']})
+
+    print(lista)
+
+    context = {
+        'lista': json.dumps(lista)
+    }
+    context.update(menu)
+
+    return render(request, "cont/v2/consulta_dashboard.html", context)
+
 
 
 @login_required()

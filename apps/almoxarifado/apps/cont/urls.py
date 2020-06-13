@@ -63,6 +63,11 @@ urlpatterns = [
         name='almoxarifado_cont_consulta_ont_detalhe',
     ),
     path(
+        'almoxarifado/cont/consultas/dashboard/',
+        views.consulta_dashboard,
+        name='almoxarifado_cont_dashboard',
+    ),
+    path(
         'almoxarifado/cont/entrada-1/',
         views.entrada_1,
         name='almoxarifado_cont_entrada_ont_1',
