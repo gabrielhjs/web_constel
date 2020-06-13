@@ -446,7 +446,7 @@ def consulta_ont_detalhe(request, serial):
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada", output_field=CharField()),
-        porta=Value(None, output_field=CharField()),
+        contrato=Value(None, output_field=CharField()),
         nivel_ont=Value(None, output_field=CharField()),
     )
     saidas = ont.saida_ont.values(
@@ -458,7 +458,7 @@ def consulta_ont_detalhe(request, serial):
         user_to_first_name=ExpressionWrapper(F('user_to__first_name'), output_field=CharField()),
         user_to_last_name=ExpressionWrapper(F('user_to__last_name'), output_field=CharField()),
         tipo=Value("Saída", output_field=CharField()),
-        porta=Value(None, output_field=CharField()),
+        contrato=Value(None, output_field=CharField()),
         nivel_ont=Value(None, output_field=CharField()),
     )
 
@@ -471,7 +471,7 @@ def consulta_ont_detalhe(request, serial):
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
         tipo=Value("Aplicação", output_field=CharField()),
-        porta=ExpressionWrapper(F('cliente__porta'), output_field=CharField()),
+        contrato=ExpressionWrapper(F('cliente__contrato'), output_field=CharField()),
         nivel_ont=Value(None, output_field=CharField()),
     )
 
@@ -484,7 +484,7 @@ def consulta_ont_detalhe(request, serial):
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada", output_field=CharField()),
-        porta=Value(None, output_field=CharField()),
+        contrato=Value(None, output_field=CharField()),
         nivel_ont=Value(None, output_field=CharField()),
     )
 
@@ -497,7 +497,7 @@ def consulta_ont_detalhe(request, serial):
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada", output_field=CharField()),
-        porta=Value(None, output_field=CharField()),
+        contrato=Value(None, output_field=CharField()),
         nivel_ont=Value(None, output_field=CharField()),
     )
 
