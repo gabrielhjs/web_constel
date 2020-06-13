@@ -465,7 +465,7 @@ def consulta_ont_detalhe(request, serial):
     aplicacoes = ont.aplicado_ont.annotate(
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
-        tipo=Value("Aplicacao", output_field=CharField()),
+        tipo=Value("Aplicação", output_field=CharField()),
     ).values(
         'ont__codigo',
         'data',
@@ -498,7 +498,7 @@ def consulta_ont_detalhe(request, serial):
     ).annotate(
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
-        tipo=Value("Devolucao: Defeito", output_field=CharField()),
+        tipo=Value("Devolução: Defeito", output_field=CharField()),
         cliente__contrato=Value(None, output_field=IntegerField()),
         cliente__nivel_ont=Value(None, output_field=FloatField()),
     )
@@ -506,7 +506,7 @@ def consulta_ont_detalhe(request, serial):
     paginator = Paginator(
         entradas.union(
             saidas,
-            aplicacoes,
+            # aplicacoes,
             ont_defeito,
             ont_devolucao,
             all=True
