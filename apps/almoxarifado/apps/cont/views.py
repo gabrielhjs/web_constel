@@ -446,8 +446,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada", output_field=CharField()),
-        cliente__contrato=Value(None, output_field=IntegerField()),
-        cliente__nivel_ont=Value(None, output_field=FloatField()),
+        cliente__contrato=Value(0, output_field=IntegerField()),
+        cliente__nivel_ont=Value(0, output_field=FloatField()),
     )
     saidas = ont.saida_ont.values(
         'ont__codigo',
@@ -458,8 +458,8 @@ def consulta_ont_detalhe(request, serial):
         'user_to__last_name',
     ).annotate(
         tipo=Value("Saida", output_field=CharField()),
-        cliente__contrato=Value(None, output_field=IntegerField()),
-        cliente__nivel_ont=Value(None, output_field=FloatField()),
+        cliente__contrato=Value(0, output_field=IntegerField()),
+        cliente__nivel_ont=Value(0, output_field=FloatField()),
     )
 
     aplicacoes = ont.aplicado_ont.values(
@@ -486,8 +486,8 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Entrada: Defeito", output_field=CharField()),
-        cliente__contrato=Value(None, output_field=IntegerField()),
-        cliente__nivel_ont=Value(None, output_field=FloatField()),
+        cliente__contrato=Value(0, output_field=IntegerField()),
+        cliente__nivel_ont=Value(0, output_field=FloatField()),
     )
     ont_devolucao = ont.devolucao_ont.values(
         'ont__codigo',
@@ -498,14 +498,14 @@ def consulta_ont_detalhe(request, serial):
         user_to__first_name=Value(None, output_field=CharField()),
         user_to__last_name=Value(None, output_field=CharField()),
         tipo=Value("Devolução: Defeito", output_field=CharField()),
-        cliente__contrato=Value(None, output_field=IntegerField()),
-        cliente__nivel_ont=Value(None, output_field=FloatField()),
+        cliente__contrato=Value(0, output_field=IntegerField()),
+        cliente__nivel_ont=Value(0, output_field=FloatField()),
     )
 
     paginator = Paginator(
         entradas.union(
             saidas,
-            # aplicacoes,
+            aplicacoes,
             ont_defeito,
             ont_devolucao,
             all=True
