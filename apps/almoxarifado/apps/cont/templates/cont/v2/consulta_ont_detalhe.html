@@ -58,8 +58,8 @@
                 <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
                 <td>{{ item.user_to_first_name|default_if_none:"-"|title }} {{ item.user_to_last_name|default_if_none:""|title }}</td>
-                <td>{{ item.contrato|default_if_none:"-" }}</td>
-                <td>{{ item.cliente__nivel_ont|default_if_none:"-" }}</td>
+                <td>{{ item.contrato }}</td>
+                <td>{{ item.nivel_ont }}</td>
             </tr>
             {% endfor %}
     </table>
