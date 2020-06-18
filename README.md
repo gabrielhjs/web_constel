@@ -32,7 +32,7 @@ O <strong>constel web</strong> é um projeto que visa automatizar a gestão de p
 Atualmente o projeto atua em dois setores, são eles almoxarifado e patrimônio.
 </p>
 
-### Almoxarifado
+## Almoxarifado
 
 <p style="text-align: justify">
 Neste setor o sistema realiza a gestão completa dos materias, documentando todo seu fluxo
