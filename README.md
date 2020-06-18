@@ -32,6 +32,72 @@ O <strong>constel web</strong> é um projeto que visa automatizar a gestão de p
 Atualmente o projeto atua em dois setores, são eles almoxarifado e patrimônio.
 </p>
 
+### Arquitetura
+
+```
++---apps
+|   +---almoxarifado
+|   |   +---apps
+|   |   |   +---cont
+|   |   |   |   +---api
+|   |   |   |   +---api2
+|   |   |   |   +---migrations
+|   |   |   |   +---templates
+|   |   |   |   |   \---cont
+|   |   |   |   |       \---v2
+|   |   |   +---lista_saida
+|   |   |   |   +---migrations
+|   |   |   |   +---templates
+|   |   |   |   |   \---lista_saida
+|   |   |   |   |       \---v2
+|   |   |   +---pdf
+|   |   +---migrations
+|   |   |   \---__pycache__
+|   |   +---templates
+|   |   |   \---almoxarifado
+|   |   |       \---v2
+|   +---patrimonio
+|   |   +---apps
+|   |   |   +---combustivel
+|   |   |   |   +---apps
+|   |   |   |   |   +---talao
+|   |   |   |   |   |   +---migrations
+|   |   |   |   |   |   +---templates
+|   |   |   |   |   |   |   \---talao
+|   |   |   |   |   |   +---tests
+|   |   |   |   +---migrations
+|   |   |   |   +---templates
+|   |   |   |   |   \---combustivel
+|   |   |   +---ferramenta
+|   |   |   |   +---migrations
+|   |   |   |   +---templates
+|   |   |   |   |   \---ferramenta
+|   |   |   +---patrimonio1
+|   |   |   |   +---migrations
+|   |   |   |   +---templates
+|   |   |   |   |   \---patrimonio1
+|   |   +---migrations
+|   |   +---templates
+|   |   |   \---patrimonio
++---constel
+|   +---apps
+|   |   +---controle_acessos
+|   |   |   +---migrations
+|   |   |   +---templates
+|   |   |   |   \---controle_acessos
+|   +---migrations
+|   +---static
+|   |   \---constel
+|   |       \---v2
+|   +---templates
+|   |   \---constel
+|   |       \---v2
++---staticfiles
++---venv_web_constel
+\---web_constel
+    +---settings
+```
+
 ## Almoxarifado
 
 <p style="text-align: justify">
