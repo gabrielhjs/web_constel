@@ -25,6 +25,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 Extras:
 
 - [Selenium](https://www.selenium.dev/)
+- [Django Rest Framework](https://www.django-rest-framework.org/)
 
 ## Projeto
 <p style="text-align: justify">
@@ -75,10 +76,10 @@ um controle especial das <bold>ONT's</bold><sup>(1)</sup> com a aplicação <a h
 
 <p style="text-align: justify">
 Esta aplicação realiza a gestão completa e individual das ONT's que passam pelo almoxarifado,
-isso inclui atividades como: entrada, estoque, saída, aplicação e devolução. O sistema de aplicação
-se baseia em <bold>web scraping</bold><sup>(2)</sup> utilizando o <bold>Selenium</bold><sup>(3)</sup>
-para realizar a busca do local e sinal dos equipamentos em tempo real em um site de domínio de outra
-empresa.
+isso inclui atividades como: entrada, estoque, saída, aplicação e devolução. O sistema utiliza uma aplicação externa 
+para realizar <bold>web scraping</bold><sup>(2)</sup> utilizando o <bold>Selenium</bold><sup>(3)</sup> para realizar a
+busca do local e sinal dos equipamentos em tempo real em um site de domínio de outra empresa. A comunicação com a
+aplicação externa é realizadada através de web socket (consultas) e API (registros no banco de dados).
 </p>
 
 >**_Web scraping<sup>(2)</sup>_** Web Scraping é uma técnica utilizada para extrair rapidamente
