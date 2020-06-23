@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 from django.conf import settings
 
 from .forms import *
-from .models import Secao, Modelo, OntDefeitoHistorico, Cliente
+from .models import Secao, Modelo, OntDefeitoHistorico
 from .menu import menu_principal, menu_cadastros, menu_consultas, menu_defeitos
 
 from constel.apps.controle_acessos.decorator import permission

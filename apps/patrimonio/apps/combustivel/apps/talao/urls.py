@@ -5,6 +5,11 @@ from . import views
 
 urlpatterns = [
     path(
+        'patrimonio/combustivel/talao/',
+        views.index,
+        name='patrimonio_combustivel_talao'
+    ),
+    path(
         'patrimonio/combustivel/menu-cadastros/cadastro-talao/',
         views.view_cadastrar_talao,
         name='gc_cadastro_talao'

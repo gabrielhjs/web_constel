@@ -7,8 +7,17 @@ import datetime
 
 from .forms import *
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
+from .menu import menu_principal, menu_consultas, menu_cadastros
 from constel.apps.controle_acessos.decorator import permission
 from constel.forms import FormDataInicialFinal, FormDataInicialFinalFuncionario
+
+
+@login_required()
+@permission('patrimonio', )
+def index(request):
+    context = menu_principal(request)
+
+    return render(request, 'constel/v2/app.html', context)
 
 
 @login_required
