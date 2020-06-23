@@ -37,15 +37,57 @@ def menu_cadastros(request):
     menu_buttons = [
         {'link': '/cadusuario-pass', 'text': 'Cadastrar beneficiário'},
         {'link': '/cadveiculo', 'text': 'Cadastrar veículo de beneficiário'},
-        {'link': '/patrimonio/combustivel/talao/combustivel', 'text': 'Cadastrar combustível'},
-        {'link': '/patrimonio/combustivel/talao/posto', 'text': 'Cadastrar posto'},
-        {'link': '/patrimonio/combustivel/talao/talao', 'text': 'Cadastrar talão'},
+        {'link': '/patrimonio/combustivel/talao/cadastros/combustivel', 'text': 'Cadastrar combustível'},
+        {'link': '/patrimonio/combustivel/talao/cadastros/posto', 'text': 'Cadastrar posto'},
+        {'link': '/patrimonio/combustivel/talao/cadastros/talao', 'text': 'Cadastrar talão'},
     ]
     button_return = {'link': '/patrimonio/combustivel/talao', 'text': 'Voltar'}
 
     context = {
         'app': 'Combustível',
         'menu': 'Cadastros',
+        'menu_buttons': menu_buttons,
+        'button_return': button_return,
+    }
+
+    return context
+
+
+def menu_taloes(request):
+    """
+    Funcão que contém as configurações do menu de gerenciamento de talão do Controle de combustível.
+    Retorna um dicionário com as configurações
+    """
+
+    menu_buttons = [
+        {'link': '/patrimonio/combustivel/talao/taloes/entrega', 'text': 'Entregar talão'},
+    ]
+    button_return = {'link': '/patrimonio/combustivel/talao', 'text': 'Voltar'}
+
+    context = {
+        'app': 'Combustível',
+        'menu': 'Talões',
+        'menu_buttons': menu_buttons,
+        'button_return': button_return,
+    }
+
+    return context
+
+
+def menu_vales(request):
+    """
+    Funcão que contém as configurações do menu de gerenciamento de vale do Controle de combustível.
+    Retorna um dicionário com as configurações
+    """
+
+    menu_buttons = [
+        {'link': '/patrimonio/combustivel/talao/vales/entrega-1', 'text': 'Entregar vale'},
+    ]
+    button_return = {'link': '/patrimonio/combustivel/talao', 'text': 'Voltar'}
+
+    context = {
+        'app': 'Combustível',
+        'menu': 'Vales',
         'menu_buttons': menu_buttons,
         'button_return': button_return,
     }
@@ -60,10 +102,11 @@ def menu_consultas(request):
     """
 
     menu_buttons = [
-        {'link': '/almoxarifado/cont/consultas/situacao', 'text': 'Status'},
-        {'link': '/almoxarifado/cont/consultas/cargas', 'text': 'Cargas de ONT\'s'},
-        {'link': '/almoxarifado/cont/consultas/ont', 'text': 'Busca serial'},
-        {'link': '/almoxarifado/cont/consultas/dashboard', 'text': 'Dashboard'},
+        {'link': '/patrimonio/combustivel/talao/consultas/talao', 'text': 'Talões'},
+        {'link': '/patrimonio/combustivel/talao/consultas/usuario/taloes', 'text': 'Meus talões'},
+        {'link': '/patrimonio/combustivel/talao/consultas/usuario/vales', 'text': 'Meus vales'},
+        {'link': '/patrimonio/combustivel/talao/consultas/funcionarios', 'text': 'Funcionários'},
+        {'link': '/patrimonio/combustivel/talao/consultas/veiculos', 'text': 'Veículos'},
     ]
     button_return = {'link': '/patrimonio/combustivel/talao', 'text': 'Voltar'}
 

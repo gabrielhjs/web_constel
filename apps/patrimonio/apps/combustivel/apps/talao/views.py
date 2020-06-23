@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.db.models import Sum, Max, Count, Q
+from django.db.models import Sum, Max, Count, Q, F
+from django.core.paginator import Paginator
 
 import datetime
 
 from .forms import *
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
-from .menu import menu_principal, menu_consultas, menu_cadastros
+from .menu import menu_principal, menu_consultas, menu_cadastros, menu_taloes, menu_vales
 from constel.apps.controle_acessos.decorator import permission
 from constel.forms import FormDataInicialFinal, FormDataInicialFinalFuncionario
 
@@ -18,6 +19,377 @@ def index(request):
     context = menu_principal(request)
 
     return render(request, 'constel/v2/app.html', context)
+
+
+@login_required()
+@permission('patrimonio', )
+def cadastros(request):
+    context = menu_cadastros(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required()
+@permission('patrimonio', 'patrimonio - combustivel', 'patrimonio - combustivel - talao', )
+def cadastrar_combustivel(request):
+    """
+    View de carregamento e gestão de combustível novos cadastrados no sistema,
+    deve ser acessado apenas pelo adm e funcionãrios autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
+    menu = menu_cadastros(request)
+
+    if request.method == 'POST':
+        # Registro do cadastro do combustível
+        form = FormCadastraCombustivel(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/patrimonio/combustivel/talao/cadastros/combustivel')
+    else:
+        form = FormCadastraCombustivel()
+
+    itens = Combustivel.objects.all().values(
+        'combustivel'
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Cadastrar combustível',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/cadastrar_combustivel.html', context)
+
+
+@login_required()
+@permission('patrimonio', 'patrimonio - combustivel', 'patrimonio - combustivel - talao', )
+def cadastrar_posto(request):
+    """
+    View de carregamento e gestão de combustível novos cadastrados no sistema,
+    deve ser acessado apenas pelo adm e funcionãrios autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
+    menu = menu_cadastros(request)
+
+    if request.method == 'POST':
+        # Registro do cadastro do posto
+        form = FormCadastraPosto(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/patrimonio/combustivel/talao/cadastros/posto')
+    else:
+        form = FormCadastraPosto()
+
+    itens = Posto.objects.all().values(
+        'posto',
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Cadastrar posto',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/cadastrar_posto.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel', 'patrimonio - combustivel - talao', )
+def cadastrar_talao(request):
+    """
+    View de carregamento e gestão do cadastro de novos talões,
+    Deve ser acessada somente pelo adm e funcionários autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
+    menu = menu_cadastros(request)
+
+    if request.method == 'POST':
+        form = FormCadastraTalao(request.POST)
+
+        if form.is_valid():
+            # Registro do cadastro do novo talão
+            talao = Talao.objects.create(talao=form.cleaned_data['talao'])
+            talao.save()
+            cadastro_talao = CadastroTalao(talao=talao, user=request.user)
+
+            for i in range(form.cleaned_data['vale_inicial'], form.cleaned_data['vale_final'] + 1):
+                vale = Vale.objects.create(vale=i, talao=talao)
+                vale.save()
+
+            cadastro_talao.save()
+            return HttpResponseRedirect('/patrimonio/combustivel/talao/cadastros/talao')
+
+    else:
+        form = FormCadastraTalao()
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Cadastrar talão',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/cadastrar_talao.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel', 'patrimonio - combustivel - talao', )
+def taloes(request):
+    context = menu_taloes(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel', 'patrimonio - combustivel - talao', )
+def entregar_talao(request):
+    """
+    View de carregamento e gestão de entrega de talões cadastrados no sistema,
+    deve ser acessado apenas pelo adm e funcionãrios autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
+    menu = menu_taloes(request)
+
+    if request.method == 'POST':
+        # Registro da entrega do talão
+        form = FormEntregaTalao(request.POST)
+
+        if form.is_valid():
+            talao = form.cleaned_data['talao']
+            talao.status = 1
+            Vale.objects.filter(talao=talao).update(status=1)
+            entrega_talao = EntregaTalao(
+                talao=talao,
+                user=request.user,
+                user_to=form.cleaned_data['user_to'],
+            )
+            entrega_talao.save()
+            talao.save()
+            return HttpResponseRedirect('/patrimonio/combustivel/talao/taloes')
+    else:
+        form = FormEntregaTalao()
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Entregar talão',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/entregar_talao.html', context)
+
+
+@login_required()
+@permission('patrimonio',)
+def vales(request):
+    context = menu_vales(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel - vale',)
+def entregar_vale_1(request):
+    """
+    View 1 de carregamento e gestão de entrega de vales cadastrados no sistema,
+    deve ser acessado apenas pelo adm e funcionãrios autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
+    menu = menu_vales(request)
+
+    if request.method == 'POST':
+        initial = {
+            'user_to': request.session.get('user_to', None),
+            'vale': request.session.get('vale', None),
+        }
+        form = FormEntregaVale1(data=request.POST, user=request.user, initial=initial)
+
+        if form.is_valid():
+            # Registro da entrega do vale
+            request.session['user_to'] = form.cleaned_data['user_to']
+            request.session['vale'] = form.cleaned_data['vale']
+
+            return HttpResponseRedirect('/patrimonio/combustivel/talao/vales/entrega-2')
+
+    else:
+        form = FormEntregaVale1(user=request.user)
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Avançar',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/entregar_vale.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel - vale',)
+def entregar_vale_2(request):
+    """
+    View 2 de carregamento e gestão de entrega de vales cadastrados no sistema,
+    deve ser acessado apenas pelo adm e funcionãrios autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
+    menu = menu_vales(request)
+
+    if request.session.get('user_to') is None:
+        return HttpResponseRedirect('/patrimonio/combustivel/talao/vales/entrega-1')
+
+    vale = Vale.objects.get(id=request.session['vale'])
+    user_to = User.objects.get(id=request.session['user_to'])
+
+    if request.method == 'POST':
+        form = FormEntregaVale2(user_to, request.POST)
+
+        if form.is_valid():
+            request.session.pop('vale')
+            request.session.pop('user_to')
+
+            vale.status = 2
+            vale.save()
+
+            EntregaVale(
+                user=request.user,
+                user_to=user_to,
+                vale=vale,
+                combustivel=form.cleaned_data['combustivel'],
+                valor=form.cleaned_data['valor'],
+                observacao=form.cleaned_data['observacao'],
+                posto=Posto.objects.get(id=form.cleaned_data['posto']),
+            ).save()
+
+            return HttpResponseRedirect('/patrimonio/combustivel/talao/vales')
+
+    else:
+        form = FormEntregaVale2(user_to)
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Entregar vale',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/entregar_vale.html', context)
+
+
+@login_required()
+@permission('patrimonio',)
+def consultas(request):
+    context = menu_consultas(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel - vale',)
+def consulta_talao(request):
+    """
+    View de exibição dos talões cadastrados no sistema
+    :param request: informações gerais
+    :return: lista de talões cadastrados
+    """
+    menu = menu_consultas(request)
+
+    q = request.GET.get('q', '')
+
+    form = FormFiltraQ(
+        initial={
+            'q': q,
+        }
+    )
+
+    query = Q()
+
+    if q != '':
+        query = query & Q(
+            Q(talao__icontains=q) |
+            Q(talao_cadastro__user__username__icontains=q) |
+            Q(talao_entrega__user__username__icontains=q) |
+            Q(talao_entrega__user_to__username__icontains=q)
+        )
+
+    itens = Talao.objects.filter(query).values(
+        'talao',
+        'status',
+        'talao_cadastro__data',
+        'talao_cadastro__user__username',
+        'talao_cadastro__user__first_name',
+        'talao_cadastro__user__last_name',
+        'talao_entrega__data',
+        'talao_entrega__user__username',
+        'talao_entrega__user__first_name',
+        'talao_entrega__user__last_name',
+        'talao_entrega__user_to__username',
+        'talao_entrega__user_to__first_name',
+        'talao_entrega__user_to__last_name',
+    ).order_by('talao')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/consulta_talao.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel - vale',)
+def consulta_talao_detalhe(request, talao):
+    """
+    View de exibição dos talões cadastrados no sistema
+    :param request: informações gerais
+    :param talao: identificação do talao a ser detalhado
+    :return: lista de vales do talão
+    """
+    if not Talao.objects.filter(talao=talao).exists():
+        return HttpResponseRedirect('/patrimonio/combustivel/talao/consultas/talao')
+
+    menu = menu_consultas(request)
+
+    talao = Talao.objects.get(talao=talao)
+
+    itens = Vale.objects.filter(talao=talao).values(
+        'vale',
+        'status',
+        'vale_entrega__data',
+        'vale_entrega__user_to__first_name',
+        'vale_entrega__user_to__last_name',
+        'vale_entrega__combustivel__combustivel',
+        'vale_entrega__valor',
+        'vale_entrega__posto__posto',
+        'vale_entrega__observacao',
+    ).order_by('vale')
+
+    context = {
+        'talao': talao,
+        'itens': itens,
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/consulta_talao_detalhe.html', context)
 
 
 @login_required
@@ -31,7 +403,7 @@ def view_cadastrar_talao(request):
     """
 
     if request.method == 'POST':
-        form = FormTalao(request.POST)
+        form = FormCadastraTalao(request.POST)
 
         if form.is_valid():
             # Registro do cadastro do novo talão
@@ -47,7 +419,7 @@ def view_cadastrar_talao(request):
             return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros')
 
     else:
-        form = FormTalao()
+        form = FormCadastraTalao()
 
     context = {
         'form': form,

@@ -1,0 +1,81 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% load humanize %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Detalhes do talão</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-md-left">
+                <td>Código</td>
+                <td colspan="2">{{ talao.talao }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Status</td>
+                <td colspan="2">
+                    {% if talao.status == 0 %}Estoque
+                    {% elif talao.status == 1 %}Entregue
+                    {% endif %}
+                </td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Cadastro</td>
+                <td>{{ talao.talao_cadastro.first.user.first_name|title }} {{ talao.talao_cadastro.first.user.last_name|title }}</td>
+                <td>{{ talao.talao_cadastro.first.data|date:'d/m/Y H:i:s' }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Entrega</td>
+                <td>{{ talao.talao_entrega.first.user.first_name|default_if_none:""|title }} {{ talao.talao_entrega.first.user.last_name|default_if_none:""|title }}</td>
+                <td>{{ talao.talao_entrega.first.data|default_if_none:""|date:'d/m/Y H:i:s' }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Beneficiário</td>
+                <td colspan="2">{{ talao.talao_entrega.first.user_to.first_name|title }} {{ talao.talao_entrega.first.user_to.last_name|title }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="8">Vales</th>
+            </tr>
+            <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Status</th>
+                <th scope="col">Beneficiário</th>
+                <th scope="col">Data de entrega</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Combustível</th>
+                <th scope="col">Posto</th>
+                <th scope="col">Observação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in itens %}
+            <tr class="text-md-left">
+                <td>{{ item.vale }}</td>
+                <td>
+                    {% if item.status == 0 %}Indisponível
+                    {% elif item.status == 1 %}Disponível
+                    {% elif item.status == 2 %}Entregue
+                    {% endif %}
+                </td>
+                <td>{{ item.vale_entrega__user_to__first_name|default_if_none:""|title }} {{ item.vale_entrega__user_to__last_name|default_if_none:""|title }}</td>
+                <td>{{ item.vale_entrega__data|default_if_none:""|date:'d/m/Y H:i:s' }}</td>
+                <td>{% if item.vale_entrega__valor %} R$ {{ item.vale_entrega__valor|floatformat:2|intcomma }} {% endif %}</td>
+                <td>{{ item.vale_entrega__combustivel__combustivel|default_if_none:""|title }}</td>
+                <td>{{   item.vale_entrega__posto__posto|default_if_none:""|title }}</td>
+                <td>{{ item.vale_entrega__observacao|default_if_none:""|lower }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'patrimonio_combustivel_talao_consultar_talao' %}?q={% firstof request.GET.q '' %}">voltar</a>
+</div>
+{% endblock %}

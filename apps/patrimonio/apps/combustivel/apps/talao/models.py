@@ -166,6 +166,7 @@ class EntregaVale(models.Model):
     def __str__(self):
         return '%s - %.19s' % (self.vale, self.data)
 
+    @staticmethod
     def valor_moeda(self):
         return 'R$ {:8.2f}'.format(self.valor)
 

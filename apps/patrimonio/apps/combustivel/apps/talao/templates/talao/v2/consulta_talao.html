@@ -1,0 +1,51 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="8">Talões</th>
+            </tr>
+            <tr>
+                <th scope="col" colspan="2">Talão</th>
+                <th scope="col" colspan="2">Cadastro</th>
+                <th scope="col" colspan="4">Entrega</th>
+            </tr>
+            <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Status</th>
+                <th scope="col">Responsável</th>
+                <th scope="col">Data</th>
+                <th scope="col">Responsável</th>
+                <th scope="col">Data</th>
+                <th scope="col">Beneficiário</th>
+                <th scope="col">#</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.talao }}</td>
+                <td>
+                    {% if item.status == 0 %}Estoque
+                    {% elif item.status == 1 %}Entregue
+                    {% endif %}
+                </td>
+                <td>{{ item.talao_cadastro__user__first_name|title }} {{ item.talao_cadastro__user__last_name|title }}</td>
+                <td>{{ item.talao_cadastro__data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.talao_entrega__user__first_name|default_if_none:""|title }} {{ item.talao_entrega__user__last_name|default_if_none:""|title }}</td>
+                <td>{{ item.talao_entrega__data|default_if_none:""|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.talao_entrega__user_to__first_name|default_if_none:""|title }} {{ item.talao_entrega__user_to__last_name|default_if_none:""|title }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                        href="{% url 'patrimonio_combustivel_talao_consultar_talao_detalhe' item.talao %}?q={% firstof request.GET.q '' %}">
+                        vales
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

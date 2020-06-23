@@ -10,6 +10,67 @@ urlpatterns = [
         name='patrimonio_combustivel_talao'
     ),
     path(
+        'patrimonio/combustivel/talao/cadastros/',
+        views.cadastros,
+        name='patrimonio_combustivel_talao_cadastros'
+    ),
+    path(
+        'patrimonio/combustivel/talao/cadastros/combustivel/',
+        views.cadastrar_combustivel,
+        name='patrimonio_combustivel_talao_cadastrar_combustivel'
+    ),
+    path(
+        'patrimonio/combustivel/talao/cadastros/posto/',
+        views.cadastrar_posto,
+        name='patrimonio_combustivel_talao_cadastrar_posto'
+    ),
+    path(
+        'patrimonio/combustivel/talao/cadastros/talao/',
+        views.cadastrar_talao,
+        name='patrimonio_combustivel_talao_cadastrar_talao'
+    ),
+    path(
+        'patrimonio/combustivel/talao/taloes/',
+        views.taloes,
+        name='patrimonio_combustivel_talao_taloes'
+    ),
+    path(
+        'patrimonio/combustivel/talao/taloes/entrega/',
+        views.entregar_talao,
+        name='patrimonio_combustivel_talao_entregar_talao'
+    ),
+    path(
+        'patrimonio/combustivel/talao/vales/',
+        views.vales,
+        name='patrimonio_combustivel_talao_vales'
+    ),
+    path(
+        'patrimonio/combustivel/talao/vales/entrega-1/',
+        views.entregar_vale_1,
+        name='patrimonio_combustivel_talao_entregar_vale_1'
+    ),
+    path(
+        'patrimonio/combustivel/talao/vales/entrega-2/',
+        views.entregar_vale_2,
+        name='patrimonio_combustivel_talao_entregar_vale_1'
+    ),
+    path(
+        'patrimonio/combustivel/talao/consultas/',
+        views.consultas,
+        name='patrimonio_combustivel_talao_consultas'
+    ),
+    path(
+        'patrimonio/combustivel/talao/consultas/talao',
+        views.consulta_talao,
+        name='patrimonio_combustivel_talao_consultar_talao'
+    ),
+    path(
+        'patrimonio/combustivel/talao/consultas/talao/<int:talao>',
+        views.consulta_talao_detalhe,
+        name='patrimonio_combustivel_talao_consultar_talao_detalhe'
+    ),
+
+    path(
         'patrimonio/combustivel/menu-cadastros/cadastro-talao/',
         views.view_cadastrar_talao,
         name='gc_cadastro_talao'

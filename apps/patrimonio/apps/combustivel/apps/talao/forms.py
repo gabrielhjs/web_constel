@@ -5,7 +5,7 @@ from .models import Talao, Vale, EntregaTalao, EntregaVale, Combustivel, Posto
 from constel.models import Veiculo
 
 
-class FormTalao(forms.ModelForm):
+class FormCadastraTalao(forms.ModelForm):
     """
     Formulário de cadstro de novos talões
     """
@@ -22,6 +22,12 @@ class FormTalao(forms.ModelForm):
     class Meta:
         model = Talao
         fields = ['talao', ]
+
+    def __init__(self, *args, **kwargs):
+        super(FormCadastraTalao, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         form_data = self.cleaned_data
@@ -58,6 +64,9 @@ class FormEntregaTalao(forms.ModelForm):
             help_text='Funcionário que solicitou o talão de combustível.'
         )
 
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
     def clean(self):
         self.cleaned_data['user_to'] = User.objects.get(id=int(self.cleaned_data['user_to']))
 
@@ -91,6 +100,9 @@ class FormEntregaVale1(forms.Form):
             label='Funcionário',
             help_text='Funcionário que solicitou o vale de combustível.')
 
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
 
 class FormEntregaVale2(forms.ModelForm):
 
@@ -119,6 +131,9 @@ class FormEntregaVale2(forms.ModelForm):
             label='Posto',
         )
 
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
 
 class FormCadastraCombustivel(forms.ModelForm):
     """
@@ -129,12 +144,42 @@ class FormCadastraCombustivel(forms.ModelForm):
         model = Combustivel
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super(FormCadastraCombustivel, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
 
 class FormCadastraPosto(forms.ModelForm):
     """
-    Formulário de cadastro de novos combustíveis
+    Formulário de cadastro de novos postos
     """
 
     class Meta:
         model = Posto
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(FormCadastraPosto, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormFiltraQ(forms.Form):
+    """
+    Formulário que permite filtrar um talao
+    """
+
+    q = forms.CharField(
+        label='Filtrar por',
+        widget=forms.TextInput(attrs={'placeholder': 'código do talão ou matrícula'}),
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(FormFiltraQ, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})

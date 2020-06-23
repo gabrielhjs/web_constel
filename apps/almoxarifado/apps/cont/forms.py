@@ -54,7 +54,7 @@ class FormEntradaOnt1(forms.Form):
         )
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class NonstickyCharfield(forms.TextInput):
