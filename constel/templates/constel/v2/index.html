@@ -2,46 +2,46 @@
 {% block body_content %}
 {% load static %}
 <div class="col-sm-12 bg-dark">
-    <div class="row justify-content-center">
-        <div class="card bg-secondary m-3" style="width: 20em;">
+    <div class="row align-items-center justify-content-center">
+        <div class="card bg-secondary m-3">
             <img src="{% static 'constel/v2/card_almoxarifado.png' %}" class="card-img-top p-2"
                 alt="Responsive image">
 
             <div class="card-body">
-                <h3 class="card-title text-center">Almoxarifado</h5>
+                <h3 class="card-title text-center">Almoxarifado</h3>
                 <p class="card-text">Controle de estoque, entradas, saídas e fluxo de materiais em geral.</p>
                 <a href="{% url 'almoxarifado_menu_principal' %}" class="btn btn-warning btn-block btn-lg">Entrar</a>
             </div>
         </div>
         
-        <div class="card bg-secondary m-3" style="width: 20em;">
-            <img src="{% static 'constel/v2/card_patrimonio.png' %}" class="card-img-top"
+        <div class="card bg-secondary m-3">
+            <img src="{% static 'constel/v2/card_patrimonio.png' %}" class="card-img-top p-2"
                 alt="Responsive image">
 
             <div class="card-body">
-                <h3 class="card-title text-center">Patrimônio</h5>
+                <h3 class="card-title text-center">Patrimônio</h3>
                 <p class="card-text">Controle do patrimônio e do seu fluxo em geral.</p>
                 <a href="{% url 'patrimonio_menu_principal' %}" class="btn btn-warning btn-block btn-lg">Entrar</a>
             </div>
         </div>
 
-        <div class="card bg-secondary m-3" style="width: 20em;">
+        <div class="card bg-secondary m-3">
             <img src="{% static 'constel/v2/card_cont2.png' %}" class="card-img-top p-2"
                 alt="Responsive image">
 
             <div class="card-body">
-                <h3 class="card-title text-center">Cont2</h5>
+                <h3 class="card-title text-center">Cont2</h3>
                 <p class="card-text">Controle de estoque, entradas, saídas e fluxo de ONT's em geral.</p>
                 <a href="{% url 'almoxarifado_cont_menu_principal' %}" class="btn btn-warning btn-block btn-lg">Entrar</a>
             </div>
         </div>
 
-        <div class="card bg-secondary m-3" style="width: 20em;">
+        <div class="card bg-secondary m-3">
             <img src="{% static 'constel/v2/card_combustivel.png' %}" class="card-img-top p-2"
                 alt="Responsive image">
 
             <div class="card-body">
-                <h3 class="card-title text-center">Combustível</h5>
+                <h3 class="card-title text-center">Combustível</h3>
                 <p class="card-text">Controle de entregas de vales de combustível.</p>
                 <a href="{% url 'gc_menu_principal' %}" class="btn btn-warning btn-block btn-lg">Entrar</a>
             </div>

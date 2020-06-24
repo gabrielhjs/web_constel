@@ -102,17 +102,38 @@ def menu_consultas(request):
     """
 
     menu_buttons = [
-        {'link': '/patrimonio/combustivel/talao/consultas/talao', 'text': 'Talões'},
+        {'link': '/patrimonio/combustivel/talao/consultas/taloes', 'text': 'Talões'},
         {'link': '/patrimonio/combustivel/talao/consultas/usuario/taloes', 'text': 'Meus talões'},
         {'link': '/patrimonio/combustivel/talao/consultas/usuario/vales', 'text': 'Meus vales'},
         {'link': '/patrimonio/combustivel/talao/consultas/funcionarios', 'text': 'Funcionários'},
-        {'link': '/patrimonio/combustivel/talao/consultas/veiculos', 'text': 'Veículos'},
     ]
     button_return = {'link': '/patrimonio/combustivel/talao', 'text': 'Voltar'}
 
     context = {
         'app': 'Combustível',
         'menu': 'Consultas',
+        'menu_buttons': menu_buttons,
+        'button_return': button_return,
+    }
+
+    return context
+
+
+def menu_relatorios(request):
+    """
+    Funcão que contém as configurações do menu de relatórios do Controle de combustível.
+    Retorna um dicionário com as configurações
+    """
+
+    menu_buttons = [
+        {'link': '/patrimonio/combustivel/talao/relatorios/mes', 'text': 'Mês Atual'},
+        {'link': '/patrimonio/combustivel/talao/relatorios/geral', 'text': 'Geral'},
+    ]
+    button_return = {'link': '/patrimonio/combustivel/talao', 'text': 'Voltar'}
+
+    context = {
+        'app': 'Combustível',
+        'menu': 'Relatórios',
         'menu_buttons': menu_buttons,
         'button_return': button_return,
     }

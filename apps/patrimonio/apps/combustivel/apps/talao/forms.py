@@ -165,21 +165,3 @@ class FormCadastraPosto(forms.ModelForm):
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
-
-
-class FormFiltraQ(forms.Form):
-    """
-    Formulário que permite filtrar um talao
-    """
-
-    q = forms.CharField(
-        label='Filtrar por',
-        widget=forms.TextInput(attrs={'placeholder': 'código do talão ou matrícula'}),
-        required=False
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(FormFiltraQ, self).__init__(*args, **kwargs)
-
-        for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class': 'form-control'})

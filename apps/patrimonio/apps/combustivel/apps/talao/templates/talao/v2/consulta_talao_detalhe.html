@@ -69,13 +69,13 @@
                 <td>{{ item.vale_entrega__data|default_if_none:""|date:'d/m/Y H:i:s' }}</td>
                 <td>{% if item.vale_entrega__valor %} R$ {{ item.vale_entrega__valor|floatformat:2|intcomma }} {% endif %}</td>
                 <td>{{ item.vale_entrega__combustivel__combustivel|default_if_none:""|title }}</td>
-                <td>{{   item.vale_entrega__posto__posto|default_if_none:""|title }}</td>
+                <td>{{ item.vale_entrega__posto__posto|default_if_none:""|title }}</td>
                 <td>{{ item.vale_entrega__observacao|default_if_none:""|lower }}</td>
             </tr>
             {% endfor %}
     </table>
 </div>
 <div class="row justify-content-center m-0">
-    <a class="btn btn-danger px-5 my-3" href="{% url 'patrimonio_combustivel_talao_consultar_talao' %}?q={% firstof request.GET.q '' %}">voltar</a>
+    <a class="btn btn-danger px-5 my-3" href="{% url 'patrimonio_combustivel_talao_consultar_talao' %}?{{ request.GET.urlencode }}">voltar</a>
 </div>
 {% endblock %}

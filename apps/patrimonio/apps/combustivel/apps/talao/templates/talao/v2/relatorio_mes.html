@@ -1,0 +1,31 @@
+{% extends 'constel/v2/app.html' %}
+{% load humanize %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0 h-100">
+        <thead>
+            <tr>
+                <th scope="col" colspan="5">Relatório do mês</th>
+            </tr>
+            <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Funcionário</th>
+                <th scope="col">Qtde de vales</th>
+                <th scope="col">Último vale</th>
+                <th scope="col">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr>
+                <td>{{ item.username }}</td>
+                <td>{{ item.first_name|title }} {{ item.last_name|title }}</td>
+                <td>{{ item.n_vales }}</td>
+                <td>{{ item.max_data|date:'d/m/Y H:i:s' }}</td>
+                <td>R$ {{ item.total|floatformat:2|intcomma }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

@@ -189,3 +189,22 @@ class FormDataInicialFinal(forms.Form):
             self.errors['data_inicial'] = ['A data inicial não pode ser mais recente que a data final']
 
         return form_data
+
+
+class FormFiltraQ(forms.Form):
+    """
+    Formulário que permite filtrar um talao
+    """
+
+    q = forms.CharField(
+        label='Filtrar por',
+        required=False
+    )
+
+    def __init__(self, descricao='', *args, **kwargs):
+        super(FormFiltraQ, self).__init__(*args, **kwargs)
+
+        self.fields['q'].widget = forms.TextInput(attrs={'placeholder': descricao})
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})

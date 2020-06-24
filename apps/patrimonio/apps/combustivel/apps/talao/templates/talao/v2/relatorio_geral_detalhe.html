@@ -1,0 +1,52 @@
+{% extends 'constel/v2/app.html' %}
+{% load humanize %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="9">Vales</th>
+            </tr>
+            <tr>
+                <th scope="col" colspan="3">Vale</th>
+                <th scope="col" colspan="6">Entrega</th>
+            </tr>
+            <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Talão</th>
+                <th scope="col">Status</th>
+                <th scope="col">Responsável</th>
+                <th scope="col">Data</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Combustível</th>
+                <th scope="col">Posto</th>
+                <th scope="col">Observação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.vale }}</td>
+                <td>{{ item.talao__talao }}</td>
+                <td>
+                    {% if item.status == 0 %}Indisponível
+                    {% elif item.status == 1 %}Disponível
+                    {% elif item.status == 2 %}Entregue
+                    {% endif %}
+                </td>
+                <td>{{ item.vale_entrega__user__first_name|default_if_none:""|title }} {{ item.vale_entrega__user__last_name|default_if_none:""|title }}</td>
+                <td>{{ item.vale_entrega__data|default_if_none:""|date:'d/m/Y H:i:s' }}</td>
+                <td>R$ {{ item.vale_entrega__valor|floatformat:2|intcomma }}</td>
+                <td>{{ item.vale_entrega__combustivel__combustivel|default_if_none:""|title }}</td>
+                <td>{{ item.vale_entrega__posto__posto|default_if_none:""|title }}</td>
+                <td>{{ item.vale_entrega__observacao|default_if_none:""|lower }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'patrimonio_combustivel_talao_relatorio_geral' %}?{{ request.GET.urlencode }}">voltar</a>
+</div>
+{% endblock %}

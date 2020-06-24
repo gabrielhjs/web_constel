@@ -60,14 +60,49 @@ urlpatterns = [
         name='patrimonio_combustivel_talao_consultas'
     ),
     path(
-        'patrimonio/combustivel/talao/consultas/talao',
+        'patrimonio/combustivel/talao/consultas/taloes',
         views.consulta_talao,
         name='patrimonio_combustivel_talao_consultar_talao'
     ),
     path(
-        'patrimonio/combustivel/talao/consultas/talao/<int:talao>',
+        'patrimonio/combustivel/talao/consultas/taloes/<int:talao>',
         views.consulta_talao_detalhe,
         name='patrimonio_combustivel_talao_consultar_talao_detalhe'
+    ),
+    path(
+        'patrimonio/combustivel/talao/consultas/usuario/taloes/',
+        views.consulta_meu_talao,
+        name='patrimonio_combustivel_talao_consultar_meu_talao'
+    ),
+    path(
+        'patrimonio/combustivel/talao/consultas/usuario/vales/',
+        views.consulta_meu_vale,
+        name='patrimonio_combustivel_talao_consultar_meu_vale'
+    ),
+    path(
+        'patrimonio/combustivel/talao/consultas/funcionarios/',
+        views.consulta_funcionarios,
+        name='patrimonio_combustivel_talao_consultar_funcionarios'
+    ),
+    path(
+        'patrimonio/combustivel/talao/relatorios/',
+        views.relatorios,
+        name='patrimonio_combustivel_talao_relatorios'
+    ),
+    path(
+        'patrimonio/combustivel/talao/relatorios/mes',
+        views.relatorio_mes,
+        name='patrimonio_combustivel_talao_relatorio_mes'
+    ),
+    path(
+        'patrimonio/combustivel/talao/relatorios/geral',
+        views.relatorio_geral,
+        name='patrimonio_combustivel_talao_relatorio_geral'
+    ),
+    path(
+        'patrimonio/combustivel/talao/relatorios/geral/<str:user>',
+        views.relatorio_geral_detalhe,
+        name='patrimonio_combustivel_talao_relatorio_geral_detalhe'
     ),
 
     path(

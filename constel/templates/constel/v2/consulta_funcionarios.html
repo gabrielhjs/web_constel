@@ -1,0 +1,54 @@
+{% extends 'constel/v2/app.html' %}
+{% load humanize %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="6">Funcionários</th>
+            </tr>
+            <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Tipo de acesso</th>
+                <th scope="col">Status Empresa</th>
+                <th scope="col">Veículos</th>
+                <th scope="col">Último acesso</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.username|title }}</td>
+                <td>{{ item.first_name|title }} {{ item.last_name|title }}</td>
+                <td>
+                    {% if item.is_superuser %}
+                        Adminstrador
+                    {% elif item.is_staff %}
+                        Staff
+                    {% elif item.is_active %}
+                        {% if item.user_type__is_passive %}
+                            Sem acesso
+                        {% else %}
+                            Comum
+                        {% endif %}
+                    {% else %}
+                        Desativado
+                    {% endif %}
+                </td>
+                <td>
+                    {% if item.is_active %}
+                        Ativo
+                    {% else %}
+                        Inativo
+                    {% endif %}
+                </td>
+                <td>{{ item.veiculos_qtde }}
+                    <td>{{ item.last_login|default:""|date:'d/m/Y H:i:s' }}
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

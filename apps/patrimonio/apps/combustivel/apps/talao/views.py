@@ -8,9 +8,9 @@ import datetime
 
 from .forms import *
 from .models import Talao, Vale, CadastroTalao, EntregaTalao, EntregaVale, Combustivel
-from .menu import menu_principal, menu_consultas, menu_cadastros, menu_taloes, menu_vales
+from .menu import menu_principal, menu_consultas, menu_cadastros, menu_taloes, menu_vales, menu_relatorios
 from constel.apps.controle_acessos.decorator import permission
-from constel.forms import FormDataInicialFinal, FormDataInicialFinalFuncionario
+from constel.forms import FormDataInicialFinal, FormDataInicialFinalFuncionario, FormFiltraQ
 
 
 @login_required()
@@ -303,13 +303,14 @@ def consulta_talao(request):
     """
     View de exibição dos talões cadastrados no sistema
     :param request: informações gerais
-    :return: lista de talões cadastrados
+    :return: template
     """
     menu = menu_consultas(request)
 
     q = request.GET.get('q', '')
 
     form = FormFiltraQ(
+        'código do talão ou matrícula',
         initial={
             'q': q,
         }
@@ -381,7 +382,7 @@ def consulta_talao_detalhe(request, talao):
         'vale_entrega__valor',
         'vale_entrega__posto__posto',
         'vale_entrega__observacao',
-    ).order_by('vale')
+    ).order_by('vale_entrega__data')
 
     context = {
         'talao': talao,
@@ -390,6 +391,326 @@ def consulta_talao_detalhe(request, talao):
     context.update(menu)
 
     return render(request, 'talao/v2/consulta_talao_detalhe.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel - vale',)
+def consulta_meu_talao(request):
+    """
+    View de exibição dos talões cadastrados no sistema que foram recebido pelo usuário logado
+    :param request: informações gerais
+    :return: template
+    """
+    menu = menu_consultas(request)
+
+    q = request.GET.get('q', '')
+
+    form = FormFiltraQ(
+        'código do talão ou matrícula',
+        initial={
+            'q': q,
+        }
+    )
+
+    query = Q(talao_entrega__user=request.user)
+
+    if q != '':
+        query = query & Q(
+            Q(talao__icontains=q) |
+            Q(talao_cadastro__user__username__icontains=q) |
+            Q(talao_entrega__user__username__icontains=q) |
+            Q(talao_entrega__user_to__username__icontains=q)
+        )
+
+    itens = Talao.objects.filter(query).values(
+        'talao',
+        'status',
+        'talao_cadastro__data',
+        'talao_cadastro__user__username',
+        'talao_cadastro__user__first_name',
+        'talao_cadastro__user__last_name',
+        'talao_entrega__data',
+        'talao_entrega__user__username',
+        'talao_entrega__user__first_name',
+        'talao_entrega__user__last_name',
+        'talao_entrega__user_to__username',
+        'talao_entrega__user_to__first_name',
+        'talao_entrega__user_to__last_name',
+    ).order_by('talao')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/consulta_talao.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel - vale',)
+def consulta_meu_vale(request):
+    """
+    View de exibição dos vales cadastrados no sistema que foram recebidos pelo usuário cadastrado
+    :param request: informações gerais
+    :return: template
+    """
+    menu = menu_consultas(request)
+
+    q = request.GET.get('q', '')
+
+    form = FormFiltraQ(
+        'código do vale ou matrícula',
+        initial={
+            'q': q,
+        }
+    )
+
+    query = Q(vale_entrega__user_to=request.user)
+
+    if q != '':
+        query = query & Q(
+            Q(vale__icontains=q) |
+            Q(vale_entrega__user__username__icontains=q)
+        )
+
+    itens = Vale.objects.filter(query).values(
+        'vale',
+        'talao__talao',
+        'status',
+        'vale_entrega__data',
+        'vale_entrega__user__first_name',
+        'vale_entrega__user__last_name',
+        'vale_entrega__combustivel__combustivel',
+        'vale_entrega__posto__posto',
+        'vale_entrega__valor',
+        'vale_entrega__observacao',
+    ).order_by('vale_entrega__data')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/consulta_vale.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel - vale',)
+def consulta_funcionarios(request):
+    """
+    View de exibição dos funcionários cadastrados
+    :param request: informações gerais
+    :return: template
+    """
+    menu = menu_consultas(request)
+
+    q = request.GET.get('q', '')
+
+    form = FormFiltraQ(
+        'matrícula',
+        initial={
+            'q': q,
+        }
+    )
+
+    query = Q()
+
+    if q != '':
+        query = query & Q(
+            Q(username__icontains=q) |
+            Q(first_name__icontains=q) |
+            Q(last_name__icontains=q)
+        )
+
+    itens = User.objects.filter(query).values(
+        'username',
+        'first_name',
+        'last_name',
+        'user_type__is_passive',
+        'is_superuser',
+        'is_active',
+        'last_login',
+    ).annotate(
+        veiculos_qtde=Count(F('veiculos__id'))
+    ).order_by('first_name', 'last_name')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'constel/v2/consulta_funcionarios.html', context)
+
+
+@login_required()
+@permission('patrimonio',)
+def relatorios(request):
+    context = menu_relatorios(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel - vale',)
+def relatorio_mes(request):
+
+    menu = menu_relatorios(request)
+
+    hoje = datetime.date.today()
+
+    itens = User.objects.filter(
+        vale_user_to__data__month=hoje.month,
+        vale_user_to__data__year=hoje.year,
+    ).values(
+        'username',
+        'first_name',
+        'last_name',
+    ).annotate(
+        total=Sum('vale_user_to__valor'),
+        max_data=Max('vale_user_to__data'),
+        n_vales=Count('vale_user_to__valor'),
+    ).order_by(
+        '-total'
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/relatorio_mes.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel - vale',)
+def relatorio_geral(request):
+
+    menu = menu_relatorios(request)
+
+    data_inicial = request.GET.get('data_inicial', '')
+    data_final = request.GET.get('data_final', '')
+    funcionario = request.GET.get('funcionario', '')
+
+    form = FormDataInicialFinalFuncionario(
+        initial={
+            'data_inicial': data_inicial,
+            'data_final': data_final,
+            'funcionario': funcionario,
+        }
+    )
+
+    query = Q(vale_user_to__vale__status=2)
+
+    if funcionario != '':
+        query = query & Q(
+            Q(username__icontains=funcionario) |
+            Q(first_name__icontains=funcionario) |
+            Q(last_name__icontains=funcionario))
+
+    if data_inicial != '':
+        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
+        query = query & Q(vale_user_to__data__gte=data_inicial)
+
+    if data_final != '':
+        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
+        query = query & Q(vale_user_to__data__lte=data_final)
+
+    itens = User.objects.filter(query).values(
+        'username',
+        'first_name',
+        'last_name',
+    ).annotate(
+        total=Sum('vale_user_to__valor'),
+        max_data=Max('vale_user_to__data'),
+        n_vales=Count('vale_user_to__valor'),
+    ).order_by(
+        '-total'
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/relatorio_geral.html', context)
+
+
+@login_required()
+@permission('patrimonio - combustivel - vale',)
+def relatorio_geral_detalhe(request, user):
+
+    menu = menu_relatorios(request)
+
+    q = request.GET.get('q', '')
+
+    form = FormFiltraQ(
+        'código do vale ou matrícula',
+        initial={
+            'q': q,
+        }
+    )
+
+    query = Q(vale_entrega__user_to__username=user)
+
+    if q != '':
+        query = query & Q(
+            Q(vale__icontains=q) |
+            Q(vale_entrega__user__username__icontains=q)
+        )
+
+    itens = Vale.objects.filter(query).values(
+        'vale',
+        'talao__talao',
+        'status',
+        'vale_entrega__data',
+        'vale_entrega__user__first_name',
+        'vale_entrega__user__last_name',
+        'vale_entrega__combustivel__combustivel',
+        'vale_entrega__posto__posto',
+        'vale_entrega__valor',
+        'vale_entrega__observacao',
+    ).order_by('vale_entrega__data')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/relatorio_geral_detalhe.html', context)
 
 
 @login_required
