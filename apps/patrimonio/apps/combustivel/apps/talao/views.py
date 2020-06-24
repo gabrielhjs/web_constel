@@ -235,7 +235,7 @@ def entregar_vale_1(request):
     }
     context.update(menu)
 
-    return render(request, 'talao/v2/entregar_vale.html', context)
+    return render(request, 'talao/v2/entregar_talao.html', context)
 
 
 @login_required()
@@ -286,7 +286,7 @@ def entregar_vale_2(request):
     }
     context.update(menu)
 
-    return render(request, 'talao/v2/entregar_vale.html', context)
+    return render(request, 'talao/v2/entregar_talao.html', context)
 
 
 @login_required()
