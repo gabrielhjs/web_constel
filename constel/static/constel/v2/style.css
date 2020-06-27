@@ -29,6 +29,7 @@ html {
 .table-content table {
     overflow: auto;
     position: static;
+    height: 100%;
 }
 
 .table-content table tbody tr {
