@@ -35,8 +35,8 @@ def menu_cadastros(request):
     """
 
     menu_buttons = [
-        {'link': '/cadusuario-pass', 'text': 'Cadastrar beneficiário'},
-        {'link': '/cadveiculo', 'text': 'Cadastrar veículo de beneficiário'},
+        {'link': '/patrimonio/combustivel/talao/cadastros/beneficiario', 'text': 'Cadastrar beneficiário'},
+        {'link': '/patrimonio/combustivel/talao/cadastros/veiculo', 'text': 'Cadastrar veículo de beneficiário'},
         {'link': '/patrimonio/combustivel/talao/cadastros/combustivel', 'text': 'Cadastrar combustível'},
         {'link': '/patrimonio/combustivel/talao/cadastros/posto', 'text': 'Cadastrar posto'},
         {'link': '/patrimonio/combustivel/talao/cadastros/talao', 'text': 'Cadastrar talão'},
@@ -126,7 +126,7 @@ def menu_relatorios(request):
     """
 
     menu_buttons = [
-        {'link': '/patrimonio/combustivel/talao/relatorios/mes', 'text': 'Mês Atual'},
+        {'link': '/patrimonio/combustivel/talao/relatorios/mes', 'text': 'Mensal'},
         {'link': '/patrimonio/combustivel/talao/relatorios/geral', 'text': 'Geral'},
     ]
     button_return = {'link': '/patrimonio/combustivel/talao', 'text': 'Voltar'}

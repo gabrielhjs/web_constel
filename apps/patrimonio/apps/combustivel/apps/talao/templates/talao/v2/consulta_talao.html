@@ -39,7 +39,7 @@
                 <td>{{ item.talao_entrega__user_to__first_name|default_if_none:""|title }} {{ item.talao_entrega__user_to__last_name|default_if_none:""|title }}</td>
                 <td>
                     <a class="btn btn-primary btn-sm"
-                        href="{% url 'patrimonio_combustivel_talao_consultar_talao_detalhe' item.talao %}?{{ request.GET.urlencode }}">
+                        href="{% url 'patrimonio_combustivel_talao_consultar_talao_detalhe' item.talao %}?next={{ request.get_full_path }}">
                         vales
                     </a>
                 </td>

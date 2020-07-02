@@ -14,8 +14,6 @@ class Talao(models.Model):
         (2, 'Usado'),
     ]
 
-    HELP_TEXT = 'Insira um valor válido de talão'
-
     talao = models.IntegerField(
         unique=True,
         validators=[
@@ -23,7 +21,6 @@ class Talao(models.Model):
             MaxValueValidator(999999, 'Talão inválido'),
         ],
         verbose_name='Talao',
-        help_text=HELP_TEXT,
     )
     status = models.IntegerField(choices=STATUS_CHOISES, default=0)
 

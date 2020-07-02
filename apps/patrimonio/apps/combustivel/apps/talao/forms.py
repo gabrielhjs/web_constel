@@ -12,11 +12,11 @@ class FormCadastraTalao(forms.ModelForm):
 
     vale_inicial = forms.IntegerField(
         label='Vale inicial',
-        help_text='Número do primeiro vale do talão'
+        widget=forms.TextInput(attrs={'placeholder': 'Número do primeiro vale do talão'}),
     )
     vale_final = forms.IntegerField(
         label='Vale final',
-        help_text='Número do último vale do talão'
+        widget=forms.TextInput(attrs={'placeholder': 'Número do último vale do talão'}),
     )
 
     class Meta:
@@ -25,6 +25,8 @@ class FormCadastraTalao(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(FormCadastraTalao, self).__init__(*args, **kwargs)
+
+        self.fields['talao'].widget = forms.TextInput(attrs={'placeholder': 'Código numérico do talão'})
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
@@ -61,7 +63,6 @@ class FormEntregaTalao(forms.ModelForm):
         self.fields['user_to'] = forms.ChoiceField(
             choices=users_name,
             label='Funcionário',
-            help_text='Funcionário que solicitou o talão de combustível.'
         )
 
         for key in self.fields.keys():
@@ -89,7 +90,7 @@ class FormEntregaVale1(forms.Form):
         self.fields['vale'] = forms.ChoiceField(
             choices=vales_name,
             label='Vale',
-            help_text='Número do vale que será entregue.')
+        )
 
         # Queryset Field User_to
         self.fields['vale'].queryset = Vale.objects.filter(talao__talao_entrega__user_to=self.user, status=1)
@@ -98,7 +99,7 @@ class FormEntregaVale1(forms.Form):
         self.fields['user_to'] = forms.ChoiceField(
             choices=users_name,
             label='Funcionário',
-            help_text='Funcionário que solicitou o vale de combustível.')
+        )
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
@@ -120,9 +121,8 @@ class FormEntregaVale2(forms.ModelForm):
         self.fields['veiculo'] = forms.ChoiceField(
             choices=veiculos_name,
             label='Veículo',
-            help_text='Veículo que será abastecido',
             error_messages={'required': 'Campo obrigatório. Caso não haja nenhuma opção deve ser cadastrado o veículo\
-                                         no menu de cadastros.'}
+                                         no menu de cadastros'}
         )
         postos = Posto.objects.all().order_by('posto')
         postos_name = [(i.id, '%s' % i.posto) for i in postos]

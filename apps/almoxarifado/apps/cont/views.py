@@ -563,7 +563,6 @@ def consulta_dashboard(request):
     return render(request, "cont/v2/consulta_dashboard.html", context)
 
 
-
 @login_required()
 def baixa_login_psw(request):
     menu = menu_principal(request)

@@ -16,9 +16,9 @@ class Veiculo(models.Model):
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='veiculos', verbose_name='Usuário')
-    modelo = models.CharField(max_length=30, help_text='Modelo do veículo')
-    placa = models.CharField(max_length=8, help_text='Placa do veículo')
-    cor = models.CharField(max_length=100, help_text='Cor do veículo')
+    modelo = models.CharField(max_length=30)
+    placa = models.CharField(max_length=8)
+    cor = models.CharField(max_length=100)
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None

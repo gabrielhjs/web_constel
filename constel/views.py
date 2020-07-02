@@ -7,9 +7,7 @@ from django.contrib import messages
 
 from .forms import (
     FormCadastraUsuario,
-    FormLogin,
-    FormCadastraUsuarioPassivo,
-    FormCadastrarVeiculo
+    FormLogin
 )
 from .models import UserType, Veiculo
 from .objects import Button
@@ -105,74 +103,74 @@ def view_cadastrar_usuario(request):
     return render(request, 'constel/v2/form_cadastro.html', context)
 
 
-@login_required
-@permission('patrimonio - combustivel', )
-def view_cadastrar_usuario_passivo(request):
-    """
-    View de cadastro de novos usuários passivos.
-    :param request: POST form
-    :return:
-    """
-
-    if request.method == 'POST':
-        form = FormCadastraUsuarioPassivo(request.POST)
-
-        if form.is_valid():
-            form.save()
-            user = User.objects.get(username=form.cleaned_data['username'])
-            modelo = form.cleaned_data['modelo']
-            placa = form.cleaned_data['placa']
-            cor = form.cleaned_data['cor']
-            user_type = UserType(user=user)
-            user_type.save()
-            veiculo = Veiculo(user=user, modelo=modelo, placa=placa, cor=cor)
-            veiculo.save()
-
-            return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
-    else:
-        form = FormCadastraUsuarioPassivo()
-
-    context = {
-        'form': form,
-        'callback': 'gc_menu_cadastros',
-        'button_submit_text': 'Cadastrar beneficiário',
-        'callback_text': 'Cancelar',
-        'pagina_titulo': 'Combustível',
-        'menu_titulo': 'Cadastro de beneficiário',
-    }
-
-    return render(request, 'constel/cadastra_usuario_passivo.html', context)
-
-
-@login_required
-@permission('patrimonio - combustivel', )
-def view_cadastrar_veiculo(request):
-    """
-    View de cadastro de veículos de funcionários existentes
-    :param request:
-    :return: formulário de cadastro
-    """
-
-    if request.method == 'POST':
-        form = FormCadastrarVeiculo(request.POST)
-
-        if form.is_valid():
-            form.save()
-
-            return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
-    else:
-        form = FormCadastrarVeiculo()
-
-    context = {
-        'form': form,
-        'callback': 'gc_menu_cadastros',
-        'button_submit_text': 'Cadastrar veículo',
-        'callback_text': 'Cancelar',
-        'pagina_titulo': 'Combustível',
-        'menu_titulo': 'Cadastro de veículo',
-    }
-
-    return render(request, 'constel/cadastra_veiculo.html', context)
+# @login_required
+# @permission('patrimonio - combustivel', )
+# def view_cadastrar_usuario_passivo(request):
+#     """
+#     View de cadastro de novos usuários passivos.
+#     :param request: POST form
+#     :return:
+#     """
+#
+#     if request.method == 'POST':
+#         form = FormCadastraUsuarioPassivo(request.POST)
+#
+#         if form.is_valid():
+#             form.save()
+#             user = User.objects.get(username=form.cleaned_data['username'])
+#             modelo = form.cleaned_data['modelo']
+#             placa = form.cleaned_data['placa']
+#             cor = form.cleaned_data['cor']
+#             user_type = UserType(user=user)
+#             user_type.save()
+#             veiculo = Veiculo(user=user, modelo=modelo, placa=placa, cor=cor)
+#             veiculo.save()
+#
+#             return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
+#     else:
+#         form = FormCadastraUsuarioPassivo()
+#
+#     context = {
+#         'form': form,
+#         'callback': 'gc_menu_cadastros',
+#         'button_submit_text': 'Cadastrar beneficiário',
+#         'callback_text': 'Cancelar',
+#         'pagina_titulo': 'Combustível',
+#         'menu_titulo': 'Cadastro de beneficiário',
+#     }
+#
+#     return render(request, 'constel/cadastra_usuario_passivo.html', context)
+#
+#
+# @login_required
+# @permission('patrimonio - combustivel', )
+# def view_cadastrar_veiculo(request):
+#     """
+#     View de cadastro de veículos de funcionários existentes
+#     :param request:
+#     :return: formulário de cadastro
+#     """
+#
+#     if request.method == 'POST':
+#         form = FormCadastrarVeiculo(request.POST)
+#
+#         if form.is_valid():
+#             form.save()
+#
+#             return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
+#     else:
+#         form = FormCadastrarVeiculo()
+#
+#     context = {
+#         'form': form,
+#         'callback': 'gc_menu_cadastros',
+#         'button_submit_text': 'Cadastrar veículo',
+#         'callback_text': 'Cancelar',
+#         'pagina_titulo': 'Combustível',
+#         'menu_titulo': 'Cadastro de veículo',
+#     }
+#
+#     return render(request, 'constel/cadastra_veiculo.html', context)
 
 
 def view_login(request):

@@ -35,6 +35,7 @@ class Ont(models.Model):
         (2, 'Aplicada'),
         (3, 'Defeito'),
         (4, 'Devolvida'),
+        (4, 'Retirada'),
     ]
     codigo = models.CharField(max_length=20, null=False, blank=False, unique=True, )
     modelo = models.ForeignKey(Modelo, on_delete=models.PROTECT, related_name='ont_modelo')
