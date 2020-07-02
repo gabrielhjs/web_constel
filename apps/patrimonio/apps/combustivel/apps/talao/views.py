@@ -154,7 +154,7 @@ def cadastrar_talao(request):
 
 
 @login_required()
-@permission('patrimonio - combustivel', 'patrimonio - combustivel - talao', )
+@permission('patrimonio - combustivel',)
 def cadastrar_beneficiario(request):
     """
     View de carregamento e gestão do cadastro de beneficiários de vale,
@@ -193,7 +193,7 @@ def cadastrar_beneficiario(request):
 
 
 @login_required()
-@permission('patrimonio - combustivel', 'patrimonio - combustivel - talao', )
+@permission('patrimonio - combustivel')
 def cadastrar_veiculo(request):
     """
     View de carregamento e gestão do cadastro de veículos de beneficiários,
