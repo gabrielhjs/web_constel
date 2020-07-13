@@ -244,3 +244,33 @@ class FormFiltraQ(forms.Form):
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormFiltraQData(forms.Form):
+    """
+    Formulário que permite filtrar por algum parametro especificado e por data
+    """
+
+    q = forms.CharField(
+        label='Filtrar por',
+        required=False
+    )
+    data_inicial = forms.DateField(widget=DateInput(), required=False)
+    data_final = forms.DateField(widget=DateInput(), required=False)
+
+    def __init__(self, descricao='', *args, **kwargs):
+        super(FormFiltraQData, self).__init__(*args, **kwargs)
+
+        self.fields['q'].widget = forms.TextInput(attrs={'placeholder': descricao})
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        super(FormFiltraQData, self).clean()
+        form_data = self.cleaned_data
+
+        if form_data['data_inicial'] >= form_data['data_final']:
+            self.errors['data_inicial'] = ['A data inicial não pode ser mais recente que a data final']
+
+        return form_data

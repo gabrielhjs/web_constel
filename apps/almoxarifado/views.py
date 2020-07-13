@@ -12,17 +12,14 @@ from django.db.models import (
     Subquery,
     F,
     IntegerField,
-    DurationField,
     ExpressionWrapper,
     DecimalField,
-    DateField,
 )
-from django.db.models.functions import TruncDate
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from constel.apps.controle_acessos.decorator import permission
-from constel.forms import FormDataInicialFinal, FormDataInicialFinalFuncionario
+from constel.forms import FormDataInicialFinal, FormDataInicialFinalFuncionario, FormFiltraQData
 from constel.models import UserType
 
 from .forms import *
@@ -627,6 +624,125 @@ def consulta_fornecedor(request):
 
 @login_required()
 @permission('almoxarifado', )
+def consulta_material_saida(request):
+    menu = menu_consultas(request)
+
+    material = request.GET.get('q', '')
+    data_inicial = request.GET.get('data_inicial', '')
+    data_final = request.GET.get('data_final', '')
+
+    form = FormFiltraQData(
+        descricao="Nome ou ID do material",
+        initial={
+            'q': material,
+            'data_inicial': data_inicial,
+            'data_final': data_final,
+        }
+    )
+
+    query = Q()
+
+    if material != '':
+        query = query & Q(
+            Q(material__codigo__icontains=material) |
+            Q(material__material__icontains=material)
+        )
+
+    if data_inicial != '':
+        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
+        query = query & Q(data__gte=data_inicial)
+
+    if data_final != '':
+        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
+        query = query & Q(data__lte=data_final)
+
+    itens = MaterialSaida.objects.filter(
+        query
+    ).values(
+        'material__codigo',
+        'material__material',
+    ).annotate(
+        total=Sum(F('quantidade')),
+    ).order_by(
+        '-total',
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/consulta_material_saida.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def consulta_material_saida_detalhe(request, codigo):
+    menu = menu_consultas(request)
+
+    data_inicial = request.GET.get('data_inicial', '')
+    data_final = request.GET.get('data_final', '')
+
+    form = FormDataInicialFinal(
+        initial={
+            'data_inicial': data_inicial,
+            'data_final': data_final,
+        }
+    )
+
+    query = Q(material__codigo=codigo)
+
+    if data_inicial != '':
+        data_inicial = datetime.datetime.strptime(data_inicial, "%Y-%m-%d").date()
+        query = query & Q(data__gte=data_inicial)
+
+    if data_final != '':
+        data_final = datetime.datetime.strptime(data_final, "%Y-%m-%d").date()
+        query = query & Q(data__lte=data_final)
+
+    itens = MaterialSaida.objects.filter(
+        query
+    ).values(
+        'user_to__first_name',
+        'user_to__last_name',
+    ).annotate(
+        total=Sum(F('quantidade')),
+    ).order_by(
+        '-total',
+    ).exclude(
+        total__lte=0,
+    )
+
+    material = Material.objects.filter(
+        codigo=codigo
+    ).values(
+        'codigo',
+        'material',
+    )[0]
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'filtrar',
+        'material': material,
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/consulta_material_saida_detalhe.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
 def consulta_fornecedor_detalhe(request, material):
     menu = menu_consultas(request)
 
@@ -653,7 +769,6 @@ def consulta_fornecedor_detalhe(request, material):
     context.update(menu)
 
     return render(request, 'almoxarifado/v2/consulta_fornecedor_detalhe.html', context)
-
 
 
 @login_required()

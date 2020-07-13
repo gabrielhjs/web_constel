@@ -1,0 +1,42 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <tbody>
+            <tr class="text-md-left">
+                <td>Código</td>
+                <td>{{ material.codigo }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Material</td>
+                <td>{{ material.material|upper }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0 mt-1">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Funcionários</th>
+            </tr>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Qtde</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in page_obj %}
+            <tr>
+                <td>{{ item.user_to__first_name|title }} {{ item.user_to__last_name|title }}</td>
+                <td style="color: yellow;">{{ item.total }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_material_saida' %}?{{ request.GET.urlencode }}">voltar</a>
+</div>
+{% endblock %}

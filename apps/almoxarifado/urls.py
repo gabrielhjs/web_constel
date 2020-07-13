@@ -97,4 +97,14 @@ urlpatterns = [
         views.consulta_fornecedor_detalhe,
         name='almoxarifado_consulta_fornecedor_detalhe',
     ),
+    path(
+        'almoxarifado/consultas/materiais/saidas/',
+        views.consulta_material_saida,
+        name='almoxarifado_consulta_material_saida',
+    ),
+    path(
+        'almoxarifado/consultas/materiais/saidas/<int:codigo>/',
+        views.consulta_material_saida_detalhe,
+        name='almoxarifado_consulta_material_saida_detalhe',
+    ),
 ]
