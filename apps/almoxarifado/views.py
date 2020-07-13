@@ -713,6 +713,7 @@ def consulta_material_saida_detalhe(request, codigo):
         'user_to__last_name',
     ).annotate(
         total=Sum(F('quantidade')),
+        qtde=Count(F('quantidade')),
     ).order_by(
         '-total',
     ).exclude(

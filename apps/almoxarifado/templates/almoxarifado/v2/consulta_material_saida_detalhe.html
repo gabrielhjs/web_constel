@@ -23,14 +23,16 @@
             </tr>
             <tr>
                 <th scope="col">Nome</th>
-                <th scope="col">Qtde</th>
+                <th scope="col">Qtde retiradas</th>
+                <th scope="col">Qtde material</th>
             </tr>
         </thead>
         <tbody>
         {% for item in page_obj %}
             <tr>
                 <td>{{ item.user_to__first_name|title }} {{ item.user_to__last_name|title }}</td>
-                <td style="color: yellow;">{{ item.total }}</td>
+                <td style="font-size: 1.2em;color: yellow;">{{ item.qtde }}</td>
+                <td style="font-size: 1.2em;color: yellow;">{{ item.total }}</td>
             </tr>
         {% endfor %}
     </table>

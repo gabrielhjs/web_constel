@@ -20,7 +20,7 @@
             <tr class="text-md-left">
                 <td>{{ item.material__codigo }}</td>
                 <td>{{ item.material__material|upper }}</td>
-                <td>{{ item.total }}</td>
+                <td style="font-size: 1.2em;color: yellow;">{{ item.total }}</td>
                 <td>
                     <a class="btn btn-primary btn-sm"
                         href="{% url 'almoxarifado_consulta_material_saida_detalhe' item.material__codigo %}?{{ request.GET.urlencode }}">
