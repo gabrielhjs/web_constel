@@ -181,3 +181,29 @@ class FormFornecedor(forms.Form):
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormMaterialEdita(forms.ModelForm):
+
+    class Meta:
+        model = Material
+        fields = ['material', 'descricao', 'tipo']
+
+    def __init__(self, *args, **kwargs):
+        super(FormMaterialEdita, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormMaterialFornecedorPrazo(forms.ModelForm):
+
+    class Meta:
+        model = MaterialFornecedorPrazo
+        fields = ['fornecedor', 'dias', 'dias_uteis']
+
+    def __init__(self, *args, **kwargs):
+        super(FormMaterialFornecedorPrazo, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})

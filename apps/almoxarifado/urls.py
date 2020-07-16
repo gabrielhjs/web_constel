@@ -38,6 +38,31 @@ urlpatterns = [
         name='almoxarifado_cadastrar_fornecedor',
     ),
     path(
+        'almoxarifado/edicao/',
+        views.edicao,
+        name='almoxarifado_edicao',
+    ),
+    path(
+        'almoxarifado/edicao/material/',
+        views.edicao_material,
+        name='almoxarifado_edicao_material',
+    ),
+    path(
+        'almoxarifado/edicao/material/<int:material>/',
+        views.edicao_material_edita,
+        name='almoxarifado_edicao_material_edita',
+    ),
+    path(
+        'almoxarifado/edicao/material/<int:material>/fornecedor/prazo/',
+        views.edicao_material_fornecedor_prazo,
+        name='almoxarifado_edicao_material_fornecedor_prazo',
+    ),
+    path(
+        'almoxarifado/edicao/fornecedor',
+        views.edicao,
+        name='almoxarifado_edicao_fornecedor',
+    ),
+    path(
         'almoxarifado/entradas/material/',
         views.entrada_material,
         name='almoxarifado_entrada_material',

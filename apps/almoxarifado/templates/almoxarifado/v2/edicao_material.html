@@ -1,0 +1,37 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="6">Materiais</th>
+            </tr>
+            <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Data de cadastro/edição</th>
+                <th scope="col">Cadastrado por</th>
+                <th scope="col">Edição</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in page_obj %}
+            <tr>
+                <td>{{ item.codigo }}</td>
+                <td>{{ item.material }}</td>
+                <td>{{ item.descricao }}</td>
+                <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                <td>
+                    <a href="{% url 'almoxarifado_edicao_material_edita' item.codigo %}?{{ request.GET.urlencode }}">
+                        <i class="far fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

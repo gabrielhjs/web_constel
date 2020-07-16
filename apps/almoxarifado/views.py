@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404
 from django.db.models import (
     Count,
     Max,
@@ -19,12 +20,17 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from constel.apps.controle_acessos.decorator import permission
-from constel.forms import FormDataInicialFinal, FormDataInicialFinalFuncionario, FormFiltraQData
+from constel.forms import (
+    FormDataInicialFinal,
+    FormDataInicialFinalFuncionario,
+    FormFiltraQData,
+    FormFiltraQ
+)
 from constel.models import UserType
 
 from .forms import *
-from .menu import menu_cadastros, menu_consultas, menu_principal
-from .models import Material, Fornecedor, MaterialEntrada
+from .menu import menu_cadastros, menu_consultas, menu_principal, menu_edicao
+from .models import Material, Fornecedor, MaterialEntrada, MaterialFornecedorPrazo
 
 
 @login_required()
@@ -125,10 +131,125 @@ def cadastra_fornecedor(request):
     return render(request, 'almoxarifado/v2/cadastra_fornecedor.html', context)
 
 
-def entrada(request):
-    menu = menu_principal(request)
+@login_required()
+@permission('almoxarifado', )
+def edicao(request):
+    context = menu_edicao(request)
 
-    return render(request, 'almoxarifado/v2/')
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def edicao_material(request):
+    menu = menu_edicao(request)
+
+    material = request.GET.get('q', '')
+
+    form = FormFiltraQ(
+        descricao='nome ou código',
+        initial={
+            'q': material
+        }
+    )
+
+    query = Q()
+
+    if material != '':
+        query = query & Q(
+            Q(codigo__icontains=material) |
+            Q(material__icontains=material)
+        )
+
+    itens = Material.objects.filter(
+        query
+    ).values(
+        'codigo',
+        'material',
+        'descricao',
+        'data',
+        'user__first_name',
+        'user__last_name',
+    ).order_by(
+        'material'
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/edicao_material.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def edicao_material_edita(request, material):
+    menu = menu_edicao(request)
+
+    material = get_object_or_404(Material, codigo=material)
+
+    form = FormMaterialEdita(request.POST or None, instance=material)
+
+    if form.is_valid():
+        form.save()
+
+        return HttpResponseRedirect('/almoxarifado/edicao/material/?' + request.GET.urlencode())
+
+    itens = MaterialFornecedorPrazo.objects.filter(
+        material=material
+    ).values(
+        'fornecedor__nome',
+        'dias',
+        'dias_uteis',
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Salvar',
+        'material_codigo': material.codigo
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/edicao_material_edita.html', context)
+
+
+def edicao_material_fornecedor_prazo(request, material):
+    menu = menu_edicao(request)
+
+    material = get_object_or_404(Material, codigo=material)
+
+    form = FormMaterialFornecedorPrazo(request.POST or None)
+
+    if form.is_valid():
+        MaterialFornecedorPrazo(
+            material=material,
+            fornecedor=form.cleaned_data['fornecedor'],
+            dias=form.cleaned_data['dias'],
+            dias_uteis=form.cleaned_data['dias_uteis'],
+        ).save()
+
+        return HttpResponseRedirect('/almoxarifado/edicao/material/'+str(material.codigo)+'/?'+request.GET.urlencode())
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Cadastrar prazo',
+        'material_codigo': material.codigo,
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/edicao_material_fornecedor_prazo.html', context)
 
 
 @login_required()

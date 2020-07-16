@@ -1,6 +1,7 @@
 """
-Módulo que contém as configurações dos menus gerais do sistema
+Módulo que contém as configurações dos menus gerais do almoxarifado
 """
+
 
 def menu_principal(request):
     """
@@ -11,6 +12,7 @@ def menu_principal(request):
     menu_buttons = [
         {'link': '/almoxarifado/cont', 'text': 'Cont2'},
         {'link': '/almoxarifado/cadastros', 'text': 'Cadastros'},
+        {'link': '/almoxarifado/edicao', 'text': 'Edição'},
         {'link': '/almoxarifado/entradas/material', 'text': 'Entrada de material'},
         {'link': '/almoxarifado/saidas/material/lista', 'text': 'Saída de material'},
         {'link': '/almoxarifado/consultas', 'text': 'Consultas'},
@@ -42,6 +44,28 @@ def menu_cadastros(request):
     context = {
         'app': 'Almoxarifado',
         'menu': 'Cadastros',
+        'menu_buttons': menu_buttons,
+        'button_return': button_return,
+    }
+
+    return context
+
+
+def menu_edicao(request):
+    """
+    Funcão que contém as configurações do menu de edição do almoxarifado.
+    Retorna um dicionário com as configurações
+    """
+
+    menu_buttons = [
+        {'link': '/almoxarifado/edicao/material', 'text': 'Editar materiais'},
+        # {'link': '/almoxarifado/edicao/fornecedor', 'text': 'Editar fornecedores'},
+    ]
+    button_return = {'link': '/almoxarifado', 'text': 'Voltar'}
+
+    context = {
+        'app': 'Almoxarifado',
+        'menu': 'Edição',
         'menu_buttons': menu_buttons,
         'button_return': button_return,
     }

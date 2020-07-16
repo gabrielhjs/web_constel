@@ -59,6 +59,22 @@ class MaterialQuantidade(models.Model):
         return '%s' % self.material
 
 
+class MaterialFornecedorPrazo(models.Model):
+    """
+    Modelo que gerencia os prazos de entrega de material de cada fornecedor
+    """
+
+    material = models.ForeignKey(Material, on_delete=models.CASCADE, related_name='almoxarifado_material_prazo')
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE, related_name='almoxarifado_fornecedor_prazo')
+    dias = models.IntegerField(null=False, blank=False)
+    dias_uteis = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('material', 'fornecedor',)
+
+    objects = None
+
+
 class Ordem(models.Model):
     """
     Model que gerencia a tabela de controle de ordens de entrada e saída do almoxarifado.
