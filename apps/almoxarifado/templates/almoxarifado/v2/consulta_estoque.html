@@ -8,12 +8,16 @@
                 <th scope="col" colspan="7">Estoque</th>
             </tr>
             <tr>
+                <th scope="col" colspan="4">Material</th>
+                <th scope="col" colspan="2">Realizar compra</th>
+            </tr>
+            <tr>
                 <th scope="col">Código</th>
                 <th scope="col">Material</th>
-                <th scope="col">Descrição</th>
                 <th scope="col">Estoque (unidades)</th>
-                <th scope="col">SM/D (unidades)</th>
-                <th scope="col">Autonomia Prev. (dias)</th>
+                <th scope="col">Autonomia (dias)</th>
+                <th scope="col">Min. (dias)</th>
+                <th scope="col">Max. (dias)</th>
                 <th scope="col">Detalhes</th>
             </tr>
         </thead>
@@ -21,15 +25,23 @@
             {% for item in page_obj %}
             <tr class="text-md-left">
                 <td>{{ item.codigo }}</td>
-                <td>{{ item.material|truncatechars:40 }}</td>
-                <td>{{ item.descricao|truncatechars:100 }}</td>
+                <td>{{ item.material }}</td>
                 <td style="font-size: 1.2em;">{{item.quantidade__quantidade }}</td>
-                <td style="font-size: 1.2em; color: yellow;">{% if item.media %}&darr; {% endif %}{{ item.media|default_if_none:''|floatformat:-2 }}</td>
                 <td style="font-size: 1.2em; color: {% if item.pt <= 15 %}Red{% elif item.pt <= 30 %}Yellow{% else %}Lime{% endif %};">{{ item.pt|default_if_none:'' }}</td>
+                <td style="font-size: 1.2em; color: {% if item.pt_min <= 5 %}Red{% elif item.pt_min <= 10 %}Yellow{% else %}Lime{% endif %};">
+                    {{ item.pt_min|default_if_none:'' }}
+                </td>
+                <td style="font-size: 1.2em; color: {% if item.pt_max <= 5 %}Red{% elif item.pt_max <= 10 %}Yellow{% else %}Lime{% endif %};">
+                    {{ item.pt_max|default_if_none:'' }}
+                </td>
                 <td>
                     <a class="btn btn-primary btn-sm"
+                        href="{% url 'almoxarifado_consulta_estoque_fornecedor_prazo' item.codigo %}?{{ request.GET.urlencode }}">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                    <a class="btn btn-primary btn-sm"
                         href="{% url 'almoxarifado_consulta_estoque_detalhe' item.codigo %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">
-                        gráfico
+                        <i class="fas fa-chart-line"></i>
                     </a>
                 </td>
             </tr>

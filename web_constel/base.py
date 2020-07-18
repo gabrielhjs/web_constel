@@ -66,7 +66,7 @@ WSGI_APPLICATION = 'web_constel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydb',
+        'NAME': 'teste',
         'USER': 'postgres',
         'PASSWORD': 'admin123',
         'HOST': '127.0.0.1',

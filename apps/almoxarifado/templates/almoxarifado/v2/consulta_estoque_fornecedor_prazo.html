@@ -1,0 +1,33 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Prazo de entrega de fornecedores</th>
+            </tr>
+            <tr>
+                <th scope="col">Fornecedor</th>
+                <th scope="col">Prazo de entrega (dias)</th>
+                <th scope="col">Dias úteis</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in page_obj %}
+            <tr>
+                <td>{{ item.fornecedor__nome|upper }}</td>
+                <td>{{ item.dias }}</td>
+                <td>
+                    {% if item.dias_uteis %}<i class="fas fa-check"></i>
+                    {% else %}<i class="fas fa-times"></i>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_estoque' %}?{{ request.GET.urlencode }}">voltar</a>
+</div>
+{% endblock %}

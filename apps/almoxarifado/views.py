@@ -329,26 +329,26 @@ def consulta_estoque(request):
         'material__material'
     ).annotate(
         total=ExpressionWrapper(Sum(F('quantidade')), output_field=DecimalField())
-    ).annotate(
-        media=F('total')/30.0
     ).values(
-        'media'
+        'total'
     )
-
-    # print(query1)
 
     itens = Material.objects.filter(
         query,
-    ).annotate(
-        media=Subquery(subquery1)
     ).values(
         'codigo',
         'material',
-        'descricao',
         'quantidade__quantidade',
-        'media',
     ).annotate(
-        pt=ExpressionWrapper(F('quantidade__quantidade')/F('media'), output_field=IntegerField())
+        total=Subquery(subquery1)
+    ).annotate(
+        pt=ExpressionWrapper(
+            F('quantidade__quantidade') * float(data_intervalo) / F('total'),
+            output_field=IntegerField()
+        )
+    ).annotate(
+        pt_min=ExpressionWrapper(F('pt') - Max('almoxarifado_material_prazo__dias'), output_field=IntegerField()),
+        pt_max=ExpressionWrapper(F('pt') - Min('almoxarifado_material_prazo__dias'), output_field=IntegerField()),
     ).exclude(
         entradas__isnull=True,
     ).order_by('material')
@@ -365,6 +365,31 @@ def consulta_estoque(request):
     context.update(menu)
 
     return render(request, 'almoxarifado/v2/consulta_estoque.html', context)
+
+
+def consulta_estoque_prazo_fornecedor(request, material):
+    menu = menu_consultas(request)
+
+    material = get_object_or_404(Material, codigo=material)
+
+    itens = MaterialFornecedorPrazo.objects.filter(
+        material=material
+    ).values(
+        'fornecedor__nome',
+        'dias',
+        'dias_uteis',
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/consulta_estoque_fornecedor_prazo.html', context)
 
 
 def consulta_estoque_detalhe(request, material):
