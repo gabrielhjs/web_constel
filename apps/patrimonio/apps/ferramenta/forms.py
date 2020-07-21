@@ -9,6 +9,12 @@ class FormCadastraFerramenta(forms.ModelForm):
         model = Ferramenta
         fields = ['nome', 'descricao', ]
 
+    def __init__(self, *args, **kwargs):
+        super(FormCadastraFerramenta, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
 
 class FormEntradaFerramenta(forms.ModelForm):
 

@@ -53,9 +53,9 @@
 {% include 'constel/v2/pagination.html' %}
 <div class="row justify-content-center m-0">
     {% if tipo %}
-    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_ordem_saida' %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">voltar</a>
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_ordem_saida' %}?{{ request.GET.urlencode }}">voltar</a>
     {% else %}
-    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_ordem_entrada' %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">voltar</a>
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_ordem_entrada' %}?{{ request.GET.urlencode }}">voltar</a>
     {% endif %}
     <a class="btn btn-primary px-5 my-3 ml-3" href="{% url 'almoxarifado_saida_lista_imprimi' ordem.id %}" target="_blank">imprimir ficha</a>
 </div>

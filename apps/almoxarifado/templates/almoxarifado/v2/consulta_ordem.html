@@ -32,7 +32,7 @@
                 {% endif %}
                 <td>
                     <a class="btn btn-primary btn-sm"
-                        href="{% url 'almoxarifado_consulta_ordem_detalhe' tipo item.id %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">
+                        href="{% url 'almoxarifado_consulta_ordem_detalhe' tipo item.id %}?{{ request.GET.urlencode }}">
                         Detalhes
                     </a>
                 </td>

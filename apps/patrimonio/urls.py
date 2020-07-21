@@ -10,11 +10,11 @@ urlpatterns = [
     path('', include('apps.patrimonio.apps.combustivel.urls')),
 
 
-    path(
-        'patrimonio/',
-        views.view_menu_principal,
-        name='patrimonio_menu_principal',
-    ),
+    # path(
+    #     'patrimonio/',
+    #     views.view_menu_principal,
+    #     name='patrimonio_menu_principal',
+    # ),
     path(
         'patrimonio/menu-cadastros/',
         views.view_menu_cadastros,
@@ -31,7 +31,7 @@ urlpatterns = [
         name='patrimonio_menu_saidas',
     ),
     path(
-        'patrimonio/menu-consultas/',
+        'patrimonio/consultas/',
         views.view_menu_consultas,
         name='patrimonio_menu_consultas',
     ),
@@ -39,5 +39,18 @@ urlpatterns = [
         'patrimonio/menu-relatorios/',
         views.view_menu_relatorios,
         name='patrimonio_menu_relatorios',
+    ),
+
+    # Novas urls
+
+    path(
+        'patrimonio/',
+        views.index,
+        name='patrimonio_menu_principal',
+    ),
+    path(
+        'patrimonio/cadastros/',
+        views.cadastros,
+        name='patrimonio_menu_cadastros',
     ),
 ]

@@ -43,6 +43,6 @@
     });
 </script>
 <div class="row justify-content-center m-0">
-    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_estoque' %}">voltar</a>
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_estoque' %}?{{ request.GET.urlencode }}">voltar</a>
 </div>
 {% endblock %}

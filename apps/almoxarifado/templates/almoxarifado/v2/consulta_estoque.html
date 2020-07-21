@@ -40,7 +40,7 @@
                         <i class="fas fa-shopping-cart"></i>
                     </a>
                     <a class="btn btn-primary btn-sm"
-                        href="{% url 'almoxarifado_consulta_estoque_detalhe' item.codigo %}?data_inicial={% firstof request.GET.data_inicial '' %}&data_final={% firstof request.GET.data_final '' %}">
+                        href="{% url 'almoxarifado_consulta_estoque_detalhe' item.codigo %}?{{ request.GET.urlencode }}">
                         <i class="fas fa-chart-line"></i>
                     </a>
                 </td>

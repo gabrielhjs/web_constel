@@ -29,4 +29,12 @@ urlpatterns = [
         views.view_consulta_ferramentas_estoque,
         name='patrimonio_consulta_ferramentas_estoque',
     ),
+
+    # Novas urls
+
+    path(
+        'patrimonio/cadastros/ferramenta/',
+        views.cadastra_ferramenta,
+        name='patrimonio_cadastrar_ferramenta',
+    ),
 ]

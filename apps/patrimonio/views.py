@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from constel.objects import Button
 from constel.apps.controle_acessos.decorator import permission
 
+from .menu import menu_principal, menu_cadastros
+
 
 @login_required
 @permission('patrimonio', )
@@ -132,3 +134,20 @@ def view_menu_consultas(request):
 def view_menu_relatorios(request):
 
     return render(request, 'patrimonio/menu_relatorios.html')
+
+
+@login_required
+@permission('patrimonio', )
+def index(request):
+
+    context = menu_principal(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required
+@permission('patrimonio', )
+def cadastros(request):
+    context = menu_cadastros(request)
+
+    return render(request, 'constel/v2/app.html', context)

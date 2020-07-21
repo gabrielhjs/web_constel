@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from .forms import *
 from .models import *
+
 from constel.apps.controle_acessos.decorator import permission
+from ...menu import menu_cadastros
 
 
 @login_required
@@ -141,3 +144,48 @@ def view_consulta_ferramentas_estoque(request):
     }
 
     return render(request, 'ferramenta/consulta_ferramenta_estoque.html', context=context)
+
+
+@login_required
+@permission('patrimonio', )
+def cadastra_ferramenta(request):
+    menu = menu_cadastros(request)
+
+    if request.method == 'POST':
+        form = FormCadastraFerramenta(request.POST)
+
+        if form.is_valid():
+            ferramenta = Ferramenta(
+                nome=form.cleaned_data['nome'],
+                descricao=form.cleaned_data['descricao'],
+                user=request.user,
+            )
+            ferramenta.save()
+            FerramentaQuantidade(
+                ferramenta=ferramenta,
+                quantidade=0,
+            ).save()
+
+            return HttpResponseRedirect('/patrimonio/cadastros/ferramenta')
+    else:
+        form = FormCadastraFerramenta()
+
+    itens = Ferramenta.objects.values(
+        'nome',
+        'data',
+        'user__first_name',
+        'user__last_name',
+    ).order_by('-data')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Cadastrar nova ferramenta',
+    }
+    context.update(menu)
+
+    return render(request, 'ferramenta/v2/cadastra_ferramenta.html', context)
