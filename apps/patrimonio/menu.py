@@ -8,6 +8,9 @@ def menu_principal(request):
 
     menu_buttons = [
         {'link': '/patrimonio/combustivel/talao', 'text': 'Combustível'},
+        {'link': '/patrimonio/cadastros', 'text': 'Cadastros'},
+        {'link': '/patrimonio/entradas', 'text': 'Entradas'},
+        {'link': '/patrimonio/saidas', 'text': 'Saídas'},
     ]
     button_return = {'link': '/', 'text': 'Voltar'}
 
@@ -29,13 +32,57 @@ def menu_cadastros(request):
 
     menu_buttons = [
         {'link': '/patrimonio/cadastros/ferramenta', 'text': 'Cadastrar ferramenta'},
-        {'link': '/patrimonio/cadastros/patrimonio', 'text': 'Cadastrar patrimônio'},
+        {'link': '/patrimonio/cadastros/patrimonio', 'text': 'Cadastrar modelo de patrimônio'},
     ]
-    button_return = {'link': '/', 'text': 'Voltar'}
+    button_return = {'link': '/patrimonio', 'text': 'Voltar'}
 
     context = {
         'app': 'Patrimônio',
         'menu': 'Cadastros',
+        'menu_buttons': menu_buttons,
+        'button_return': button_return,
+    }
+
+    return context
+
+
+def menu_entradas(request):
+    """
+    Funcão que contém as configurações do menu de entradas do patrimônio.
+    Retorna um dicionário com as configurações
+    """
+
+    menu_buttons = [
+        {'link': '/patrimonio/entradas/ferramenta', 'text': 'Entrada de ferramenta'},
+        {'link': '/patrimonio/entradas/patrimonio', 'text': 'Entrada de patrimônio'},
+    ]
+    button_return = {'link': '/patrimonio', 'text': 'Voltar'}
+
+    context = {
+        'app': 'Patrimônio',
+        'menu': 'Entradas',
+        'menu_buttons': menu_buttons,
+        'button_return': button_return,
+    }
+
+    return context
+
+
+def menu_saidas(request):
+    """
+    Funcão que contém as configurações do menu de saídas do patrimônio.
+    Retorna um dicionário com as configurações
+    """
+
+    menu_buttons = [
+        {'link': '/patrimonio/saidas/ferramenta', 'text': 'Entrega de ferramenta'},
+        {'link': '/patrimonio/saidas/patrimonio', 'text': 'Entrega de patrimônio'},
+    ]
+    button_return = {'link': '/patrimonio', 'text': 'Voltar'}
+
+    context = {
+        'app': 'Patrimônio',
+        'menu': 'Saídas',
         'menu_buttons': menu_buttons,
         'button_return': button_return,
     }

@@ -7,7 +7,7 @@ from .forms import *
 from .models import *
 
 from constel.apps.controle_acessos.decorator import permission
-from ...menu import menu_cadastros
+from ...menu import menu_cadastros, menu_entradas, menu_saidas
 
 
 @login_required
@@ -189,3 +189,73 @@ def cadastra_ferramenta(request):
     context.update(menu)
 
     return render(request, 'ferramenta/v2/cadastra_ferramenta.html', context)
+
+
+@login_required
+@permission('patrimonio', )
+def entrada_ferramenta(request):
+    menu = menu_entradas(request)
+
+    if request.method == 'POST':
+        form = FormEntradaFerramenta(request.POST)
+
+        if form.is_valid():
+            FerramentaEntrada(
+                ferramenta=form.cleaned_data['ferramenta'],
+                quantidade=form.cleaned_data['quantidade'],
+                valor=form.cleaned_data['valor'],
+                observacao=form.cleaned_data['observacao'],
+                user=request.user,
+            ).save()
+            ferramenta = form.cleaned_data['ferramenta']
+            ferramenta.quantidade.quantidade += form.cleaned_data['quantidade']
+            ferramenta.quantidade.save()
+
+            return HttpResponseRedirect('/patrimonio/entradas/ferramenta')
+
+    else:
+        form = FormEntradaFerramenta()
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Registrar entrada',
+    }
+    context.update(menu)
+
+    return render(request, 'patrimonio/v2/entrada.html', context)
+
+
+@login_required
+@permission('patrimonio', )
+def saida_ferramenta(request):
+    menu = menu_saidas(request)
+
+    if request.method == 'POST':
+        form = FormSaidaFerramenta(request.POST)
+
+        if form.is_valid():
+            saida = FerramentaSaida(
+                ferramenta=form.cleaned_data['ferramenta'],
+                quantidade=form.cleaned_data['quantidade'],
+                observacao=form.cleaned_data['observacao'],
+                user_to=form.cleaned_data['user_to'],
+                user=request.user,
+            )
+            ferramenta = form.cleaned_data['ferramenta']
+            ferramenta.quantidade.quantidade -= form.cleaned_data['quantidade']
+
+            ferramenta.quantidade.save()
+            saida.save()
+
+            return HttpResponseRedirect('/patrimonio/saidas/ferramenta')
+
+    else:
+        form = FormSaidaFerramenta()
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Registrar entrega',
+    }
+    context.update(menu)
+
+    return render(request, 'patrimonio/v2/entrada.html', context)

@@ -10,12 +10,24 @@ class FormCadastraPatrimonio(forms.ModelForm):
         model = Patrimonio
         fields = ['nome', 'descricao', ]
 
+    def __init__(self, *args, **kwargs):
+        super(FormCadastraPatrimonio, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
 
 class FormEntradaPatrimonio(forms.ModelForm):
 
     class Meta:
         model = PatrimonioEntrada
         fields = ['patrimonio', 'codigo', 'valor', 'observacao', ]
+
+    def __init__(self, *args, **kwargs):
+        super(FormEntradaPatrimonio, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
     def clean_codigo(self):
         codigo = self.cleaned_data['codigo']
@@ -39,8 +51,10 @@ class FormSaidaPatrimonio(forms.ModelForm):
         self.fields['user_to'] = forms.ChoiceField(
             choices=users_name,
             label='Funcionário',
-            help_text='Funcionário que solicitou o patrimônio.',
         )
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         self.cleaned_data['user_to'] = User.objects.get(id=int(self.cleaned_data['user_to']))

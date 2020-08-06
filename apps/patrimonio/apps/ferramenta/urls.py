@@ -37,4 +37,14 @@ urlpatterns = [
         views.cadastra_ferramenta,
         name='patrimonio_cadastrar_ferramenta',
     ),
+    path(
+        'patrimonio/entradas/ferramenta/',
+        views.entrada_ferramenta,
+        name='patrimonio_entrada_ferramenta',
+    ),
+    path(
+        'patrimonio/saidas/ferramenta/',
+        views.saida_ferramenta,
+        name='patrimonio_saida_ferramenta',
+    ),
 ]

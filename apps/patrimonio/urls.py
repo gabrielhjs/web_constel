@@ -53,4 +53,14 @@ urlpatterns = [
         views.cadastros,
         name='patrimonio_menu_cadastros',
     ),
+    path(
+        'patrimonio/entradas/',
+        views.entradas,
+        name='patrimonio_menu_entradas',
+    ),
+    path(
+        'patrimonio/saidas/',
+        views.saidas,
+        name='patrimonio_menu_saidas',
+    ),
 ]

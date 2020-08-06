@@ -22,6 +22,12 @@ class FormEntradaFerramenta(forms.ModelForm):
         model = FerramentaEntrada
         fields = ['ferramenta', 'quantidade', 'valor', 'observacao', ]
 
+    def __init__(self, *args, **kwargs):
+        super(FormEntradaFerramenta, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
 
 class FormSaidaFerramenta(forms.ModelForm):
 
@@ -41,8 +47,10 @@ class FormSaidaFerramenta(forms.ModelForm):
         self.fields['user_to'] = forms.ChoiceField(
             choices=users_name,
             label='Funcionário',
-            help_text='Funcionário que solicitou a ferramenta.',
         )
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         form_data = self.cleaned_data

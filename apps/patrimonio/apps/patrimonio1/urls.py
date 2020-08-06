@@ -29,4 +29,22 @@ urlpatterns = [
         views.view_consulta_patrimonios,
         name='patrimonio_consulta_patrimonios',
     ),
+
+    # Novas urls
+
+    path(
+        'patrimonio/cadastros/patrimonio/',
+        views.cadastra_patrimonio,
+        name='patrimonio_cadastrar_patrimonio',
+    ),
+    path(
+        'patrimonio/entradas/patrimonio/',
+        views.entrada_patrimonio,
+        name='patrimonio_entrada_patrimonio',
+    ),
+    path(
+        'patrimonio/saidas/patrimonio/',
+        views.saida_patrimonio,
+        name='patrimonio_saida_patrimonio',
+    ),
 ]
