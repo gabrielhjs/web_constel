@@ -2,12 +2,15 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Q, Subquery, OuterRef, Max, ExpressionWrapper, CharField, F
 
 from .forms import *
 from .models import *
 from constel.apps.controle_acessos.decorator import permission
 
-from ...menu import menu_cadastros, menu_entradas, menu_saidas
+from ...menu import menu_cadastros, menu_entradas, menu_saidas, menu_consultas
+
+from constel.forms import FormFiltraQ
 
 
 @login_required
@@ -241,3 +244,102 @@ def saida_patrimonio(request):
     context.update(menu)
 
     return render(request, 'patrimonio/v2/entrada.html', context)
+
+
+@login_required
+@permission('patrimonio', )
+def consulta_patrimonio(request):
+    menu = menu_consultas(request)
+
+    patrimonio = request.GET.get('q', '')
+
+    form = FormFiltraQ(
+        descricao="patrimônio",
+        initial={
+            'q': patrimonio,
+        }
+    )
+
+    query = Q()
+
+    if patrimonio != '':
+        query = query & Q(nome__icontains=patrimonio)
+
+    itens = Patrimonio.objects.filter(
+        query
+    ).values(
+        'nome',
+        'data',
+        'user__first_name',
+        'user__last_name',
+    ).order_by('nome')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Filtrar',
+        'page_obj': page_obj,
+    }
+    context.update(menu)
+
+    return render(request, 'patrimonio1/v2/consulta_patrimonio.html', context=context)
+
+
+@login_required
+@permission('patrimonio', )
+def consulta_patrimonio_status(request):
+    menu = menu_consultas(request)
+
+    patrimonio = request.GET.get('q', '')
+
+    form = FormFiltraQ(
+        descricao="patrimônio",
+        initial={
+            'q': patrimonio,
+        }
+    )
+
+    query = Q()
+
+    if patrimonio != '':
+        query = query & Q(
+            Q(codigo__icontains=patrimonio) |
+            Q(patrimonio__nome__icontains=patrimonio)
+        )
+
+    subquery = PatrimonioSaida.objects.filter(
+        entrada=OuterRef('pk')
+    ).annotate(
+        Max('data')
+    )
+
+    itens = PatrimonioEntrada.objects.filter(
+        query
+    ).annotate(
+        user_to_first_name=Subquery(subquery.values('user_to__first_name')),
+        user_to_last_name=Subquery(subquery.values('user_to__last_name')),
+        ultima_entrega=Subquery(subquery.values('data')),
+    ).values(
+        'codigo',
+        'patrimonio__nome',
+        'status',
+        'user_to_first_name',
+        'user_to_last_name',
+        'ultima_entrega',
+    ).order_by('patrimonio__nome', 'codigo')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Filtrar',
+        'page_obj': page_obj,
+    }
+    context.update(menu)
+
+    return render(request, 'patrimonio1/v2/consulta_patrimonio_status.html', context=context)

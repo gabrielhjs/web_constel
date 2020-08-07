@@ -47,4 +47,14 @@ urlpatterns = [
         views.saida_patrimonio,
         name='patrimonio_saida_patrimonio',
     ),
+    path(
+        'patrimonio/consultas/patrimonio/',
+        views.consulta_patrimonio,
+        name='patrimonio_saida_patrimonio',
+    ),
+    path(
+        'patrimonio/consultas/patrimonio/status/',
+        views.consulta_patrimonio_status,
+        name='patrimonio_saida_patrimonio_status',
+    ),
 ]

@@ -1,14 +1,15 @@
 {% extends 'constel/v2/app.html' %}
 {% block app_content %}
-{% include 'constel/v2/form_post.html' %}
+{% include 'constel/v2/form_get_inline.html' %}
 <div class="table-responsive table-content">
     <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
         <thead>
             <tr>
-                <th scope="col" colspan="5">Modelos cadastrados</th>
+                <th scope="col" colspan="5">Modelos de património</th>
             </tr>
             <tr>
                 <th scope="col">Nome</th>
+                <th scope="col">Descrição</th>
                 <th scope="col">Data de cadastro</th>
                 <th scope="col">Cadastrado por</th>
             </tr>
@@ -17,8 +18,9 @@
         {% for item in page_obj %}
             <tr>
                 <td>{{ item.nome|title }}</td>
+                <td>{{ item.descricao|lower }}</td>
                 <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
-                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }} {{ item.user__password|title }}</td>
             </tr>
         {% endfor %}
     </table>

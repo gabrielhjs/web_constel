@@ -30,11 +30,11 @@ urlpatterns = [
         views.view_menu_saidas,
         name='patrimonio_menu_saidas',
     ),
-    path(
-        'patrimonio/consultas/',
-        views.view_menu_consultas,
-        name='patrimonio_menu_consultas',
-    ),
+    # path(
+    #     'patrimonio/consultas/',
+    #     views.view_menu_consultas,
+    #     name='patrimonio_menu_consultas',
+    # ),
     path(
         'patrimonio/menu-relatorios/',
         views.view_menu_relatorios,
@@ -62,5 +62,10 @@ urlpatterns = [
         'patrimonio/saidas/',
         views.saidas,
         name='patrimonio_menu_saidas',
+    ),
+    path(
+        'patrimonio/consultas/',
+        views.consultas,
+        name='patrimonio_menu_consultas',
     ),
 ]

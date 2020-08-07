@@ -2,12 +2,15 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 from .forms import *
 from .models import *
 
 from constel.apps.controle_acessos.decorator import permission
-from ...menu import menu_cadastros, menu_entradas, menu_saidas
+from ...menu import menu_cadastros, menu_entradas, menu_saidas, menu_consultas
+
+from constel.forms import FormFiltraQ
 
 
 @login_required
@@ -259,3 +262,88 @@ def saida_ferramenta(request):
     context.update(menu)
 
     return render(request, 'patrimonio/v2/entrada.html', context)
+
+
+@login_required
+@permission('patrimonio', )
+def consulta_ferramenta(request):
+    menu = menu_consultas(request)
+
+    ferramenta = request.GET.get('q', '')
+
+    form = FormFiltraQ(
+        descricao="ferramenta",
+        initial={
+            'q': ferramenta,
+        }
+    )
+
+    query = Q()
+
+    if ferramenta != '':
+        query = query & Q(nome__icontains=ferramenta)
+
+    itens = Ferramenta.objects.filter(
+        query
+    ).values(
+        'nome',
+        'descricao',
+        'data',
+        'user__first_name',
+        'user__last_name',
+    ).order_by('nome')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Filtrar',
+        'page_obj': page_obj,
+    }
+    context.update(menu)
+
+    return render(request, 'ferramenta/v2/consulta_ferramenta.html', context=context)
+
+
+@login_required
+@permission('patrimonio', )
+def consulta_ferramenta_estoque(request):
+    menu = menu_consultas(request)
+
+    ferramenta = request.GET.get('q', '')
+
+    form = FormFiltraQ(
+        descricao="ferramenta",
+        initial={
+            'q': ferramenta,
+        }
+    )
+
+    query = Q()
+
+    if ferramenta != '':
+        query = query & Q(ferramenta__nome__icontains=ferramenta)
+
+    itens = FerramentaQuantidade.objects.filter(
+        query
+    ).values(
+        'ferramenta__nome',
+        'quantidade',
+    ).exclude(
+        quantidade__lte=0,
+    ).order_by('ferramenta__nome')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Filtrar',
+        'page_obj': page_obj,
+    }
+    context.update(menu)
+
+    return render(request, 'ferramenta/v2/consulta_ferramenta_estoque.html', context=context)

@@ -47,4 +47,14 @@ urlpatterns = [
         views.saida_ferramenta,
         name='patrimonio_saida_ferramenta',
     ),
+    path(
+        'patrimonio/consultas/ferramenta/',
+        views.consulta_ferramenta,
+        name='patrimonio_consulta_ferramenta',
+    ),
+    path(
+        'patrimonio/consultas/ferramenta/estoque/',
+        views.consulta_ferramenta_estoque,
+        name='patrimonio_consulta_ferramenta_estoque',
+    ),
 ]

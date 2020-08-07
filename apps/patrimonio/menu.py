@@ -11,6 +11,7 @@ def menu_principal(request):
         {'link': '/patrimonio/cadastros', 'text': 'Cadastros'},
         {'link': '/patrimonio/entradas', 'text': 'Entradas'},
         {'link': '/patrimonio/saidas', 'text': 'Saídas'},
+        {'link': '/patrimonio/consultas', 'text': 'Consultas'},
     ]
     button_return = {'link': '/', 'text': 'Voltar'}
 
@@ -83,6 +84,30 @@ def menu_saidas(request):
     context = {
         'app': 'Patrimônio',
         'menu': 'Saídas',
+        'menu_buttons': menu_buttons,
+        'button_return': button_return,
+    }
+
+    return context
+
+
+def menu_consultas(request):
+    """
+    Funcão que contém as configurações do menu de consultas do patrimônio.
+    Retorna um dicionário com as configurações
+    """
+
+    menu_buttons = [
+        {'link': '/patrimonio/consultas/ferramenta', 'text': 'Modelos de ferramenta'},
+        {'link': '/patrimonio/consultas/patrimonio', 'text': 'Modelos de patrimônio'},
+        {'link': '/patrimonio/consultas/ferramenta/estoque', 'text': 'Estoque de ferramentas'},
+        {'link': '/patrimonio/consultas/patrimonio/status', 'text': 'Status dos patrimônio'},
+    ]
+    button_return = {'link': '/patrimonio', 'text': 'Voltar'}
+
+    context = {
+        'app': 'Patrimônio',
+        'menu': 'Consultas',
         'menu_buttons': menu_buttons,
         'button_return': button_return,
     }
