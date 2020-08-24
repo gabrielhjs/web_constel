@@ -71,6 +71,14 @@ class OntEntrada(models.Model):
     objects = None
 
 
+class OntEntradaHistorico(models.Model):
+    ont = models.ForeignKey(Ont, on_delete=models.CASCADE, null=False, blank=False, related_name='historico_ont')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='entrada_historico_ont')
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+
+
 class OntSaida(models.Model):
     ordem = models.ForeignKey(Ordem, on_delete=models.CASCADE, default=None, related_name='saida_ordem_ont', null=True)
     entrada = models.ForeignKey(OntEntrada, on_delete=models.CASCADE, default=None, related_name='saida_entrada_ont')
