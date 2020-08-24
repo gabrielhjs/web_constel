@@ -49,14 +49,6 @@ class Ont(models.Model):
     objects = None
 
 
-class OntEntradaHistorico(models.Model):
-    ont = models.ForeignKey(Ont, on_delete=models.CASCADE, null=False, blank=False, related_name='historico_ont')
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='entrada_historico_ont')
-
-    # Default fields (apenas para não gerar alertas na IDE)
-    objects = None
-
-
 class Cliente(models.Model):
     porta = models.CharField(max_length=255, default='vazio')
     estado_link = models.CharField(max_length=255, default='vazio')

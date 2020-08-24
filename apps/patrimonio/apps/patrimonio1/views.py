@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q, Subquery, OuterRef, Max, ExpressionWrapper, CharField, F
+from django.db.models import Q, Subquery, OuterRef, Max
 
 from .forms import *
 from .models import *
@@ -190,6 +190,11 @@ def entrada_patrimonio(request):
         form = FormEntradaPatrimonio(request.POST)
 
         if form.is_valid():
+            codigo = form.cleaned_data['codigo']
+
+            if PatrimonioEntrada.objects.filter(codigo=codigo).exists():
+                pass
+
             PatrimonioEntrada(
                 patrimonio=form.cleaned_data['patrimonio'],
                 codigo=form.cleaned_data['codigo'],
