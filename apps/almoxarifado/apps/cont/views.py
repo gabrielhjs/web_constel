@@ -166,7 +166,7 @@ def entrada_2(request):
                         messages.success(request, 'Modelo da ONT alterado!')
                 
                     ont.save()
-                    OntEntradaHistorico(ont=ont, user=request.user).save()
+                    OntEntradaHistorico1(ont=ont, user=request.user).save()
 
                 else:
                     messages.error(request, 'Serial de Ont já em estoque')
@@ -183,14 +183,14 @@ def entrada_2(request):
                 messages.success(request, 'Ont cadastrada e inserida no estoque com sucesso!')
 
                 OntEntrada(ont=ont, user=request.user).save()
-                OntEntradaHistorico(ont=ont, user=request.user).save()
+                OntEntradaHistorico1(ont=ont, user=request.user).save()
 
             return HttpResponseRedirect('/almoxarifado/cont/entrada-2/')
 
     else:
         form = FormEntradaOnt2()
 
-    historico = OntEntradaHistorico.objects.filter(user=request.user).order_by('id').values(
+    historico = OntEntradaHistorico1.objects.filter(user=request.user).order_by('id').values(
         'ont__codigo',
     )
 
@@ -211,7 +211,7 @@ def entrada_2(request):
 @permission('almoxarifado', )
 def entrada_3(request):
 
-    OntEntradaHistorico.objects.filter(user=request.user).delete()
+    OntEntradaHistorico1.objects.filter(user=request.user).delete()
     request.session.pop('cont2_entrada_modelo')
     request.session.pop('cont2_entrada_secao')
 
