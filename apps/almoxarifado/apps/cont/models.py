@@ -71,7 +71,7 @@ class OntEntrada(models.Model):
     objects = None
 
 
-class OntEntradaHistorico(models.Model):
+class OntEntradaHistorico1(models.Model):
     ont = models.ForeignKey(Ont, on_delete=models.CASCADE, null=False, blank=False, related_name='historico_ont')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='entrada_historico_ont')
 
