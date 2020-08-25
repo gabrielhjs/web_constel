@@ -35,6 +35,27 @@ class FerramentaQuantidade(models.Model):
     objects = None
 
 
+class FerramentaQuantidadeFuncionario(models.Model):
+    """
+    Model que gerencia a tabela de controle da quantidade de ferramentas na carga dos colaboradores
+    """
+    ferramenta = models.ForeignKey(
+        Ferramenta,
+        on_delete=models.CASCADE,
+        related_name='quantidade_funcionario',
+        editable=True,
+    )
+    quantidade = models.IntegerField(verbose_name='Quantidade', default=0, editable=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='ferramentas_carga', default=None)
+
+    def __str__(self):
+
+        return f'{self.user.username} | {self.ferramenta.nome} | {self.quantidade}'
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+
+
 class FerramentaEntrada(models.Model):
     """
     Model que gerencia a tabela de entradas de ferramentas no patrimio
@@ -56,7 +77,7 @@ class FerramentaEntrada(models.Model):
 
 class FerramentaSaida(models.Model):
     """
-    Model que gerencia a tabela de saídas de ferramentas no patrimio
+    Model que gerencia a tabela de saídas de ferramentas no patrimônio
     """
     ferramenta = models.ForeignKey(Ferramenta, on_delete=models.CASCADE, related_name='saidas')
     quantidade = models.IntegerField(verbose_name='Quantidade', null=True, blank=True)
@@ -71,3 +92,21 @@ class FerramentaSaida(models.Model):
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
+
+
+class FerramentaFechamento(models.Model):
+    """
+    Model que gerencia a tabela de devolucao e descarte de ferramentas do patrimônio
+    """
+    STATUS = [
+        (0, 'Bom'),
+        (1, 'Descarte'),
+        (2, 'Perda'),
+    ]
+    status = models.IntegerField(choices=STATUS, default=0)
+    ferramenta = models.ForeignKey(Ferramenta, on_delete=models.CASCADE, related_name='ferramenta_fechamentos')
+    quantidade = models.PositiveIntegerField(null=False, blank=False)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='user_ferramenta_fechamentos')
+    user_from = models.ForeignKey(User, on_delete=models.PROTECT, related_name='user_from_ferramenta_fechamentos')
+    data = models.DateTimeField(auto_now=True, verbose_name='Data de descarte')
+    observacao = models.TextField(verbose_name='Observação', max_length=500, null=True, blank=True)

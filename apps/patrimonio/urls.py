@@ -68,4 +68,9 @@ urlpatterns = [
         views.consultas,
         name='patrimonio_menu_consultas',
     ),
+    path(
+        'patrimonio/consultas/modelos/',
+        views.consultas_modelos,
+        name='patrimonio_menu_consultas_modelos',
+    ),
 ]

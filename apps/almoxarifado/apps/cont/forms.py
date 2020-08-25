@@ -13,7 +13,7 @@ class FormCadastraModelo(forms.ModelForm):
         super(FormCadastraModelo, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class FormCadastraSecao(forms.ModelForm):
@@ -26,7 +26,7 @@ class FormCadastraSecao(forms.ModelForm):
         super(FormCadastraSecao, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class FormEntradaOnt1(forms.Form):
@@ -79,7 +79,7 @@ class FormEntradaOnt2(forms.Form):
         )
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         form_data = super().clean()

@@ -48,6 +48,11 @@ urlpatterns = [
         name='patrimonio_saida_ferramenta',
     ),
     path(
+        'patrimonio/fechamento/ferramenta/',
+        views.fechamento_ferramenta,
+        name='patrimonio_fechamento_ferramenta',
+    ),
+    path(
         'patrimonio/consultas/ferramenta/',
         views.consulta_ferramenta,
         name='patrimonio_consulta_ferramenta',
