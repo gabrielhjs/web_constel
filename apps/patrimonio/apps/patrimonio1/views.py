@@ -255,8 +255,11 @@ def consulta_patrimonio_status(request):
 
     subquery = PatrimonioSaida.objects.filter(
         patrimonio=OuterRef('pk')
+    ).values(
+        'user_to__first_name',
+        'user_to__last_name',
     ).annotate(
-        Max('data')
+        ultima_data=Max('data')
     )
 
     itens = PatrimonioId.objects.filter(
@@ -264,7 +267,7 @@ def consulta_patrimonio_status(request):
     ).annotate(
         user_to_first_name=Subquery(subquery.values('user_to__first_name')),
         user_to_last_name=Subquery(subquery.values('user_to__last_name')),
-        ultima_entrega=Subquery(subquery.values('data')),
+        ultima_entrega=Subquery(subquery.values('ultima_data')),
     ).values(
         'codigo',
         'patrimonio__nome',
