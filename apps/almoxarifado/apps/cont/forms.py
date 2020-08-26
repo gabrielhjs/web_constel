@@ -105,12 +105,12 @@ class FormEntradaOnt2(forms.Form):
             return form_data
 
 
-class FormOntDefeito(forms.Form):
+class FormOntFechamento(forms.Form):
 
     serial = forms.CharField(required=True, widget=NonstickyCharfield())
 
     def __init__(self, *args, **kwargs):
-        super(FormOntDefeito, self).__init__(*args, **kwargs)
+        super(FormOntFechamento, self).__init__(*args, **kwargs)
 
         self.fields['serial'].widget.attrs.update(
             {'autofocus': 'autofocus', 'required': 'required'}
@@ -130,6 +130,24 @@ class FormOntDefeito(forms.Form):
             self.errors['serial'] = ['Ont não cadastrada no sistema, cadastre-a para registrá-la como com defeito']
 
         return form_data
+
+
+class FormOntManutencao1(forms.Form):
+
+    modelo = forms.ChoiceField()
+
+    def __init__(self, *args, **kwargs):
+        super(FormOntManutencao1, self).__init__(*args, **kwargs)
+
+        modelos = Modelo.objects.all().order_by('nome')
+        modelos_name = [(i.id, i.nome.upper()) for i in modelos]
+        self.fields['modelo'] = forms.ChoiceField(
+            choices=modelos_name,
+            label='Modelo',
+        )
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class FormPswLogin(forms.Form):

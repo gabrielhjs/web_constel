@@ -46,7 +46,7 @@ class DefeitoOntLista(models.Model):
     data = models.DateTimeField(auto_now=True, verbose_name='Lista criada em')
 
     # Default fields (apenas para não gerar alertas na IDE)
-    # objects = None
+    objects = None
 
 
 class DefeitoOntItem(models.Model):
@@ -54,4 +54,4 @@ class DefeitoOntItem(models.Model):
     material = models.ForeignKey(Ont, on_delete=models.CASCADE, related_name='cont_defeito_material_listas')
 
     # Default fields (apenas para não gerar alertas na IDE)
-    # objects = None
+    objects = None

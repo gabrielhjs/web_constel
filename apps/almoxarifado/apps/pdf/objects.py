@@ -1,7 +1,7 @@
 from fpdf import FPDF
 from io import BytesIO
 from apps.almoxarifado.models import MaterialEntrada, MaterialSaida
-from ..cont.models import OntSaida, OntDefeitoDevolucao
+from ..cont.models import OntSaida, OntDevolucao
 
 
 class FichaMateriais(FPDF):
@@ -298,7 +298,7 @@ class FichaOntsDefeito(FPDF):
         self.cell(colunas[2], linha, 'Código', align='C', border=1)
         self.cell(colunas[3], linha, 'Check', align='C', border=1)
 
-        materiais = OntDefeitoDevolucao.objects.filter(ordem=self.ordem)
+        materiais = OntDevolucao.objects.filter(ordem=self.ordem)
 
         for material in materiais:
             self.ln(linha)

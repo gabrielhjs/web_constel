@@ -10,14 +10,14 @@ from apps.almoxarifado.models import Ordem, Fornecedor
 from apps.almoxarifado.apps.pdf.objects import FichaOntsDefeito
 from constel.apps.controle_acessos.decorator import permission
 
-from ..cont.menu import menu_defeitos
-from ..cont.models import OntDefeito, OntDefeitoDevolucao, Ont
+from ..cont.menu import menu_fechamento
+from ..cont.models import OntFechamento, OntDevolucao
 
 
 @login_required
 @permission('almoxarifado', 'almoxarifado - saida', )
 def lista_cria(request):
-    menu = menu_defeitos(request)
+    menu = menu_fechamento(request)
 
     if request.method == 'POST':
         form = FormOntDefeitoFornecedor(request.POST)
@@ -53,7 +53,7 @@ def lista_cria(request):
 @login_required()
 @permission('almoxarifado', 'almoxarifado - saida', )
 def view_insere(request, fornecedor):
-    menu = menu_defeitos(request)
+    menu = menu_fechamento(request)
 
     fornecedor = Fornecedor.objects.get(id=fornecedor)
 
@@ -126,9 +126,9 @@ def view_entrega(request, fornecedor):
 
         for item in itens:
             ont = item.material
-            defeito = OntDefeito.objects.filter(ont=ont).latest('data')
+            defeito = OntFechamento.objects.filter(ont=ont).latest('data')
 
-            OntDefeitoDevolucao(
+            OntDevolucao(
                 ordem=ordem,
                 ont=ont,
                 user=request.user,
@@ -180,7 +180,7 @@ def view_limpa(request, fornecedor):
 @login_required
 @permission('almoxarifado', 'almoxarifado - saida', )
 def view_conclui(request, ordem_id):
-    menu = menu_defeitos(request)
+    menu = menu_fechamento(request)
 
     context = {
         'ordem_id': ordem_id,

@@ -93,18 +93,33 @@ urlpatterns = [
         name='almoxarifado_cont_baixa_psw_contrato',
     ),
     path(
-        'almoxarifado/cont/defeito',
-        views.defeito,
+        'almoxarifado/cont/fechamentos',
+        views.fechamentos,
         name='almoxarifado_cont_defeito',
     ),
     path(
-        'almoxarifado/cont/defeito/entrada',
+        'almoxarifado/cont/fechamento/entrada/defeito',
         views.defeito_registra,
-        name='almoxarifado_cont_defeito_entrada',
+        name='almoxarifado_cont_entrada_defeito',
     ),
     path(
-        'almoxarifado/cont/defeito/entrada/limpa',
+        'almoxarifado/cont/fechamento/entrada/defeito/limpa',
         views.defeito_registra_limpa,
-        name='almoxarifado_cont_defeito_entrada_lima',
+        name='almoxarifado_cont_entrada_defeito_limpa',
+    ),
+    path(
+        'almoxarifado/cont/fechamento/entrada/manutencao_1',
+        views.manutencao_registra_1,
+        name='almoxarifado_cont_entrada_manutencao_1',
+    ),
+    path(
+        'almoxarifado/cont/fechamento/entrada/manutencao_2',
+        views.manutencao_registra_2,
+        name='almoxarifado_cont_entrada_manutencao_2',
+    ),
+    path(
+        'almoxarifado/cont/fechamento/entrada/manutencao/limpa',
+        views.manutencao_registra_limpa,
+        name='almoxarifado_cont_entrada_manutencao_limpa',
     ),
 ]

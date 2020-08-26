@@ -35,7 +35,7 @@ class Ont(models.Model):
         (2, 'Aplicada'),
         (3, 'Defeito'),
         (4, 'Devolvida'),
-        (4, 'Retirada'),
+        (5, 'Retirada manutenção'),
     ]
     codigo = models.CharField(max_length=20, null=False, blank=False, unique=True, )
     modelo = models.ForeignKey(Modelo, on_delete=models.PROTECT, related_name='ont_modelo')
@@ -102,16 +102,21 @@ class OntAplicado(models.Model):
     objects = None
 
 
-class OntDefeito(models.Model):
-    ont = models.ForeignKey(Ont, on_delete=models.CASCADE, null=False, blank=False, related_name='defeito_ont')
+class OntFechamento(models.Model):
+    CHOICES = [
+        (0, 'Defeito'),
+        (1, 'Manutencao'),
+    ]
+    status = models.IntegerField(choices=CHOICES, editable=False, default=0)
+    ont = models.ForeignKey(Ont, on_delete=models.CASCADE, null=False, blank=False, related_name='fechamento_ont')
     data = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='dfeito_user')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='ont_fechamento_user')
 
     # Default fields (apenas para não gerar alertas na IDE)
-    # objects = None
+    objects = None
 
 
-class OntDefeitoDevolucao(models.Model):
+class OntDevolucao(models.Model):
     ordem = models.ForeignKey(
         Ordem,
         on_delete=models.CASCADE,
@@ -120,14 +125,19 @@ class OntDefeitoDevolucao(models.Model):
         related_name='devolucao_ordem_ont',
         null=True
     )
-    defeito = models.ForeignKey(OntDefeito, on_delete=models.CASCADE, default=None, related_name='devolucao_defeito')
+    fechamento = models.ForeignKey(
+        OntFechamento,
+        on_delete=models.CASCADE,
+        default=None,
+        related_name='ont_devolucao',
+    )
     data = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='devolucao_user')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='ont_devolucao_user')
     ont = models.ForeignKey(Ont, on_delete=models.CASCADE, null=False, blank=False, related_name='devolucao_ont')
-    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.PROTECT, related_name='devolucao_fornecedor')
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.PROTECT, related_name='ont_devolucao_fornecedor')
 
     # Default fields (apenas para não gerar alertas na IDE)
-    # objects = None
+    objects = None
 
 
 class OntDefeitoHistorico(models.Model):
@@ -142,4 +152,19 @@ class OntDefeitoHistorico(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='defeito_historico_ont')
 
     # Default fields (apenas para não gerar alertas na IDE)
-    # objects = None
+    objects = None
+
+
+class OntManutencaoHistorico(models.Model):
+    ont = models.ForeignKey(
+        Ont,
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        related_name='historico_ont_manutencao'
+    )
+
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='manutencao_historico_ont')
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None

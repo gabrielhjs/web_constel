@@ -10,7 +10,7 @@ from django.conf import settings
 
 from .forms import *
 from .models import Secao, Modelo, OntDefeitoHistorico
-from .menu import menu_principal, menu_cadastros, menu_consultas, menu_defeitos
+from .menu import menu_principal, menu_cadastros, menu_consultas, menu_fechamento
 
 from constel.apps.controle_acessos.decorator import permission
 from constel.forms import FormFuncionario
@@ -477,7 +477,9 @@ def consulta_ont_detalhe(request, serial):
         nivel_ont=ExpressionWrapper(F('cliente__nivel_ont'), output_field=FloatField()),
     )
 
-    ont_defeito = ont.defeito_ont.values(
+    ont_defeito = ont.fechamento_ont.filter(
+        status=0
+    ).values(
         'ont__codigo',
         'data',
         'user__first_name',
@@ -485,7 +487,22 @@ def consulta_ont_detalhe(request, serial):
     ).annotate(
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
-        tipo=Value("Defeito: Entrada", output_field=CharField()),
+        tipo=Value("Entrada: Defeito", output_field=CharField()),
+        contrato=Value(0, output_field=IntegerField()),
+        nivel_ont=Value(0, output_field=FloatField()),
+    )
+
+    ont_retirada_manutencao = ont.fechamento_ont.filter(
+        status=1
+    ).values(
+        'ont__codigo',
+        'data',
+        'user__first_name',
+        'user__last_name',
+    ).annotate(
+        user_to_first_name=Value(None, output_field=CharField()),
+        user_to_last_name=Value(None, output_field=CharField()),
+        tipo=Value("Entrada: Retirada de manutenção", output_field=CharField()),
         contrato=Value(0, output_field=IntegerField()),
         nivel_ont=Value(0, output_field=FloatField()),
     )
@@ -498,7 +515,7 @@ def consulta_ont_detalhe(request, serial):
     ).annotate(
         user_to_first_name=Value(None, output_field=CharField()),
         user_to_last_name=Value(None, output_field=CharField()),
-        tipo=Value("Defeito: Devolução", output_field=CharField()),
+        tipo=Value("Saída: Devolução para fornecedor", output_field=CharField()),
         contrato=Value(0, output_field=IntegerField()),
         nivel_ont=Value(0, output_field=FloatField()),
     )
@@ -508,6 +525,7 @@ def consulta_ont_detalhe(request, serial):
             saidas,
             aplicacoes,
             ont_defeito,
+            ont_retirada_manutencao,
             ont_devolucao,
             all=True
         ).values(
@@ -621,32 +639,36 @@ def baixa_busca_contrato(request):
     return render(request, 'cont/v2/psw_contrato.html', context)
 
 
-def defeito(request):
-    context = menu_defeitos(request)
+def fechamentos(request):
+    context = menu_fechamento(request)
 
     return render(request, 'constel/v2/app.html', context)
 
 
 def defeito_registra(request):
-    menu = menu_defeitos(request)
+    menu = menu_fechamento(request)
 
     if request.method == 'POST':
-        form = FormOntDefeito(request.POST)
+        form = FormOntFechamento(request.POST)
 
         if form.is_valid():
             ont = form.cleaned_data['serial']
 
-            OntDefeito(ont=ont, user=request.user).save()
-            OntDefeitoHistorico(ont=ont, user=request.user).save()
-            ont.status = 3
-            ont.save()
+            if not OntFechamento.objects.filter(ont=ont, status=0, ont__status=3).exists():
+                OntFechamento(ont=ont, user=request.user, status=0).save()
+                OntDefeitoHistorico(ont=ont, user=request.user).save()
+                ont.status = 3
+                ont.save()
 
-            messages.success(request, 'Ont com defeito inserida!')
+                messages.success(request, 'Ont com defeito inserida!')
 
-            return HttpResponseRedirect('/almoxarifado/cont/defeito/entrada')
+            else:
+                messages.error(request, 'Serial de Ont já com status defeito')
+
+            return HttpResponseRedirect('/almoxarifado/cont/fechamento/entrada/defeito')
 
     else:
-        form = FormOntDefeito()
+        form = FormOntFechamento()
 
     if OntDefeitoHistorico.objects.filter(user=request.user).exists():
         historico = OntDefeitoHistorico.objects.filter(user=request.user).values(
@@ -658,11 +680,12 @@ def defeito_registra(request):
     context = {
         'form': form,
         'form_submit_text': 'Inserir',
+        'url_limpa_lista': 'almoxarifado_cont_entrada_defeito_limpa',
         'historico': historico,
     }
     context.update(menu)
 
-    return render(request, 'cont/v2/defeito_entrada.html', context)
+    return render(request, 'cont/v2/fechamento_entrada.html', context)
 
 
 @login_required()
@@ -670,4 +693,100 @@ def defeito_registra(request):
 def defeito_registra_limpa(request):
     OntDefeitoHistorico.objects.filter(user=request.user).delete()
 
-    return HttpResponseRedirect('/almoxarifado/cont/defeito/entrada')
+    return HttpResponseRedirect('/almoxarifado/cont/fechamento/entrada/defeito')
+
+
+@login_required()
+@permission('almoxarifado', )
+def manutencao_registra_1(request):
+    menu = menu_fechamento(request)
+
+    if request.method == 'POST':
+        initial = {
+            'modelo': request.session.get('cont2_entrada_manutencao_modelo', None),
+        }
+        form = FormOntManutencao1(data=request.POST, initial=initial)
+
+        if form.is_valid():
+            request.session['cont2_entrada_manutencao_modelo'] = form.cleaned_data['modelo']
+
+            return HttpResponseRedirect('/almoxarifado/cont/fechamento/entrada/manutencao_2')
+    else:
+        form = FormOntManutencao1()
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Avançar',
+    }
+    context.update(menu)
+
+    return render(request, 'cont/v2/entrada_1.html', context)
+
+
+def manutencao_registra_2(request):
+    menu = menu_fechamento(request)
+
+    if request.session.get('cont2_entrada_manutencao_modelo') is None:
+        return HttpResponseRedirect('/almoxarifado/cont/fechamento/entrada/manutencao_1')
+
+    else:
+        modelo = request.session.get('cont2_entrada_manutencao_modelo')
+
+    if request.method == 'POST':
+        form = FormEntradaOnt2(request.POST)
+
+        if form.is_valid():
+            ont = form.cleaned_data['serial'].upper()
+
+            if Ont.objects.filter(codigo=ont).exists():
+                ont = Ont.objects.get(codigo=ont)
+
+            else:
+                ont = Ont(
+                    codigo=ont,
+                    modelo=Modelo.objects.get(id=modelo),
+                    secao=Secao.objects.get(nome='Manutenção'),
+                    status=0,
+                )
+                ont.save()
+
+            if not OntFechamento.objects.filter(ont=ont, status=1, ont__status=5).exists():
+                OntFechamento(ont=ont, user=request.user, status=1).save()
+                OntManutencaoHistorico(ont=ont, user=request.user).save()
+                ont.status = 5
+                ont.save()
+
+                messages.success(request, 'Ont retirada de manutenção inserida')
+
+            else:
+                messages.error(request, 'Serial de Ont já está com status retirada de manutenção')
+
+            return HttpResponseRedirect('/almoxarifado/cont/fechamento/entrada/manutencao_2')
+
+    else:
+        form = FormEntradaOnt2()
+
+    if OntManutencaoHistorico.objects.filter(user=request.user).exists():
+        historico = OntManutencaoHistorico.objects.filter(user=request.user).values(
+            'ont__codigo',
+        ).order_by('-id')
+    else:
+        historico = []
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Inserir',
+        'url_limpa_lista': 'almoxarifado_cont_entrada_manutencao_limpa',
+        'historico': historico,
+    }
+    context.update(menu)
+
+    return render(request, 'cont/v2/fechamento_entrada.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def manutencao_registra_limpa(request):
+    OntManutencaoHistorico.objects.filter(user=request.user).delete()
+
+    return HttpResponseRedirect('/almoxarifado/cont/fechamento/entrada/manutencao_1')
