@@ -126,14 +126,14 @@ def view_entrega(request, fornecedor):
 
         for item in itens:
             ont = item.material
-            defeito = OntFechamento.objects.filter(ont=ont).latest('data')
+            fechamento = OntFechamento.objects.filter(ont=ont).latest('data')
 
             OntDevolucao(
                 ordem=ordem,
                 ont=ont,
                 user=request.user,
                 fornecedor=fornecedor,
-                defeito=defeito,
+                fechamento=fechamento,
             ).save()
 
             ont.status = 4
