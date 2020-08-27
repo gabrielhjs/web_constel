@@ -67,7 +67,12 @@ class FormSaidaPatrimonio(forms.Form):
 
     patrimonio = forms.CharField()
     user_to = forms.CharField()
-    observacao = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'asd'}), required=False)
+    observacao = forms.CharField(
+        widget=forms.Textarea(
+            attrs={'placeholder': 'Observação de saída do patrimônio'}
+        ),
+        required=False
+    )
 
     def __init__(self, *args, **kwargs):
         super(FormSaidaPatrimonio, self).__init__(*args, **kwargs)

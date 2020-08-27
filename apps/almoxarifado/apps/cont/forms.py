@@ -174,7 +174,12 @@ class FormPswContrato(forms.Form):
     Formulário de busca de contrato no psw
     """
 
-    contrato = forms.IntegerField(label='Contrato')
+    contratos = forms.CharField(
+        label='Contratos',
+        widget=forms.TextInput(
+            attrs={'placeholder': 'Ex: 1234567,1234568, 1234569'}
+        )
+    )
 
     def __init__(self, *args, **kwargs):
         super(FormPswContrato, self).__init__(*args, **kwargs)
