@@ -514,8 +514,7 @@ def consulta_ordem_saida(request):
     ).annotate(
         user_to_first_name=Min('almoxarifado_ordem_saida__user_to__first_name'),
         user_to_last_name=Min('almoxarifado_ordem_saida__user_to__last_name'),
-    )
-    itens = itens.values(
+    ).values(
         'id',
         'data',
         'user__first_name',

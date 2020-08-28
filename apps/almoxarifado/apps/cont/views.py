@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q, Max, Value, CharField, IntegerField, FloatField, F, ExpressionWrapper
+from django.db.models import Count, Q, Max, Min, Value, CharField, IntegerField, FloatField, F, ExpressionWrapper
 from django.core.paginator import Paginator
 from django.conf import settings
 
@@ -13,7 +13,7 @@ from .models import Secao, Modelo, OntDefeitoHistorico
 from .menu import menu_principal, menu_cadastros, menu_consultas, menu_fechamento
 
 from constel.apps.controle_acessos.decorator import permission
-from constel.forms import FormFuncionario
+from constel.forms import FormFuncionario, FormFiltraQ
 
 
 @login_required()
@@ -396,6 +396,94 @@ def consulta_tecnicos_carga_detalhe(request, funcionario):
     context.update(menu)
 
     return render(request, 'cont/v2/consulta_tecnicos_carga_detalhe.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def consulta_saidas(request):
+    menu = menu_consultas(request)
+
+    q = request.GET.get('q', '')
+
+    form = FormFiltraQ(initial={'q': q}, descricao='Fucionário ou id da ordem')
+
+    query = Q()
+
+    if q != '':
+        query = query & Q(
+            Q(user_to_username__icontains=q) |
+            Q(user_to_first_name__icontains=q) |
+            Q(user_to_last_name__icontains=q) |
+            Q(id__icontains=q)
+        )
+
+    itens = Ordem.objects.filter(tipo=1, saida_ordem_ont__id__gte=0).annotate(
+        user_to_username=Min('saida_ordem_ont__user_to__first_name'),
+        user_to_first_name=Min('saida_ordem_ont__user_to__first_name'),
+        user_to_last_name=Min('saida_ordem_ont__user_to__last_name'),
+        quantidade=Count('saida_ordem_ont__id')
+    ).values(
+        'id',
+        'data',
+        'user__first_name',
+        'user__last_name',
+        'user_to_first_name',
+        'user_to_last_name',
+        'quantidade',
+    ).filter(
+        query
+    ).order_by(
+        '-data'
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'tipo': 1,
+        'form_submit_text': 'Filtrar',
+        'form': form,
+    }
+    context.update(menu)
+
+    return render(request, 'cont/v2/consulta_ordem.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def consulta_saidas_detalhe(request, ordem):
+    menu = menu_consultas(request)
+
+    itens = OntSaida.objects.filter(
+        ordem__id=ordem
+    ).values(
+        'ont__codigo',
+        'ont__secao__nome',
+        'ont__modelo__nome',
+    ).order_by(
+        'ont__secao__nome',
+        'ont__modelo__nome',
+        'ont__codigo',
+    )
+
+    ordem = Ordem.objects.get(id=ordem)
+
+    print(itens.values_list())
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'ordem': ordem,
+        'tipo': 1,
+    }
+    context.update(menu)
+
+    return render(request, 'cont/v2/consulta_ordem_detalhe.html', context)
 
 
 def consulta_ont(request):
