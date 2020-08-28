@@ -486,6 +486,88 @@ def consulta_saidas_detalhe(request, ordem):
     return render(request, 'cont/v2/consulta_ordem_detalhe.html', context)
 
 
+@login_required()
+@permission('almoxarifado', )
+def consulta_devolucoes(request):
+    menu = menu_consultas(request)
+
+    q = request.GET.get('q', '')
+
+    form = FormFiltraQ(initial={'q': q}, descricao='Fornecedor ou id da ordem')
+
+    query = Q()
+
+    if q != '':
+        query = query & Q(
+            Q(fornecedor_cnpj__icontains=q) |
+            Q(fornecedor_nome__icontains=q) |
+            Q(id__icontains=q)
+        )
+
+    itens = Ordem.objects.filter(tipo=1, devolucao_ont__id__gte=0).annotate(
+        fornecedor_cnpj=Min('devolucao_ont__forncedor__cnpj'),
+        fornecedor_nome=Min('devolucao_ont__fornecedor__nome'),
+        quantidade=Count('devolucao_ont__id')
+    ).values(
+        'id',
+        'data',
+        'fornecedor_cnpj',
+        'fornecedor_nome',
+        'quantidade',
+    ).filter(
+        query
+    ).order_by(
+        '-data'
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'tipo': 1,
+        'form_submit_text': 'Filtrar',
+        'form': form,
+    }
+    context.update(menu)
+
+    return render(request, 'cont/v2/consulta_ordem.html', context)
+
+
+@login_required()
+@permission('almoxarifado', )
+def consulta_devolucoes_detalhe(request, ordem):
+    menu = menu_consultas(request)
+
+    itens = OntDevolucao.objects.filter(
+        ordem__id=ordem
+    ).values(
+        'ont__codigo',
+        'ont__modelo__nome',
+    ).order_by(
+        'ont__modelo__nome',
+        'ont__codigo',
+    )
+
+    ordem = Ordem.objects.get(id=ordem)
+
+    print(itens.values_list())
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'ordem': ordem,
+        'tipo': 1,
+    }
+    context.update(menu)
+
+    return render(request, 'cont/v2/consulta_ordem_detalhe.html', context)
+
+
 def consulta_ont(request):
     menu = menu_consultas(request)
 

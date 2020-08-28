@@ -63,6 +63,16 @@ urlpatterns = [
         name='almoxarifado_cont_consulta_saidas_detalhes',
     ),
     path(
+        'almoxarifado/cont/consultas/devolucoes/',
+        views.consulta_devolucoes,
+        name='almoxarifado_cont_consulta_devolucoes',
+    ),
+    path(
+        'almoxarifado/cont/consultas/devolucoes/<int:ordem>/',
+        views.consulta_devolucoes_detalhe,
+        name='almoxarifado_cont_consulta_devolucoes_detalhes',
+    ),
+    path(
         'almoxarifado/cont/consultas/ont/',
         views.consulta_ont,
         name='almoxarifado_cont_consulta_ont',

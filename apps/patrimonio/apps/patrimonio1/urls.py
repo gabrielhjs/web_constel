@@ -37,4 +37,9 @@ urlpatterns = [
         views.consulta_patrimonio_status,
         name='patrimonio_saida_patrimonio_status',
     ),
+    path(
+        'patrimonio/consultas/patrimonio/status/<int:patrimonio>/',
+        views.consulta_patrimonio_status_detalhe,
+        name='patrimonio_saida_patrimonio_status_detalhe',
+    ),
 ]

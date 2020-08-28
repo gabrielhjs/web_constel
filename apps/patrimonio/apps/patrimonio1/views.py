@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q, Subquery, OuterRef, Max
+from django.db.models import Q, Subquery, OuterRef, Max, ExpressionWrapper, Value, F, CharField
 
 from .forms import *
 from .models import *
@@ -289,3 +289,58 @@ def consulta_patrimonio_status(request):
     context.update(menu)
 
     return render(request, 'patrimonio1/v2/consulta_patrimonio_status.html', context=context)
+
+
+def consulta_patrimonio_status_detalhe(request, patrimonio):
+    menu = menu_consultas(request)
+
+    patrimonio = PatrimonioId.objects.get(codigo=patrimonio)
+
+    entradas = patrimonio.patrimonio_entrada.values(
+        'patrimonio__codigo',
+        'data',
+        'user__first_name',
+        'user__last_name',
+    ).annotate(
+        tipo=Value("Entrada", output_field=CharField()),
+        user_to_first_name=Value(None, output_field=CharField()),
+        user_to_last_name=Value(None, output_field=CharField()),
+    )
+
+    saidas = patrimonio.patrimonio_saida.values(
+        'patrimonio__codigo',
+        'data',
+        'user__first_name',
+        'user__last_name',
+    ).annotate(
+        tipo=Value("Saída", output_field=CharField()),
+        user_to_first_name=ExpressionWrapper(F('user_to__first_name'), output_field=CharField()),
+        user_to_last_name=ExpressionWrapper(F('user_to__last_name'), output_field=CharField()),
+    )
+
+    paginator = Paginator(
+        entradas.union(
+            saidas,
+            all=True
+        ).values(
+            'patrimonio__codigo',
+            'data',
+            'user__first_name',
+            'user__last_name',
+            'user_to_first_name',
+            'user_to_last_name',
+            'tipo',
+        ).order_by('-data'),
+        50
+    )
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'patrimonio': patrimonio,
+    }
+    context.update(menu)
+
+    return render(request, "patrimonio1/v2/consulta_patrimonio_status_detalhe.html", context)
