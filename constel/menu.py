@@ -1,23 +1,23 @@
 """
-Módulo que contém as configurações dos menus gerais do sistema
+Módulo que contém as configurações dos menus de administração do sistema
 """
+
 
 def menu_principal(request):
     """
-    Funcão que contém as configurações do menu principal do sistema.
+    Funcão que contém as configurações do menu de administração do sistema.
     Retorna um dicionário com as configurações
     """
 
     menu_buttons = [
-        {'link': '/almoxarifado', 'text': 'Almoxarifado'},
-        {'link': '/patrimonio', 'text': 'Patrimônio'},
-        {'link': '/admin', 'text': 'Administrativo'},
+        {'link': '/admin', 'text': 'Administração Django'},
+        {'link': '/administracao/acesso/', 'text': 'Controle de acessos'},
     ]
 
-    button_return = {'link': '/', 'text': 'Tela principal'}
+    button_return = {'link': '/', 'text': 'Voltar'}
 
     context = {
-        'app': 'Almoxarifado',
+        'app': 'Admin',
         'menu': 'Menu principal',
         'menu_buttons': menu_buttons,
         'button_return': button_return,

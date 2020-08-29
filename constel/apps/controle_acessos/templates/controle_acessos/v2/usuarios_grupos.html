@@ -1,0 +1,48 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <tbody>
+            <tr class="text-md-left">
+                <td>Matrícula</td>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Nome</td>
+                <td>{{ user.first_name|title }} {{ user.last_name|title }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0 mt-1">
+        <thead>
+            <tr>
+                <th scope="col" colspan="2">Grupos</th>
+            </tr>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">#</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in page_obj %}
+            <tr>
+                <td>{{ item.name|title }}</td>
+                <td>
+                    <form method="post" class="form">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ item.id }}" name="grupo_id"/>
+                        <button class="btn btn-danger btn-sm" type="submit"><i class="fas fa-ban"></i></button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/form_post.html' %}
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'constel_acesso_usuarios' %}?{{ request.GET.urlencode }}">voltar</a>
+</div>
+{% endblock %}

@@ -58,3 +58,9 @@ html {
 .card {
     width: 20em;
 }
+
+.page-title h1 {
+    margin: 0;
+    font-size: 4rem;
+    color: orange;
+}

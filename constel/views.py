@@ -12,13 +12,7 @@ from .forms import (
 from .models import UserType, Veiculo
 from .objects import Button
 from .apps.controle_acessos.decorator import permission
-
-
-@login_required
-@permission('admin', )
-def view_admin(request):
-
-    return HttpResponseRedirect('/admin')
+from .menu import menu_principal
 
 
 @login_required
@@ -37,34 +31,6 @@ def view_menu_gerenciamento_sistema(request):
             button_2,
         ],
         'rollback': rollback,
-    }
-
-    return render(request, 'constel/menu.html', context)
-
-
-@login_required
-def index(request):
-    """
-    View da página inicial do sistema
-    :param request: None
-    :return: Renderiza página inicial
-    """
-
-    button_1 = Button('almoxarifado_menu_principal', 'Almoxarifado')
-    button_2 = Button('patrimonio_menu_principal', 'Patrimônio')
-    button_3 = Button('constel_menu_admin', 'Administração do sistema')
-    button_logout = Button('logout', 'Logout')
-
-    context = {
-        'admin': request.user.is_superuser,
-        'guia_titulo': 'Constel',
-        'pagina_titulo': 'Constel',
-        'buttons': [
-            button_1,
-            button_2,
-            button_3,
-        ],
-        'rollback': button_logout,
     }
 
     return render(request, 'constel/menu.html', context)
@@ -101,76 +67,6 @@ def view_cadastrar_usuario(request):
     }
 
     return render(request, 'constel/v2/form_cadastro.html', context)
-
-
-# @login_required
-# @permission('patrimonio - combustivel', )
-# def view_cadastrar_usuario_passivo(request):
-#     """
-#     View de cadastro de novos usuários passivos.
-#     :param request: POST form
-#     :return:
-#     """
-#
-#     if request.method == 'POST':
-#         form = FormCadastraUsuarioPassivo(request.POST)
-#
-#         if form.is_valid():
-#             form.save()
-#             user = User.objects.get(username=form.cleaned_data['username'])
-#             modelo = form.cleaned_data['modelo']
-#             placa = form.cleaned_data['placa']
-#             cor = form.cleaned_data['cor']
-#             user_type = UserType(user=user)
-#             user_type.save()
-#             veiculo = Veiculo(user=user, modelo=modelo, placa=placa, cor=cor)
-#             veiculo.save()
-#
-#             return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
-#     else:
-#         form = FormCadastraUsuarioPassivo()
-#
-#     context = {
-#         'form': form,
-#         'callback': 'gc_menu_cadastros',
-#         'button_submit_text': 'Cadastrar beneficiário',
-#         'callback_text': 'Cancelar',
-#         'pagina_titulo': 'Combustível',
-#         'menu_titulo': 'Cadastro de beneficiário',
-#     }
-#
-#     return render(request, 'constel/cadastra_usuario_passivo.html', context)
-#
-#
-# @login_required
-# @permission('patrimonio - combustivel', )
-# def view_cadastrar_veiculo(request):
-#     """
-#     View de cadastro de veículos de funcionários existentes
-#     :param request:
-#     :return: formulário de cadastro
-#     """
-#
-#     if request.method == 'POST':
-#         form = FormCadastrarVeiculo(request.POST)
-#
-#         if form.is_valid():
-#             form.save()
-#
-#             return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
-#     else:
-#         form = FormCadastrarVeiculo()
-#
-#     context = {
-#         'form': form,
-#         'callback': 'gc_menu_cadastros',
-#         'button_submit_text': 'Cadastrar veículo',
-#         'callback_text': 'Cancelar',
-#         'pagina_titulo': 'Combustível',
-#         'menu_titulo': 'Cadastro de veículo',
-#     }
-#
-#     return render(request, 'constel/cadastra_veiculo.html', context)
 
 
 def view_login(request):
@@ -251,3 +147,11 @@ def indexv2(request):
     }
 
     return render(request, 'constel/v2/index.html', context)
+
+
+@login_required
+@permission('admin',)
+def admin(request):
+    context = menu_principal(request)
+
+    return render(request, 'constel/v2/app.html', context)

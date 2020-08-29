@@ -1,0 +1,32 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Usuários</th>
+            </tr>
+            <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Funcionário</th>
+                <th scope="col">#</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.username|upper }}</td>
+                <td>{{ item.first_name|title }} {{ item.last_name|title }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                        href="{% url 'constel_acesso_usuarios_grupos' item.username %}?{{ request.GET.urlencode }}">
+                        Grupos
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

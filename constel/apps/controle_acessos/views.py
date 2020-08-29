@@ -1,136 +1,223 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
+from django.db.models import Q, Count, OuterRef, Subquery
+from django.core.paginator import Paginator
 
-from constel.objects import Button
-from .forms import FormCriaGrupo, FormAssociaGrupo
+from constel.forms import FormFiltraQ
+
+from .forms import FormAssociaGrupo, FormAssociaUsuario
 from .decorator import permission
+from .menu import menu_principal
 
 
 @login_required()
-@permission('admin', )
-def view_menu_controle_acessos(request):
-    button_1 = Button('constel_controle_menu_grupos', 'Gerenciamento de grupo de acessos')
-    rollback = Button('constel_menu_admin', 'Voltar')
+def acesso_negado(request):
 
-    context = {
-        'guia_titulo': 'Constel | Admin',
-        'pagina_titulo': 'Controle de Acessos',
-        'menu_titulo': 'Menu principal',
-        'buttons': [
-            button_1,
-        ],
-        'rollback': rollback,
+    return render(request, 'controle_acessos/v2/acesso_restrito.html')
+
+
+@login_required
+@permission('admin',)
+def index(request):
+    context = menu_principal(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required
+@permission('admin',)
+def usuarios(request):
+    menu = menu_principal(request)
+
+    q = request.GET.get('q', '')
+
+    initial = {
+        'q': q
     }
 
-    return render(request, 'constel/menu.html', context)
+    form = FormFiltraQ(
+        initial=initial,
+        descricao='matrícula ou nome'
+    )
 
+    query = Q()
 
-@login_required()
-@permission('admin', )
-def view_menu_grupos(request):
+    if q != '':
+        query = query & Q(
+            Q(username__icontains=q) |
+            Q(first_name__icontains=q) |
+            Q(last_name__icontains=q))
 
-    button_1 = Button('constel_controle_grupos_criar', 'Criar novo grupo')
-    button_2 = Button('constel_controle_grupos_usuarios', 'Usuários')
-    rollback = Button('constel_menu_controle_acessos', 'Voltar')
+    itens = User.objects.filter(query).values(
+        'username',
+        'first_name',
+        'last_name',
+    )
 
-    context = {
-        'guia_titulo': 'Constel | Admin',
-        'pagina_titulo': 'Controle de Acessos',
-        'menu_titulo': 'Menu de grupos',
-        'buttons': [
-            button_1,
-            button_2,
-        ],
-        'rollback': rollback,
-    }
-
-    return render(request, 'constel/menu.html', context)
-
-
-@login_required()
-@permission('admin', )
-def view_grupos_criar(request):
-
-    if request.method == 'POST':
-        form = FormCriaGrupo(request.POST)
-
-        if form.is_valid():
-            Group.objects.create(
-                name=form.cleaned_data['nome']
-            ).save()
-
-            return HttpResponseRedirect('/menu-admin/controle-acessos/grupos/')
-
-    else:
-        form = FormCriaGrupo()
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
+        'page_obj': page_obj,
         'form': form,
-        'callback': 'constel_controle_menu_grupos',
-        'callback_text': 'Cancelar',
-        'button_submit_text': 'Criar grupo',
-        'pagina_titulo': 'Controle de Acessos',
-        'menu_titulo': 'Criar grupo',
-        'grupos': Group.objects.all(),
+        'form_submit_text': 'Filtrar',
     }
+    context.update(menu)
 
-    return render(request, 'controle_acessos/cria_grupo.html', context)
-
-
-@login_required()
-@permission('admin', )
-def view_grupos_usuarios(request):
-
-    usuarios = User.objects.filter(is_active=True).order_by('first_name', 'last_name')
-
-    context = {
-        'usuarios': usuarios,
-        'pagina_titulo': 'Controle de Acessos',
-        'menu_titulo': 'Usuários',
-    }
-
-    return render(request, 'controle_acessos/usuarios.html', context)
+    return render(request, 'controle_acessos/v2/usuarios.html', context)
 
 
-@login_required()
-@permission('admin', )
-def view_grupos_usuario(request, usuario_id):
+@login_required
+@permission('admin',)
+def usuarios_grupos(request, username):
+    menu = menu_principal(request)
 
-    usuario = User.objects.get(id=usuario_id)
-    grupos = usuario.groups.all().order_by('name')
+    user = User.objects.get(username=username)
 
     if request.method == 'POST':
+
+        if username == 'admin':
+            messages.error(request, 'Negado')
+
+            return HttpResponseRedirect(f'/administracao/acesso/usuarios/{username}?{request.GET.urlencode()}')
+
+        form = FormAssociaGrupo(data=request.POST)
+
         grupo_id = request.POST.get('grupo_id', None)
 
         if grupo_id is not None:
-            usuario.groups.remove(Group.objects.get(id=grupo_id))
+            user.groups.remove(Group.objects.get(id=grupo_id))
 
-            return HttpResponseRedirect('/menu-admin/controle-acessos/grupos/usuario/' + str(usuario.id))
-
-        form = FormAssociaGrupo(request.POST)
+            return HttpResponseRedirect(f'/administracao/acesso/usuarios/{username}?{request.GET.urlencode()}')
 
         if form.is_valid():
-            usuario.groups.add(Group.objects.get(id=form.cleaned_data['grupo']))
+            user.groups.add(form.cleaned_data['grupo'])
 
     else:
-        form = FormAssociaGrupo()
+        form = FormAssociaGrupo(groups=user.groups.values('name'))
+
+    itens = user.groups.values('name', 'id').order_by('name')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
+        'page_obj': page_obj,
+        'user': user,
         'form': form,
-        'callback': 'constel_controle_grupos_usuarios',
-        'callback_text': 'Voltar',
-        'button_submit_text': 'Adidicionar grupo',
-        'grupos': grupos,
-        'pagina_titulo': 'Controle de Acessos',
-        'menu_titulo': usuario.first_name.title() + ' ' + usuario.last_name.title(),
+        'form_submit_text': 'Adicionar grupo',
+    }
+    context.update(menu)
+
+    return render(request, 'controle_acessos/v2/usuarios_grupos.html', context)
+
+
+@login_required
+@permission('admin',)
+def grupos(request):
+    menu = menu_principal(request)
+
+    q = request.GET.get('q', '')
+
+    initial = {
+        'q': q
     }
 
-    return render(request, 'controle_acessos/usuario.html', context)
+    form = FormFiltraQ(
+        initial=initial,
+        descricao='nome'
+    )
+
+    query = Q()
+
+    if q != '':
+        query = query & Q(name__icontains=q)
+
+    sub_query = User.objects.filter(
+        groups__id=OuterRef('pk')
+    ).values(
+        'groups__id'
+    ).annotate(
+        quantidade=Count('id')
+    ).values(
+        'quantidade'
+    )
+
+    itens = Group.objects.filter(query).values(
+        'id',
+        'name',
+    ).annotate(
+        quantidade=Subquery(sub_query)
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'controle_acessos/v2/grupos.html', context)
 
 
-@login_required()
-def view_acesso_negado(request):
+@login_required
+@permission('admin',)
+def grupos_usuarios(request, grupo):
+    menu = menu_principal(request)
 
-    return render(request, 'controle_acessos/acesso_restrito.html')
+    grupo = Group.objects.get(id=grupo)
+
+    if request.method == 'POST':
+
+        if grupo.name == 'admin':
+            messages.error(request, 'Negado')
+
+            return HttpResponseRedirect(f'/administracao/acesso/grupos/{grupo.id}?{request.GET.urlencode()}')
+
+        form = FormAssociaUsuario(data=request.POST)
+
+        user_id = request.POST.get('user_id', None)
+
+        if user_id is not None:
+            user = User.objects.get(username=user_id)
+            user.groups.remove(grupo)
+
+            return HttpResponseRedirect(f'/administracao/acesso/grupos/{grupo.id}?{request.GET.urlencode()}')
+
+        if form.is_valid():
+            user = form.cleaned_data['user']
+            user.groups.add(grupo)
+
+            return HttpResponseRedirect(f'/administracao/acesso/grupos/{grupo.id}?{request.GET.urlencode()}')
+
+    else:
+        form = FormAssociaUsuario(User.objects.filter(groups__id=grupo.id).values('id'))
+
+    itens = User.objects.filter(groups__id=grupo.id).values(
+        'username',
+        'first_name',
+        'last_name'
+    ).order_by('first_name', 'last_name')
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'grupo': grupo,
+        'form': form,
+        'form_submit_text': 'Adicionar usuário',
+    }
+    context.update(menu)
+
+    return render(request, 'controle_acessos/v2/grupos_usuarios.html', context)
