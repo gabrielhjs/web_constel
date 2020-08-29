@@ -55,6 +55,9 @@ def usuarios(request):
         'username',
         'first_name',
         'last_name',
+    ).order_by(
+        'first_name',
+        'last_name',
     )
 
     paginator = Paginator(itens, 50)
