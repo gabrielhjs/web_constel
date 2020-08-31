@@ -1,0 +1,8 @@
+{% extends 'constel/v2/app.html' %}
+{% load humanize %}
+{% block app_content %}
+{% include 'constel/v2/form_post.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'constel_admin_usuarios' %}?{{ request.GET.urlencode }}">voltar</a>
+</div>
+{% endblock %}

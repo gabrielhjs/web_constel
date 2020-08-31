@@ -1,0 +1,84 @@
+{% extends 'constel/v2/app.html' %}
+{% load humanize %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="5">Talões recebidos</th>
+            </tr>
+            <tr>
+                <th scope="col">Talão</th>
+                <th scope="col">Entregue por</th>
+                <th scope="col">Data</th>
+                <th scope="col">Vales entregues</th>
+                <th scope="col">Valor agregado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in taloes %}
+            <tr class="text-md-left">
+                <td>{{ item.talao_user_to__talao__talao }}</td>
+                <td>{{ item.talao_user_to__user__first_name|title }} {{ item.talao_user_to__user__last_name|title }}</td>
+                <td>{{ item.talao_user_to__data|default:""|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.n_vales}}</td>
+                <td>R$ {{ item.valor_agregado|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="4">Vales recebidos</th>
+            </tr>
+            <tr>
+                <th scope="col">Vale</th>
+                <th scope="col">Entregue por</th>
+                <th scope="col">Data</th>
+                <th scope="col">Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-md-left">
+                <td colspan="2">Total</td>
+                <td>{{ vales_total.quantidade }}</td>
+                <td>R$ {{ vales_total.total|floatformat:2 }}</td>
+            </tr>
+            {% for item in vales %}
+            <tr class="text-md-left">
+                <td>{{ item.vale_user_to__vale__vale }}</td>
+                <td>{{ item.vale_user_to__user__first_name|title }} {{ item.vale_user_to__user__last_name|title }}</td>
+                <td>{{ item.vale_user_to__data|default:""|date:'d/m/Y H:i:s' }}</td>
+                <td>R$ {{ item.vale_user_to__valor|floatformat:2|intcomma }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Materiais recebidos</th>
+            </tr>
+            <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Material</th>
+                <th scope="col">Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in materiais %}
+            <tr class="text-md-left">
+                <td>{{ item.almoxarifado_retiradas__material__codigo }}</td>
+                <td>{{ item.almoxarifado_retiradas__material__material }}</td>
+                <td>{{ item.quantidade }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'constel_admin_usuarios' %}?{{ request.GET.urlencode }}">voltar</a>
+</div>
+{% endblock %}

@@ -1,13 +1,17 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.db.models import Q, Count, Sum
+from django.core.paginator import Paginator
 
 from .forms import (
     FormCadastraUsuario,
-    FormLogin
+    FormLogin,
+    FormFiltraQ,
+    FormUsuarioEdita,
 )
 from .models import UserType, Veiculo
 from .objects import Button
@@ -155,3 +159,147 @@ def admin(request):
     context = menu_principal(request)
 
     return render(request, 'constel/v2/app.html', context)
+
+
+@login_required
+@permission('admin',)
+def usuarios(request):
+    menu = menu_principal(request)
+
+    q = request.GET.get('q', '')
+
+    initial = {
+        'q': q
+    }
+
+    form = FormFiltraQ(
+        initial=initial,
+        descricao='Nome ou matrícula'
+    )
+
+    query = Q()
+
+    if q != '':
+        query = query & Q(
+            Q(username__icontains=q) |
+            Q(first_name__icontains=q) |
+            Q(last_name__icontains=q))
+
+    itens = User.objects.filter(
+        query
+    ).values(
+        'username',
+        'first_name',
+        'last_name',
+        'last_login',
+        'user_type__is_passive',
+    ).order_by(
+        'first_name',
+        'last_name',
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'constel/v2/usuarios.html', context)
+
+
+@login_required
+@permission('admin',)
+def usuarios_edita(request, matricula):
+    menu = menu_principal(request)
+
+    user = get_object_or_404(User, username=matricula)
+    form = FormUsuarioEdita(request.POST or None, request.FILES or None, instance=user)
+
+    if request.method == 'POST':
+
+        if matricula == 'admin':
+            messages.error(request, 'Negado')
+
+            return HttpResponseRedirect(
+                f'/administracao/usuarios/{matricula}?{request.GET.urlencode()}'
+            )
+
+        if form.is_valid():
+            form.save()
+
+            return HttpResponseRedirect(
+                f'/administracao/usuarios/{form.cleaned_data["username"]}?{request.GET.urlencode()}'
+            )
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Salvar edição',
+    }
+    context.update(menu)
+
+    return render(request, 'constel/v2/usuarios_edita.html', context)
+
+
+@login_required
+@permission('admin',)
+def usuarios_info(request, matricula):
+    menu = menu_principal(request)
+
+    user = get_object_or_404(User, username=matricula)
+
+    taloes = User.objects.filter(username=matricula).values(
+        'talao_user_to__talao__talao',
+        'talao_user_to__user__first_name',
+        'talao_user_to__user__last_name',
+        'talao_user_to__data',
+    ).annotate(
+        n_vales=Count('talao_user_to__talao__talao_vales'),
+        valor_agregado=Sum('talao_user_to__talao__talao_vales__vale_entrega__valor'),
+    ).exclude(
+        talao_user_to__talao__talao=None
+    ).order_by(
+        '-talao_user_to__data'
+    )
+
+    vales = User.objects.filter(username=matricula).values(
+        'vale_user_to__vale__vale',
+        'vale_user_to__user__first_name',
+        'vale_user_to__user__last_name',
+        'vale_user_to__data',
+        'vale_user_to__valor',
+    ).exclude(
+        vale_user_to__vale__vale=None
+    ).order_by(
+        '-vale_user_to__data'
+    )
+
+    vales_total = vales.aggregate(
+        quantidade=Count('vale_user_to__vale__vale'),
+        total=Sum('vale_user_to__valor'),
+    )
+
+    materiais = User.objects.filter(username=matricula).values(
+        'almoxarifado_retiradas__material__codigo',
+        'almoxarifado_retiradas__material__material',
+    ).annotate(
+        quantidade=Sum('almoxarifado_retiradas__quantidade')
+    ).exclude(
+        almoxarifado_retiradas__material__codigo=None
+    ).order_by(
+        'almoxarifado_retiradas__material__material'
+    )
+
+    context = {
+        'taloes': taloes,
+        'vales': vales,
+        'vales_total': vales_total,
+        'materiais': materiais,
+    }
+    context.update(menu)
+
+    return render(request, 'constel/v2/usuarios_info.html', context)

@@ -11,7 +11,8 @@ def menu_principal(request):
 
     menu_buttons = [
         {'link': '/admin', 'text': 'Administração Django'},
-        {'link': '/administracao/acesso/', 'text': 'Controle de acessos'},
+        {'link': '/administracao/acesso', 'text': 'Controle de acessos'},
+        {'link': '/administracao/usuarios', 'text': 'Usuários'},
     ]
 
     button_return = {'link': '/', 'text': 'Voltar'}

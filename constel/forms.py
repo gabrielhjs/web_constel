@@ -274,3 +274,22 @@ class FormFiltraQData(forms.Form):
             self.errors['data_inicial'] = ['A data inicial não pode ser mais recente que a data final']
 
         return form_data
+
+
+class FormUsuarioEdita(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super(FormUsuarioEdita, self).__init__(*args, **kwargs)
+
+        self.fields['first_name'].label = 'Nome'
+        self.fields['last_name'].label = 'Sobrenome'
+        self.fields['email'].label = 'Email'
+        self.fields['username'].help_text = None
+        self.fields['username'].error_messages.update({'unique': 'Já existe um usuário com esta matrícula'})
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
