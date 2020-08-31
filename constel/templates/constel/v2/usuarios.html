@@ -28,13 +28,13 @@
                 </td>
                 <td>{{ item.last_login|default:""|date:'d/m/Y H:i:s' }}</td>
                 <td>
-                    <a class="btn btn-primary btn-sm"
+                    <a class="btn btn-primary btn-sm w-25"
                         href="{% url 'constel_admin_usuarios_edita' item.username %}?{{ request.GET.urlencode }}">
-                        Editar
+                        <i class="fas fa-user-edit"></i>
                     </a>
-                    <a class="btn btn-primary btn-sm"
+                    <a class="btn btn-primary btn-sm w-25"
                         href="{% url 'constel_admin_usuarios_info' item.username %}?{{ request.GET.urlencode }}">
-                        Info
+                        <i class="fas fa-info"></i>
                     </a>
                 </td>
             </tr>

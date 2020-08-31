@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -12,6 +12,7 @@ from .forms import (
     FormLogin,
     FormFiltraQ,
     FormUsuarioEdita,
+    FormUsuarioSenha,
 )
 from .models import UserType, Veiculo
 from .objects import Button
@@ -239,6 +240,7 @@ def usuarios_edita(request, matricula):
     context = {
         'form': form,
         'form_submit_text': 'Salvar edição',
+        'user_id': user.id,
     }
     context.update(menu)
 
@@ -250,7 +252,7 @@ def usuarios_edita(request, matricula):
 def usuarios_info(request, matricula):
     menu = menu_principal(request)
 
-    user = get_object_or_404(User, username=matricula)
+    get_object_or_404(User, username=matricula)
 
     taloes = User.objects.filter(username=matricula).values(
         'talao_user_to__talao__talao',
@@ -303,3 +305,40 @@ def usuarios_info(request, matricula):
     context.update(menu)
 
     return render(request, 'constel/v2/usuarios_info.html', context)
+
+
+@login_required
+@permission('admin',)
+def usuarios_senha(request, user):
+    menu = menu_principal(request)
+
+    user = get_object_or_404(User, id=user)
+    form = FormUsuarioSenha(user=user, data=request.POST or None)
+
+    if request.method == 'POST':
+
+        if user.username == 'admin':
+            messages.error(request, 'Negado')
+
+            return HttpResponseRedirect(
+                f'/administracao/usuarios/senha/{str(user.id)}/?{request.GET.urlencode()}'
+            )
+
+        print(form.is_valid())
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Senha alterada com sucesso')
+
+            return HttpResponseRedirect(
+                f'/administracao/usuarios/senha/{str(user.id)}/?{request.GET.urlencode()}'
+            )
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Alterar senha',
+        'user_username': user.username,
+    }
+    context.update(menu)
+
+    return render(request, 'constel/v2/usuarios_senha.html', context)

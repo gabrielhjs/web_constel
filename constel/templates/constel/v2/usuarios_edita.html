@@ -3,6 +3,9 @@
 {% block app_content %}
 {% include 'constel/v2/form_post.html' %}
 <div class="row justify-content-center m-0">
-    <a class="btn btn-danger px-5 my-3" href="{% url 'constel_admin_usuarios' %}?{{ request.GET.urlencode }}">voltar</a>
+    <a class="btn btn-warning px-5 my-3 w-50" href="{% url 'constel_admin_usuarios_senha' user_id %}?{{ request.GET.urlencode }}">alterar senha</a>
+</div>
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3 w-50" href="{% url 'constel_admin_usuarios' %}?{{ request.GET.urlencode }}">voltar</a>
 </div>
 {% endblock %}

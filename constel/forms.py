@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AdminPasswordChangeForm
 from django.contrib.auth.models import User
 
 from .models import Veiculo
@@ -290,6 +290,15 @@ class FormUsuarioEdita(forms.ModelForm):
         self.fields['email'].label = 'Email'
         self.fields['username'].help_text = None
         self.fields['username'].error_messages.update({'unique': 'Já existe um usuário com esta matrícula'})
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormUsuarioSenha(AdminPasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super(FormUsuarioSenha, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
