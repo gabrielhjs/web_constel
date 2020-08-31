@@ -4,7 +4,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q, Max, Min, Value, CharField, IntegerField, FloatField, F, ExpressionWrapper
+from django.db.models import Count, Q, Max, Min, Value, CharField, IntegerField, FloatField, F, ExpressionWrapper, OuterRef, Subquery
+from django.db.models.functions import TruncDate, TruncMonth, TruncWeek
 from django.core.paginator import Paginator
 from django.conf import settings
 
@@ -729,23 +730,31 @@ def consulta_ont_detalhe(request, serial):
 def consulta_dashboard(request):
     menu = menu_consultas(request)
 
-    status = Ont.objects.values(
-        'status',
-        'secao',
+    entradas = OntEntrada.objects.all().annotate(
+        mes=TruncWeek('data')
+    ).values(
+        'mes',
     ).annotate(
-        quantidade=Count(F('codigo'))
+        total=Count('id')
+    ).order_by(
+        'mes'
     )
 
-    lista = {str(1): []}
-
-    for item in status:
-        lista[str(item['status'])].append({"ele": item['secao'], "val": item['quantidade']})
-
-    print(lista)
+    saidas = OntSaida.objects.all().annotate(
+        mes=TruncWeek('data')
+    ).values(
+        'mes'
+    ).annotate(
+        total=Count('id')
+    ).order_by(
+        'mes'
+    )
 
     context = {
-        'lista': json.dumps(lista)
+        'entradas': entradas,
+        'saidas': saidas,
     }
+
     context.update(menu)
 
     return render(request, "cont/v2/consulta_dashboard.html", context)

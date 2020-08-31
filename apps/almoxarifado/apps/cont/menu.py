@@ -62,7 +62,7 @@ def menu_consultas(request):
         {'link': '/almoxarifado/cont/consultas/cargas', 'text': 'Cargas de ONT\'s'},
         {'link': '/almoxarifado/cont/consultas/saidas', 'text': 'Registro de saídas'},
         {'link': '/almoxarifado/cont/consultas/ont', 'text': 'Busca serial'},
-        # {'link': '/almoxarifado/cont/consultas/dashboard', 'text': 'Dashboard'},
+        {'link': '/almoxarifado/cont/consultas/dashboard', 'text': 'Dashboard'},
     ]
     button_return = {'link': '/almoxarifado/cont', 'text': 'Voltar'}
 
