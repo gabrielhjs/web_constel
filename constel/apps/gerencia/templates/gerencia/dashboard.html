@@ -1,11 +1,15 @@
 {% extends 'constel/v2/app.html' %}
 {% block app_content %}
-<div style=" display: flex; width: 100%; min-height: 100%; flex-wrap:wrap;">
-    <div id="combustivel" style="width: 50%; height: 50%;"></div>
-    <div id="almoxarifado" style="width: 50%; height: 50%;"></div>
-    <div id="conector" style="width: 50%; height: 50%;"></div>
-    <div id="ont" style="width: 50%; height: 50%;"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6 m-0 p-0" id="combustivel"></div>
+        <div class="col-lg-6 m-0 p-0" id="almoxarifado"></div>
+        <div class="col-lg-6 m-0 p-0" id="conector"></div>
+        <div class="col-lg-6 m-0 p-0" id="ont"></div>
+    </div>
 </div>
+
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
 <script type="text/javascript">
@@ -89,13 +93,10 @@
             legend: {
                 layout: 'vertical',
                 align: 'left',
-                x: 100,
+                x: 80,
                 verticalAlign: 'top',
                 y: 0,
-                floating: true,
-                backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || // theme
-                    'rgba(255,255,255,0.25)'
+                floating: true
             },
         series: [{
           name: 'Total',
@@ -184,13 +185,10 @@
             legend: {
                 layout: 'vertical',
                 align: 'left',
-                x: 100,
+                x: 80,
                 verticalAlign: 'top',
                 y: 0,
                 floating: true,
-                backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || // theme
-                    'rgba(255,255,255,0.25)'
             },
         series: [{
           name: 'Drop',
@@ -256,13 +254,10 @@
             legend: {
                 layout: 'vertical',
                 align: 'left',
-                x: 100,
+                x: 80,
                 verticalAlign: 'top',
                 y: 0,
-                floating: true,
-                backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || // theme
-                    'rgba(255,255,255,0.25)'
+                floating: true
             },
         series: [{
           name: 'Conector',
@@ -327,13 +322,10 @@
             legend: {
                 layout: 'vertical',
                 align: 'left',
-                x: 100,
+                x: 80,
                 verticalAlign: 'top',
                 y: 0,
-                floating: true,
-                backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || // theme
-                    'rgba(255,255,255,0.25)'
+                floating: true
             },
         series: [{
           name: 'Entrada',
