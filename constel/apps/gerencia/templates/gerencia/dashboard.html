@@ -1,0 +1,353 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div style=" display: flex; width: 100%; min-height: 100%; flex-wrap:wrap;">
+    <div id="combustivel" style="width: 50%; height: 50%;"></div>
+    <div id="almoxarifado" style="width: 50%; height: 50%;"></div>
+    <div id="conector" style="width: 50%; height: 50%;"></div>
+    <div id="ont" style="width: 50%; height: 50%;"></div>
+</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+<script type="text/javascript">
+    Highcharts.chart('combustivel', {
+        chart: {
+          type: 'spline',
+          backgroundColor:'#6c757d',
+          style: {
+            color: 'white',
+          }
+        },
+        title: {
+          text: 'Combustível'
+        },
+        xAxis: {
+            labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Mês',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+          categories: [
+            {% for entry in combustivel %}"{{ entry.mes|date:'M/y' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          crosshair: true
+        },
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: 'R$ {value}',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Total',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            }
+
+            }, { // Secondary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Quantidade',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}un',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+
+            }, { // Tertiary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Média por vale',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                labels: {
+                    format: 'R$ {value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                opposite: true
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 100,
+                verticalAlign: 'top',
+                y: 0,
+                floating: true,
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || // theme
+                    'rgba(255,255,255,0.25)'
+            },
+        series: [{
+          name: 'Total',
+          type: 'column',
+          data: [
+            {% for entry in combustivel %}{{ entry.total|stringformat:"f" }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        },{
+          name: 'Média',
+          type: 'spline',
+          yAxis: 2,
+          data: [
+            {% for entry in combustivel %}{{ entry.avg|stringformat:"f" }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        },{
+          name: 'Quantidade',
+          type: 'spline',
+          yAxis: 1,
+          data: [
+            {% for entry in combustivel %}{{ entry.qtd|stringformat:"f" }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        }]
+  });
+        Highcharts.chart('almoxarifado', {
+        chart: {
+          type: 'spline',
+          backgroundColor:'#6c757d',
+          style: {
+            color: 'white',
+          }
+        },
+        title: {
+          text: 'Cabos'
+        },
+        xAxis: {
+            labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Mês',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+          categories: [
+            {% for entry in almoxarifado %}"{{ entry.mes|date:'M/y' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          crosshair: true
+        },
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}m',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Drop',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            }
+
+            }, { // Secondary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Low',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}m',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 100,
+                verticalAlign: 'top',
+                y: 0,
+                floating: true,
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || // theme
+                    'rgba(255,255,255,0.25)'
+            },
+        series: [{
+          name: 'Drop',
+          type: 'spline',
+          data: [
+            {% for entry in almoxarifado %}{{ entry.total_1 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        },{
+          name: 'Low',
+          type: 'spline',
+          yAxis: 1,
+          data: [
+            {% for entry in almoxarifado %}{{ entry.total_2 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ]
+        }]
+     });
+  Highcharts.chart('conector', {
+        chart: {
+          type: 'spline',
+          backgroundColor:'#6c757d',
+          style: {
+            color: 'white',
+          }
+        },
+        title: {
+          text: 'Conector x Protetor'
+        },
+        xAxis: {
+            labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Mês',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+          categories: [
+            {% for entry in almoxarifado %}"{{ entry.mes|date:'M/y' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          crosshair: true
+        },
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}un',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Conector',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            }
+
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 100,
+                verticalAlign: 'top',
+                y: 0,
+                floating: true,
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || // theme
+                    'rgba(255,255,255,0.25)'
+            },
+        series: [{
+          name: 'Conector',
+          type: 'spline',
+          data: [
+            {% for entry in almoxarifado %}{{ entry.total_3 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        },{
+          name: 'Protetor',
+          type: 'spline',
+          data: [
+            {% for entry in almoxarifado %}{{ entry.total_4 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ]
+        }]
+  });
+  Highcharts.chart('ont', {
+        chart: {
+          type: 'spline',
+          backgroundColor:'#6c757d',
+          style: {
+            color: 'white',
+          }
+        },
+        title: {
+          text: 'Ont\'s'
+        },
+        xAxis: {
+            labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Mês',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+          categories: [
+            {% for entry in ont_entrada %}"{{ entry.mes|date:'M/y' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          crosshair: true
+        },
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}un',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Onts',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            }
+
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 100,
+                verticalAlign: 'top',
+                y: 0,
+                floating: true,
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || // theme
+                    'rgba(255,255,255,0.25)'
+            },
+        series: [{
+          name: 'Entrada',
+          type: 'spline',
+          data: [
+            {% for entry in ont_entrada %}{{ entry.total }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        },{
+          name: 'Saída',
+          type: 'spline',
+          data: [
+            {% for entry in ont_saida %}{{ entry.total }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ]
+        }]
+  });
+</script>
+{% endblock %}

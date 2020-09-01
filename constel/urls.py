@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', include('constel.apps.controle_acessos.urls')),
+    path('', include('constel.apps.gerencia.urls')),
 
     path('cadusuario/', views.view_cadastrar_usuario, name='cadastra_usuario'),
     # path('cadusuario-pass/', views.view_cadastrar_usuario_passivo, name='cadastra_usuario_passivo'),
