@@ -16,7 +16,7 @@ def menu_principal(request):
     button_return = {'link': '/', 'text': 'Voltar'}
 
     context = {
-        'app': 'Acesso',
+        'app': 'Gerência',
         'menu': 'Menu principal',
         'menu_buttons': menu_buttons,
         'button_return': button_return,
