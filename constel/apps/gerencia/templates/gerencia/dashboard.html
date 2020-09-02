@@ -193,13 +193,13 @@
             },
         series: [{
           name: 'Drop',
-          type: 'spline',
+          type: 'areaspline',
           data: [
             {% for entry in almoxarifado %}{{ entry.total_1 }}{% if not forloop.last %}, {% endif %}{% endfor %}
           ],
         },{
           name: 'Low',
-          type: 'spline',
+          type: 'areaspline',
           yAxis: 1,
           data: [
             {% for entry in almoxarifado %}{{ entry.total_2 }}{% if not forloop.last %}, {% endif %}{% endfor %}
@@ -262,13 +262,13 @@
             },
         series: [{
           name: 'Conector',
-          type: 'spline',
+          type: 'areaspline',
           data: [
             {% for entry in almoxarifado %}{{ entry.total_3 }}{% if not forloop.last %}, {% endif %}{% endfor %}
           ],
         },{
           name: 'Protetor',
-          type: 'spline',
+          type: 'areaspline',
           data: [
             {% for entry in almoxarifado %}{{ entry.total_4 }}{% if not forloop.last %}, {% endif %}{% endfor %}
           ]
@@ -330,13 +330,13 @@
             },
         series: [{
           name: 'Entrada',
-          type: 'spline',
+          type: 'areaspline',
           data: [
             {% for entry in ont_entrada %}{{ entry.total }}{% if not forloop.last %}, {% endif %}{% endfor %}
           ],
         },{
           name: 'Saída',
-          type: 'spline',
+          type: 'areaspline',
           data: [
             {% for entry in ont_saida %}{{ entry.total }}{% if not forloop.last %}, {% endif %}{% endfor %}
           ]
@@ -366,7 +366,7 @@
                 }
             },
           categories: [
-            {% for entry in combustivel_mes %}"{{ entry.dia|date:'M/y' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+            {% for entry in combustivel_mes %}"{{ entry.dia|date:'d' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
           ],
           crosshair: true
         },
@@ -413,18 +413,18 @@
                 floating: true
             },
         series: [{
-          name: 'Total',
-          type: 'spline',
-          data: [
-            {% for entry in combustivel_mes %}{{ entry.sum }}{% if not forloop.last %}, {% endif %}{% endfor %}
-          ],
-        },{
           name: 'Quantidade',
           yAxis: 1,
           type: 'column',
           data: [
             {% for entry in combustivel_mes %}{{ entry.qtd }}{% if not forloop.last %}, {% endif %}{% endfor %}
           ]
+        },{
+          name: 'Total',
+          type: 'areaspline',
+          data: [
+            {% for entry in combustivel_mes %}{{ entry.total|stringformat:"f" }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
         }]
   });
 </script>

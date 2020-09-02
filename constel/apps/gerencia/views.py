@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -42,7 +42,7 @@ def index(request):
         'dia'
     ).annotate(
         total=Sum('valor'),
-        qtd=Count('valor'),
+        qtd=Count('id'),
     ).order_by(
         'dia'
     )
