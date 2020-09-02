@@ -40,7 +40,7 @@ def index(request):
     menu = menu_principal(request)
 
     almoxarifado = MaterialSaida.objects.all().annotate(
-        mes=TruncMonth('data', )
+        mes=TruncMonth('data')
     ).values(
         'mes',
     ).annotate(
@@ -56,9 +56,9 @@ def index(request):
 
     cabos_mes = MaterialSaida.objects.filter(
         data__year=hoje.year,
-        data__month=hoje.month-3,
+        data__month=hoje.month,
     ).annotate(
-        dia=TruncDay('data', )
+        dia=TruncDay('data')
     ).values(
         'dia',
     ).annotate(

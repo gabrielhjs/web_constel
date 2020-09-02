@@ -35,7 +35,7 @@ def index(request):
 
     combustivel_mes = EntregaVale.objects.filter(
         data__year=hoje.year,
-        data__month=hoje.month-2,
+        data__month=hoje.month,
     ).annotate(
         dia=TruncDay('data')
     ).values(
