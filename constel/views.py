@@ -260,7 +260,7 @@ def usuarios_info(request, matricula):
         'talao_user_to__user__last_name',
         'talao_user_to__data',
     ).annotate(
-        n_vales=Count('talao_user_to__talao__talao_vales'),
+        n_vales=Count('talao_user_to__talao__talao_vales', filter=Q(talao_user_to__talao__talao_vales__status=2)),
         valor_agregado=Sum('talao_user_to__talao__talao_vales__vale_entrega__valor'),
     ).exclude(
         talao_user_to__talao__talao=None

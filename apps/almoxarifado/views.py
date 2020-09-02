@@ -14,8 +14,9 @@ from django.db.models import (
     F,
     IntegerField,
     ExpressionWrapper,
-    DecimalField,
+    DecimalField
 )
+from django.db.models.functions import TruncMonth, Coalesce, TruncDay
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -36,9 +37,44 @@ from .models import Material, Fornecedor, MaterialEntrada, MaterialFornecedorPra
 @login_required()
 @permission('almoxarifado', )
 def index(request):
-    context = menu_principal(request)
+    menu = menu_principal(request)
 
-    return render(request, 'constel/v2/app.html', context)
+    almoxarifado = MaterialSaida.objects.all().annotate(
+        mes=TruncMonth('data', )
+    ).values(
+        'mes',
+    ).annotate(
+        total_1=Coalesce(Sum('quantidade', filter=Q(material__codigo=20014434)), 0),
+        total_2=Coalesce(Sum('quantidade', filter=Q(material__codigo=20010213)), 0),
+        total_3=Coalesce(Sum('quantidade', filter=Q(material__codigo=15022859)), 0),
+        total_4=Coalesce(Sum('quantidade', filter=Q(material__codigo=15018751)), 0),
+    ).order_by(
+        'mes'
+    )
+
+    hoje = datetime.datetime.today()
+
+    cabos_mes = MaterialSaida.objects.filter(
+        data__year=hoje.year,
+        data__month=hoje.month-3,
+    ).annotate(
+        dia=TruncDay('data', )
+    ).values(
+        'dia',
+    ).annotate(
+        total_1=Coalesce(Sum('quantidade', filter=Q(material__codigo=20014434)), 0),
+        total_2=Coalesce(Sum('quantidade', filter=Q(material__codigo=20010213)), 0),
+    ).order_by(
+        'dia'
+    )
+
+    context = {
+        'almoxarifado': almoxarifado,
+        'cabos_mes': cabos_mes,
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/dashboard.html', context)
 
 
 @login_required()

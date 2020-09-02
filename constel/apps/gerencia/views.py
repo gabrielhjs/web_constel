@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import TruncMonth, TruncDay, Coalesce
-from django.db.models import Sum, Count, Avg, F, Q
+from django.db.models import Sum, Count, Avg, Q
 
 from ..controle_acessos.decorator import permission
 
@@ -35,7 +35,7 @@ def index(request):
 
     combustivel_mes = EntregaVale.objects.filter(
         data__year=hoje.year,
-        data__month=hoje.month,
+        data__month=hoje.month-2,
     ).annotate(
         dia=TruncDay('data')
     ).values(
