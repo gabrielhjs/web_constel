@@ -1,6 +1,8 @@
+from datetime import datetime
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.db.models.functions import TruncMonth, TruncWeek, Coalesce
+from django.db.models.functions import TruncMonth, TruncDay, Coalesce
 from django.db.models import Sum, Count, Avg, F, Q
 
 from ..controle_acessos.decorator import permission
@@ -27,6 +29,22 @@ def index(request):
         qtd=Count('valor'),
     ).order_by(
         'mes'
+    )
+
+    hoje = datetime.today()
+
+    combustivel_mes = EntregaVale.objects.filter(
+        data__year=hoje.year,
+        data__month=hoje.month,
+    ).annotate(
+        dia=TruncDay('data')
+    ).values(
+        'dia'
+    ).annotate(
+        total=Sum('valor'),
+        qtd=Count('valor'),
+    ).order_by(
+        'dia'
     )
 
     almoxarifado = MaterialSaida.objects.all().annotate(
@@ -64,6 +82,7 @@ def index(request):
 
     context = {
         'combustivel': combustivel,
+        'combustivel_mes': combustivel_mes,
         'almoxarifado': almoxarifado,
         'ont_entrada': ont_entrada,
         'ont_saida': ont_saida,

@@ -7,6 +7,7 @@
         <div class="col-lg-6 m-0 p-0" id="almoxarifado"></div>
         <div class="col-lg-6 m-0 p-0" id="conector"></div>
         <div class="col-lg-6 m-0 p-0" id="ont"></div>
+        <div class="col-lg-12 m-0 p-0" id="combustivel_mes"></div>
     </div>
 </div>
 
@@ -338,6 +339,91 @@
           type: 'spline',
           data: [
             {% for entry in ont_saida %}{{ entry.total }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ]
+        }]
+  });
+    Highcharts.chart('combustivel_mes', {
+        chart: {
+          type: 'spline',
+          backgroundColor:'#6c757d',
+          style: {
+            color: 'white',
+          }
+        },
+        title: {
+          text: 'Combustível (este mês)'
+        },
+        xAxis: {
+            labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Mês',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+          categories: [
+            {% for entry in combustivel_mes %}"{{ entry.dia|date:'M/y' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          crosshair: true
+        },
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: 'R$ {value}',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Total',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            }
+
+            }, { // Secondary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Quantidade',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}un',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 80,
+                verticalAlign: 'top',
+                y: 0,
+                floating: true
+            },
+        series: [{
+          name: 'Total',
+          type: 'spline',
+          data: [
+            {% for entry in combustivel_mes %}{{ entry.sum }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        },{
+          name: 'Quantidade',
+          yAxis: 1,
+          type: 'column',
+          data: [
+            {% for entry in combustivel_mes %}{{ entry.qtd }}{% if not forloop.last %}, {% endif %}{% endfor %}
           ]
         }]
   });

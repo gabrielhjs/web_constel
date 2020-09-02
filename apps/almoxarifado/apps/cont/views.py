@@ -1,13 +1,14 @@
 import json
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count, Q, Max, Min, Value, CharField, IntegerField, FloatField, F, ExpressionWrapper, OuterRef, Subquery
 from django.db.models.functions import TruncDate, TruncMonth, TruncWeek
 from django.core.paginator import Paginator
 from django.conf import settings
+from django.core import serializers
 
 from .forms import *
 from .models import Secao, Modelo, OntDefeitoHistorico
@@ -750,9 +751,20 @@ def consulta_dashboard(request):
         'mes'
     )
 
+    total = Ont.objects.filter(status__in=[0, 1]).aggregate(total=Count('id'))['total']
+
+    onts = Ont.objects.filter(status__in=[0, 1]).values(
+        'status',
+    ).annotate(
+        qtd=ExpressionWrapper(Count('id'), output_field=FloatField())/Value(total, output_field=FloatField())*100.0
+    ).order_by(
+        'qtd'
+    )
+
     context = {
         'entradas': entradas,
         'saidas': saidas,
+        'onts': onts,
     }
 
     context.update(menu)
