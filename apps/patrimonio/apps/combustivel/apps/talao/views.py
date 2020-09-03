@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.db.models import Sum, Max, Count, Q, F
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 import datetime
 
@@ -151,7 +152,7 @@ def cadastrar_talao(request):
 
 
 @login_required()
-@permission('patrimonio - combustivel',)
+@permission('patrimonio - combustivel - vale',)
 def cadastrar_beneficiario(request):
     """
     View de carregamento e gestão do cadastro de beneficiários de vale,
@@ -190,7 +191,7 @@ def cadastrar_beneficiario(request):
 
 
 @login_required()
-@permission('patrimonio - combustivel',)
+@permission('patrimonio - combustivel - vale',)
 def cadastrar_veiculo(request):
     """
     View de carregamento e gestão do cadastro de veículos de beneficiários,
@@ -350,6 +351,69 @@ def entregar_vale_2(request):
 
     else:
         form = FormEntregaVale2(user_to)
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Entregar vale',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/entregar_talao.html', context)
+
+
+@login_required()
+@permission('patrimonio', 'patrimonio - combustivel')
+def vales_buscar_vale_entregue(request):
+    """
+    View para a busca de vale entregue
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
+    menu = menu_vales(request)
+
+    form = FormBuscaValeEntregue(request.POST or None)
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+
+            return HttpResponseRedirect(f'/patrimonio/combustivel/talao/vales/edicao/{form.cleaned_data["vale"]}/')
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Buscar vale',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/entregar_talao.html', context)
+
+
+@login_required()
+@permission('patrimonio', )
+def vales_editar_entrega(request, vale_id):
+    """
+    View de edição de vales que já foram entregues. Para casos de preenchimento incorreto
+    :param request: informações do formulário
+    :param vale_id: codigo do vale
+    :return: carregamento do formulário
+    """
+    menu = menu_vales(request)
+
+    vale = get_object_or_404(Vale, vale=vale_id)
+
+    if vale.status != 2:
+        return HttpResponseRedirect('/patrimonio/combustivel/talao/vales/edicao/')
+
+    vale_entrega = EntregaVale.objects.get(vale=vale)
+    form = FormEditaValeEntregue(request.POST or None, instance=vale_entrega)
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Vale alterado com sucesso')
+
+            return HttpResponseRedirect('/patrimonio/combustivel/talao/vales/edicao/')
 
     context = {
         'form': form,
