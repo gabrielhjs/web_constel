@@ -389,7 +389,7 @@ def vales_buscar_vale_entregue(request):
 
 
 @login_required()
-@permission('patrimonio', )
+@permission('patrimonio', 'patrimonio - combustivel', 'gestor')
 def vales_editar_entrega(request, vale_id):
     """
     View de edição de vales que já foram entregues. Para casos de preenchimento incorreto
@@ -417,7 +417,7 @@ def vales_editar_entrega(request, vale_id):
 
     context = {
         'form': form,
-        'form_submit_text': 'Entregar vale',
+        'form_submit_text': 'Salvar',
     }
     context.update(menu)
 

@@ -165,3 +165,70 @@ class FormCadastraPosto(forms.ModelForm):
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormBuscaValeEntregue(forms.Form):
+    """
+    Form para a busca de vales já entregues
+    """
+
+    vale = forms.IntegerField(required=True, widget=forms.NumberInput(attrs={'placeholder': 'código numérico do vale'}))
+
+    def __init__(self, *args, **kwargs):
+        super(FormBuscaValeEntregue, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        form_data = super(FormBuscaValeEntregue, self).clean()
+
+        if not Vale.objects.filter(vale=form_data['vale']).exists():
+            self.errors['vale'] = ['Vale não encontrado']
+
+            return form_data
+
+        vale = Vale.objects.get(vale=form_data['vale'])
+
+        if vale.status != 2:
+            self.errors['vale'] = ['Vale NÃO consta como entregue no sistema']
+
+            return form_data
+
+        return form_data
+
+
+class FormEditaValeEntregue(forms.ModelForm):
+    user = forms.DateTimeField(label='Entregue por')
+    user_to = forms.DateTimeField(label='Entregue para')
+    vale = forms.IntegerField()
+    data = forms.DateTimeField()
+
+    class Meta:
+        model = EntregaVale
+        fields = ('valor', 'combustivel', 'posto', 'observacao')
+        fields_order = ['vale', 'data', 'valor', 'combustivel', 'posto', 'observacao']
+
+    def __init__(self,  *args, **kwargs):
+        super(FormEditaValeEntregue, self).__init__(*args, **kwargs)
+
+        instance = getattr(self, 'instance', None)
+        if instance and instance.id:
+            self.fields['vale'].required = False
+            self.fields['vale'].widget.attrs['disabled'] = 'disabled'
+            self.fields['vale'].initial = instance.vale
+
+            self.fields['data'].required = False
+            self.fields['data'].widget.attrs['disabled'] = 'disabled'
+            self.fields['data'].initial = instance.data
+
+            self.fields['user'].required = False
+            self.fields['user'].widget.attrs['disabled'] = 'disabled'
+            self.fields['user'].initial = instance.user.get_full_name().title()
+
+            self.fields['user_to'].required = False
+            self.fields['user_to'].widget.attrs['disabled'] = 'disabled'
+            self.fields['user_to'].initial = instance.user_to.get_full_name().title()
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})

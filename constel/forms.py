@@ -237,10 +237,11 @@ class FormFiltraQ(forms.Form):
         required=False
     )
 
-    def __init__(self, descricao='', *args, **kwargs):
+    def __init__(self, field_name='Filtrar por', descricao='', *args, **kwargs):
         super(FormFiltraQ, self).__init__(*args, **kwargs)
 
         self.fields['q'].widget = forms.TextInput(attrs={'placeholder': descricao})
+        self.fields['q'].label = field_name
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
