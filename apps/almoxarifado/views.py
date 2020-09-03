@@ -14,7 +14,8 @@ from django.db.models import (
     F,
     IntegerField,
     ExpressionWrapper,
-    DecimalField
+    DecimalField,
+    Window
 )
 from django.db.models.functions import TruncMonth, Coalesce, TruncDay
 from django.http import HttpResponseRedirect
@@ -39,7 +40,9 @@ from .models import Material, Fornecedor, MaterialEntrada, MaterialFornecedorPra
 def index(request):
     menu = menu_principal(request)
 
-    almoxarifado = MaterialSaida.objects.all().annotate(
+    almoxarifado = MaterialSaida.objects.filter(
+        material__codigo__in=[20014434, 20010213, 15022859, 15018751]
+    ).annotate(
         mes=TruncMonth('data')
     ).values(
         'mes',
@@ -55,6 +58,7 @@ def index(request):
     hoje = datetime.datetime.today()
 
     cabos_mes = MaterialSaida.objects.filter(
+        material__codigo__in=[20014434, 20010213],
         data__year=hoje.year,
         data__month=hoje.month,
     ).annotate(
@@ -68,9 +72,24 @@ def index(request):
         'dia'
     )
 
+    conector_protetor_cumulativo = MaterialSaida.objects.filter(
+        material__codigo__in=[15022859, 15018751],
+        data__day__lte=hoje.day,
+    ).annotate(
+        mes=TruncMonth('data')
+    ).values(
+        'mes',
+    ).annotate(
+        total_1=Coalesce(Sum('quantidade', filter=Q(material__codigo=15022859)), 0),
+        total_2=Coalesce(Sum('quantidade', filter=Q(material__codigo=15018751)), 0),
+    ).order_by(
+        'mes'
+    )
+
     context = {
         'almoxarifado': almoxarifado,
         'cabos_mes': cabos_mes,
+        'conector_protetor_cumulativo': conector_protetor_cumulativo,
     }
     context.update(menu)
 
