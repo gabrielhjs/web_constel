@@ -209,7 +209,7 @@ class FormEditaValeEntregue(forms.ModelForm):
         fields = ('valor', 'combustivel', 'posto', 'observacao')
         fields_order = ['vale', 'data', 'valor', 'combustivel', 'posto', 'observacao']
 
-    def __init__(self,  *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(FormEditaValeEntregue, self).__init__(*args, **kwargs)
 
         instance = getattr(self, 'instance', None)
@@ -232,3 +232,43 @@ class FormEditaValeEntregue(forms.ModelForm):
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormRetiraTalao(forms.Form):
+
+    talao = forms.IntegerField(
+        required=True,
+        widget=forms.NumberInput({'placeholder': 'código do talão a ser devolvido'})
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(FormRetiraTalao, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        form_data = super(FormRetiraTalao, self).clean()
+        talao_id = form_data['talao']
+
+        if not Talao.objects.filter(talao=talao_id).exists():
+            self.errors['talao'] = ['Talão NÃO encontrado']
+
+            return form_data
+
+        talao = Talao.objects.get(talao=talao_id)
+
+        if talao.status != 1:
+            self.errors['talao'] = ['Talão NÃO está em uso']
+
+            return form_data
+
+        if EntregaVale.objects.filter(vale__talao=talao).exists():
+            self.errors['talao'] = [
+                'Já foi entregue um ou mais vales deste talão',
+                'Talão não pode ser devolvido',
+            ]
+
+        form_data['talao'] = talao
+
+        return form_data

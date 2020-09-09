@@ -14,8 +14,7 @@ from django.db.models import (
     F,
     IntegerField,
     ExpressionWrapper,
-    DecimalField,
-    Window
+    DecimalField
 )
 from django.db.models.functions import TruncMonth, Coalesce, TruncDay
 from django.http import HttpResponseRedirect

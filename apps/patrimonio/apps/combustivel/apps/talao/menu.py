@@ -61,6 +61,7 @@ def menu_taloes(request):
 
     menu_buttons = [
         {'link': '/patrimonio/combustivel/talao/taloes/entrega', 'text': 'Entregar talão'},
+        {'link': '/patrimonio/combustivel/talao/taloes/devolucao', 'text': 'Devolução de talão vazio'},
     ]
     button_return = {'link': '/patrimonio/combustivel/talao', 'text': 'Voltar'}
 

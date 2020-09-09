@@ -9,7 +9,7 @@ from django.db.models import Max
 from .models import OntItem, OntLista
 from .forms import FormCria, FormOntInsere
 from apps.almoxarifado.models import Ordem
-from apps.almoxarifado.apps.pdf.objects import FichaOnts
+from apps.almoxarifado.apps.pdf.objects import FichaOnts, FichaOntsManutencao
 from constel.apps.controle_acessos.decorator import permission
 
 from ..cont.models import OntEntrada, OntSaida
