@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q, Max, Min, Value, CharField, IntegerField, FloatField, F, ExpressionWrapper, OuterRef, Subquery
+from django.db.models import Count, Q, Max, Min, Value, CharField, IntegerField, FloatField, F, ExpressionWrapper, OuterRef, Subquery, Sum
 from django.db.models.functions import TruncDate, TruncMonth, TruncWeek
 from django.core.paginator import Paginator
 from django.conf import settings
@@ -21,9 +21,36 @@ from constel.forms import FormFuncionario, FormFiltraQ
 @login_required()
 @permission('almoxarifado', )
 def index(request):
-    context = menu_principal(request)
+    menu = menu_principal(request)
 
-    return render(request, 'constel/v2/app.html', context)
+    total = Ont.objects.filter(
+        status__in=[0, 1]
+    ).aggregate(
+        total=Count('id')
+    )
+
+    print(total)
+
+    onts = Ont.objects.filter(
+        status__in=[0, 1]
+    ).values(
+        'status'
+    ).annotate(
+        quantidade=ExpressionWrapper(
+            Count('id'), output_field=FloatField()
+        )/Value(
+            total['total'], output_field=FloatField()
+        )
+    )
+
+    print(onts.values_list('status', 'quantidade'))
+
+    context = {
+        'onts': onts
+    }
+    context.update(menu)
+
+    return render(request, 'cont/v2/dashboard.html', context)
 
 
 @login_required()
