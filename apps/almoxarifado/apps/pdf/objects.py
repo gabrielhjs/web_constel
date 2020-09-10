@@ -391,7 +391,7 @@ class FichaOntsManutencao(FPDF):
 
     def tabela(self):
 
-        materiais = OntSaida.objects.filter(ordem=self.ordem).order_by('ont__modelo__nome', 'ont__codigo')
+        materiais = OntDevolucao.objects.filter(ordem=self.ordem).order_by('ont__modelo__nome', 'ont__codigo')
 
         modelos = materiais.values(
             'ont__modelo__nome'

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views, views_ont, views_ont_defeito
+from . import views, views_ont, views_ont_defeito, views_ont_manutencao
 
 
 urlpatterns = [
@@ -68,7 +68,7 @@ urlpatterns = [
         name='almoxarifado_cont_saida_lista_conclui',
     ),
 
-    # Urls das listas de devolução de Ont
+    # Urls das listas de devolução de Ont com defeito
 
     path(
         'almoxarifado/cont/defeito/saidas/lista/',
@@ -99,5 +99,38 @@ urlpatterns = [
         'almoxarifado/cont/defeito/saidas/conclui/<int:ordem_id>/',
         views_ont_defeito.view_conclui,
         name='almoxarifado_cont_defeito_saida_lista_conclui',
+    ),
+
+    # Urls das listas de devolução de Ont de manutenção
+
+    path(
+        'almoxarifado/cont/manutencao/saidas/lista/',
+        views_ont_manutencao.lista_cria,
+        name='almoxarifado_cont_manutencao_saida_lista',
+    ),
+    path(
+        'almoxarifado/cont/manutencao/saidas/lista/<int:fornecedor>/',
+        views_ont_manutencao.view_insere,
+        name='almoxarifado_cont_manutencao_saida_lista',
+    ),
+    path(
+        'almoxarifado/cont/manutencao/saidas/lista/entrega/<int:fornecedor>/',
+        views_ont_manutencao.view_entrega,
+        name='almoxarifado_cont_manutencao_saida_lista_entrega',
+    ),
+    path(
+        'almoxarifado/cont/manutencao/saidas/lista/imprimir/<int:ordem_id>/',
+        views_ont_manutencao.view_imprime,
+        name='almoxarifado_cont_manutencao_saida_lista_imprimi',
+    ),
+    path(
+        'almoxarifado/cont/manutencao/saidas/lista/limpa/<int:fornecedor>/',
+        views_ont_manutencao.view_limpa,
+        name='almoxarifado_cont_manutencao_saida_lista_limpa',
+    ),
+    path(
+        'almoxarifado/cont/manutencao/saidas/conclui/<int:ordem_id>/',
+        views_ont_manutencao.view_conclui,
+        name='almoxarifado_cont_manutencao_saida_lista_conclui',
     ),
 ]

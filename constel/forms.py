@@ -279,6 +279,8 @@ class FormFiltraQData(forms.Form):
 
 class FormUsuarioEdita(forms.ModelForm):
 
+    ativo = forms.BooleanField(required=False)
+
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email')
@@ -292,8 +294,25 @@ class FormUsuarioEdita(forms.ModelForm):
         self.fields['username'].help_text = None
         self.fields['username'].error_messages.update({'unique': 'Já existe um usuário com esta matrícula'})
 
+        self.fields['ativo'].initial = not self.instance.user_type.is_passive
+
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        super(FormUsuarioEdita, self).clean()
+
+        form_data = self.cleaned_data
+
+        if form_data['ativo'] and not self.instance.password:
+            self.errors['ativo'] = [
+                'O usuário deve possuir uma senha para utilizar o sistema',
+                'Cadastre uma senha para o usuário',
+            ]
+
+        else:
+            self.instance.user_type.is_passive = not form_data['ativo']
+            self.instance.user_type.save()
 
 
 class FormUsuarioSenha(AdminPasswordChangeForm):

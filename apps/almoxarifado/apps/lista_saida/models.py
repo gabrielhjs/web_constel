@@ -55,3 +55,24 @@ class DefeitoOntItem(models.Model):
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
+
+
+class ManutencaoOntLista(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='cont_manutencao_lista_saida')
+    fornecedor = models.OneToOneField(
+        Fornecedor,
+        on_delete=models.PROTECT,
+        related_name='cont_manutencao_lista_retirada'
+    )
+    data = models.DateTimeField(auto_now=True, verbose_name='Lista criada em')
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+
+
+class ManutencaoOntItem(models.Model):
+    lista = models.ForeignKey(ManutencaoOntLista, on_delete=models.CASCADE, related_name='cont_manutencao_lista_itens')
+    material = models.ForeignKey(Ont, on_delete=models.CASCADE, related_name='cont_manutencao_material_listas')
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None

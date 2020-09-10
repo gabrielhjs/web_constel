@@ -17,7 +17,7 @@ class FormCria(forms.Form):
         super(FormCria, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         form_data = self.cleaned_data
@@ -45,7 +45,7 @@ class FormInsere(forms.Form):
         self.user_to = user_to
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
         self.fields['material'].queryset = Material.objects.filter(
             quantidade__quantidade__gt=0
@@ -106,7 +106,7 @@ class FormOntInsere(forms.Form):
         )
 
         for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class' : 'form-control'})
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         form_data = self.cleaned_data

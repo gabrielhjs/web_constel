@@ -17,6 +17,11 @@ urlpatterns = [
     path('administracao/usuarios/<str:matricula>/', views.usuarios_edita, name='constel_admin_usuarios_edita'),
     path('administracao/usuarios/<str:matricula>/info/', views.usuarios_info, name='constel_admin_usuarios_info'),
     path('administracao/usuarios/senha/<int:user>/', views.usuarios_senha, name='constel_admin_usuarios_senha'),
+    path(
+        'administracao/usuarios/cadastro/sem_acesso/',
+        views.cadastrar_usuario_passivo,
+        name='constel_admin_cadastro_usuario_passivo'
+    ),
     path('consulta/usuarios/next=<str:rollback>', views.view_consulta_funcionarios, name='consulta_funcionarios'),
     path('consulta/veiculos/next=<str:rollback>', views.view_consulta_veiculos, name='consulta_veiculos'),
 ]
