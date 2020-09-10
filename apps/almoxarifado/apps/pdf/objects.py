@@ -3,11 +3,10 @@ from io import BytesIO
 from calendar import monthrange
 
 from django.db.models import Count
-from django.templatetags.static import static
-from django.http import request
 
 from apps.almoxarifado.models import MaterialEntrada, MaterialSaida
 from ..cont.models import OntSaida, OntDevolucao
+from web_constel.base import BASE_DIR
 
 
 class FichaMateriais(FPDF):
@@ -356,9 +355,9 @@ class FichaOntsManutencao(FPDF):
 
         self.set_font_size(10)
         # self.cell(self.epw, self.th * 2, cabecalho_texto, align='C', border=1)
-        self.image('apps/almoxarifado/apps/pdf/assets/copel_telecom.jpg', h=4*self.th, w=self.epw*.2)
+        self.image(BASE_DIR + '/apps/almoxarifado/apps/pdf/assets/copel_telecom.jpg', h=4*self.th, w=self.epw*.2)
         self.set_xy(self.epw*.2 + self.l_margin, self.t_margin)
-        self.image('apps/almoxarifado/apps/pdf/assets/titulo.jpg', h=4*self.th, w=self.epw*.5)
+        self.image(BASE_DIR + '/apps/almoxarifado/apps/pdf/assets/titulo.jpg', h=4*self.th, w=self.epw*.5)
         self.set_xy(self.l_margin, self.t_margin)
         self.cell(h=4 * self.th, w=self.epw * .2, border=1)
         self.cell(h=4 * self.th, w=self.epw * .5, border=1)
