@@ -16,142 +16,6 @@ from constel.forms import FormFiltraQ
 
 @login_required
 @permission('patrimonio', )
-def view_cadastrar_ferramenta(request):
-
-    if request.method == 'POST':
-        form = FormCadastraFerramenta(request.POST)
-
-        if form.is_valid():
-            ferramenta = Ferramenta(
-                nome=form.cleaned_data['nome'],
-                descricao=form.cleaned_data['descricao'],
-                user=request.user,
-            )
-            ferramenta.save()
-            FerramentaQuantidade(
-                ferramenta=ferramenta,
-                quantidade=0,
-            ).save()
-
-            return HttpResponseRedirect('/patrimonio/menu-cadastros/')
-    else:
-        form = FormCadastraFerramenta()
-
-    context = {
-        'ferramentas': Ferramenta.objects.all().order_by('nome'),
-        'form': form,
-        'pagina_titulo': 'Patrimônio',
-        'menu_titulo': 'Cadastro de ferramenta',
-        'callback': 'patrimonio_menu_cadastros',
-        'button_submit_text': 'Cadastrar ferramenta',
-        'callback_text': 'Cancelar',
-    }
-
-    return render(request, 'ferramenta/cadastrar_ferramenta.html', context)
-
-
-@login_required
-@permission('patrimonio', )
-def view_entrada_ferramenta(request):
-
-    if request.method == 'POST':
-        form = FormEntradaFerramenta(request.POST)
-
-        if form.is_valid():
-            FerramentaEntrada(
-                ferramenta=form.cleaned_data['ferramenta'],
-                quantidade=form.cleaned_data['quantidade'],
-                valor=form.cleaned_data['valor'],
-                observacao=form.cleaned_data['observacao'],
-                user=request.user,
-            ).save()
-            ferramenta = form.cleaned_data['ferramenta']
-            ferramenta.quantidade.quantidade += form.cleaned_data['quantidade']
-            ferramenta.quantidade.save()
-
-            return HttpResponseRedirect('/patrimonio/menu-entradas/')
-
-    else:
-        form = FormEntradaFerramenta()
-
-    context = {
-        'form': form,
-        'callback': 'patrimonio_menu_entradas',
-        'button_submit_text': 'Registrar entrada',
-        'callback_text': 'Cancelar',
-        'pagina_titulo': 'Patrimônio',
-        'menu_titulo': 'Aquisição de ferramenta',
-    }
-
-    return render(request, 'patrimonio/entrada.html', context)
-
-
-@login_required
-@permission('patrimonio', )
-def view_saida_ferramenta(request):
-
-    if request.method == 'POST':
-        form = FormSaidaFerramenta(request.POST)
-
-        if form.is_valid():
-            saida = FerramentaSaida(
-                ferramenta=form.cleaned_data['ferramenta'],
-                quantidade=form.cleaned_data['quantidade'],
-                observacao=form.cleaned_data['observacao'],
-                user_to=form.cleaned_data['user_to'],
-                user=request.user,
-            )
-            ferramenta = form.cleaned_data['ferramenta']
-            ferramenta.quantidade.quantidade -= form.cleaned_data['quantidade']
-
-            ferramenta.quantidade.save()
-            saida.save()
-
-            return HttpResponseRedirect('/patrimonio/menu-saidas/')
-
-    else:
-        form = FormSaidaFerramenta()
-
-    context = {
-        'form': form,
-        'callback': 'patrimonio_menu_saidas',
-        'button_submit_text': 'Registrar entrega',
-        'callback_text': 'Cancelar',
-        'pagina_titulo': 'Patrimônio',
-        'menu_titulo': 'Entrega de ferramenta',
-    }
-
-    return render(request, 'patrimonio/entrada.html', context)
-
-
-@login_required
-@permission('patrimonio', )
-def view_consulta_ferramentas(request):
-
-    context = {
-        'ferramentas': Ferramenta.objects.all().order_by('nome'),
-        'pagina_titulo': 'Patrimônio',
-        'menu_titulo': 'Ferramentas cadastradas',
-    }
-
-    return render(request, 'ferramenta/consulta_ferramenta.html', context=context)
-
-
-@login_required
-@permission('patrimonio', )
-def view_consulta_ferramentas_estoque(request):
-
-    context = {
-        'ferramentas': FerramentaQuantidade.objects.all().order_by('ferramenta__nome'),
-        'pagina_titulo': 'Patrimônio',
-        'menu_titulo': 'Estoque de ferramentas',
-    }
-
-    return render(request, 'ferramenta/consulta_ferramenta_estoque.html', context=context)
-
-
-@login_required
-@permission('patrimonio', )
 def cadastra_ferramenta(request):
     menu = menu_cadastros(request)
 
@@ -360,6 +224,7 @@ def consulta_ferramenta(request):
     itens = Ferramenta.objects.filter(
         query
     ).values(
+        'id',
         'nome',
         'descricao',
         'data',
@@ -379,6 +244,31 @@ def consulta_ferramenta(request):
     context.update(menu)
 
     return render(request, 'ferramenta/v2/consulta_ferramenta.html', context=context)
+
+
+def edita_modelo_ferramenta(request, modelo_id):
+    menu = menu_consultas_modelos(request)
+
+    modelo = Ferramenta.objects.get(id=modelo_id)
+
+    form = FormEditaModeloFerramenta(data=request.POST or None, instance=modelo)
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Alterações salvas com sucesso')
+
+            return HttpResponseRedirect(f'/patrimonio/edicao/ferramenta/modelo/{modelo_id}')
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Salvar alterações',
+    }
+    context.update(menu)
+
+    return render(request, 'ferramenta/v2/edita_modelo_ferramenta.html', context)
 
 
 @login_required

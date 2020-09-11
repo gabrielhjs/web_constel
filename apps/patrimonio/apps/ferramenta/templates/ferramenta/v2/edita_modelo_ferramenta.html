@@ -1,0 +1,7 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_post.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'patrimonio_consulta_ferramenta' %}?{{ request.GET.urlencode }}">Voltar</a>
+</div>
+{% endblock %}

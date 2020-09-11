@@ -1,5 +1,4 @@
 from django import forms
-from django.core.exceptions import ValidationError
 
 from apps.almoxarifado.apps.cont.forms import NonstickyCharfield
 
@@ -101,3 +100,41 @@ class FormSaidaPatrimonio(forms.Form):
 
         self.cleaned_data['patrimonio'] = PatrimonioId.objects.get(id=int(self.cleaned_data['patrimonio']))
         self.cleaned_data['user_to'] = User.objects.get(id=int(self.cleaned_data['user_to']))
+
+
+class FormEditaModeloPatrimonio(forms.ModelForm):
+
+    class Meta:
+        model = Patrimonio
+        fields = ('nome', 'descricao')
+
+    def __init__(self, *args, **kwargs):
+        super(FormEditaModeloPatrimonio, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormEditaPatrimonio(forms.ModelForm):
+
+    class Meta:
+        model = PatrimonioId
+        fields = ('codigo', 'patrimonio', 'valor')
+
+    def __init__(self, *args, **kwargs):
+        super(FormEditaPatrimonio, self).__init__(*args, **kwargs)
+
+        self.fields['patrimonio'].label = 'Modelo'
+        self.fields['valor'].label = 'Valor (R$)'
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        form_data = super(FormEditaPatrimonio, self).clean()
+
+        if form_data['codigo'] != self.instance.codigo:
+            if PatrimonioId.objects.filter(codigo=form_data['codigo']).exists():
+                self.errors['codigo'] = ['Código já cadastrado em outro patrímonio']
+
+        return form_data

@@ -116,3 +116,16 @@ class FormFechamentoFerramenta(forms.Form):
             self._errors['quantidade'] = ['Não há essa quantidade de ferramentas na carga deste funcionário']
 
         return form_data
+
+
+class FormEditaModeloFerramenta(forms.ModelForm):
+
+    class Meta:
+        model = Ferramenta
+        fields = ('nome', 'descricao')
+
+    def __init__(self, *args, **kwargs):
+        super(FormEditaModeloFerramenta, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})

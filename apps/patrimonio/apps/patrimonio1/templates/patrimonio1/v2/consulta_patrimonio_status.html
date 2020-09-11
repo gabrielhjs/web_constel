@@ -25,9 +25,13 @@
                 <td>{{ item.ultima_entrega|default_if_none:''|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ item.user_to_first_name|default_if_none:''|title }} {{ item.user_to_last_name|default_if_none:''|title }}</td>
                 <td>
-                    <a class="btn btn-primary btn-sm"
-                        href="{% url 'patrimonio_saida_patrimonio_status_detalhe' item.codigo %}?q={% firstof request.GET.q '' %}">
-                        Histórico
+                    <a class="btn btn-primary btn-sm w-50"
+                        href="{% url 'patrimonio_consulta_patrimonio_status_detalhe' item.codigo %}?{{ request.GET.urlencode }}">
+                        <i class="fas fa-history"></i>
+                    </a>
+                    <a class="btn btn-primary btn-sm w-50"
+                        href="{% url 'patrimonio_edita_patrimonio' item.id %}?{{ request.GET.urlencode }}">
+                        <i class="far fa-edit"></i>
                     </a>
                 </td>
             </tr>
