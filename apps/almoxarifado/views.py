@@ -349,8 +349,13 @@ def consulta_estoque(request):
     ).annotate(
         pt_min=ExpressionWrapper(F('pt') - Max('almoxarifado_material_prazo__dias'), output_field=IntegerField()),
         pt_max=ExpressionWrapper(F('pt') - Min('almoxarifado_material_prazo__dias'), output_field=IntegerField()),
+        ultima_entrada=Max("entradas__data"),
     ).exclude(
         entradas__isnull=True,
+    ).exclude(
+        Q(quantidade__quantidade=0) & Q(
+            ultima_entrada__lte=datetime.datetime.today() - datetime.timedelta(days=60)
+        )
     ).order_by('material')
 
     paginator = Paginator(itens, 50)
