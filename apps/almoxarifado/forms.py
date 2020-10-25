@@ -187,7 +187,7 @@ class FormMaterialEdita(forms.ModelForm):
 
     class Meta:
         model = Material
-        fields = ['material', 'descricao', 'tipo']
+        fields = ['material', 'descricao', 'tipo', 'status']
 
     def __init__(self, *args, **kwargs):
         super(FormMaterialEdita, self).__init__(*args, **kwargs)

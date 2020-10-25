@@ -170,6 +170,7 @@ def edicao_material(request):
         'data',
         'user__first_name',
         'user__last_name',
+        'status',
     ).order_by(
         'material'
     )

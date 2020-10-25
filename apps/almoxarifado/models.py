@@ -34,6 +34,7 @@ class Material(models.Model):
     data = models.DateTimeField(auto_now=True, verbose_name='Data de cadastro')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='materiais_cadastrados', default=None)
     tipo = models.IntegerField(choices=TIPOS, default=1)
+    status = models.BooleanField(default=True)
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
