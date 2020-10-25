@@ -99,3 +99,5 @@ aplicação externa é realizadada através de web socket (consultas) e API (reg
 ---
 
 by **Gabriel Sá** | Analista de desenvolvimento
+
+teste
