@@ -4,7 +4,7 @@
     <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
         <thead>
             <tr>
-                <th scope="col" colspan="5">Lista de ONT's</th>
+                <th scope="col" colspan="6">Lista de ONT's</th>
             </tr>
             <tr>
                 <th scope="col" rowspan="2">Serial</th>
@@ -15,6 +15,7 @@
                 <th scope="col">Saída</th>
                 <th scope="col">Aplicação</th>
                 <th scope="col">Devolução</th>
+                <th scope="col">Contrato</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,7 @@
                 <td>{{ item.max_saida|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ item.max_aplicada|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ item.max_devolucao|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.max_contrato|default_if_none:"" }}</td>
             </tr>
             {% endfor %}
     </table>
