@@ -2,7 +2,7 @@
 {% block app_content %} 
 {% include 'constel/v2/form_post.html' %}
 <div class="row mx-0 mb-3 justify-content-center">
-    <a href="/almoxarifado/cont/defeito/entrada/limpa" class="btn btn-primary px-4">Concluir</a>
+    <a href="{% url url_limpa_lista %}" class="btn btn-primary px-4">Limpar lista</a>
 </div>
 <div class="table-responsive table-content enumerated">
     <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">

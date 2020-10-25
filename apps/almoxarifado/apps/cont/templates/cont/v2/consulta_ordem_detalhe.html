@@ -1,0 +1,62 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <tbody>
+            <tr class="text-md-left">
+                <td>ID</td>
+                <td>{{ ordem.id }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Data</td>
+                <td>{{ ordem.data|date:'d/m/Y H:i:s' }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Tipo</td>
+                <td>{{ ordem.get_tipo_display }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Responsável</td>
+                <td>{{ ordem.user.get_full_name|title }}</td>
+            </tr>
+            {% if tipo %}
+            <tr class="text-md-left">
+                <td>Para</td>
+                <td>{{ ordem.saida_ordem_ont.first.user_to.get_full_name|title }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0 mt-1">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Lista de Onts</th>
+            </tr>
+            <tr>
+                <th scope="col">Serial</th>
+                <th scope="col">Seção</th>
+                <th scope="col">Modelo</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in page_obj %}
+            <tr>
+                <td>{{ item.ont__codigo }}</td>
+                <td>{{ item.ont__secao__nome }}</td>
+                <td>{{ item.ont__modelo__nome }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    {% if tipo %}
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_cont_consulta_saidas' %}?{{ request.GET.urlencode }}">voltar</a>
+    {% else %}
+    <a class="btn btn-danger px-5 my-3" href="{% url 'almoxarifado_consulta_ordem_entrada' %}?{{ request.GET.urlencode }}">voltar</a>
+    {% endif %}
+    <a class="btn btn-primary px-5 my-3 ml-3" href="{% url 'almoxarifado_cont_saida_lista_imprimi' ordem.id %}" target="_blank">imprimir ficha</a>
+</div>
+{% endblock %}

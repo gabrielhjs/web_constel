@@ -82,6 +82,7 @@ def menu_vales(request):
 
     menu_buttons = [
         {'link': '/patrimonio/combustivel/talao/vales/entrega-1', 'text': 'Entregar vale'},
+        {'link': '/patrimonio/combustivel/talao/vales/edicao/', 'text': 'Editar vale entregue'},
     ]
     button_return = {'link': '/patrimonio/combustivel/talao', 'text': 'Voltar'}
 

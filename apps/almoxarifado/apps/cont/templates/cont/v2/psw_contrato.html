@@ -31,10 +31,10 @@
     var socket = new WebSocket(endpoit)
 
     var formData = $("form")
-    var id_contrato = $("#id_contrato")
+    var id_contratos = $("#id_contratos")
     var tabela = $("#dados")
 
-    id_contrato.attr('disabled', true)
+    id_contratos.attr('disabled', true)
 
     socket.onmessage = function(e) {
         var mensagem = JSON.parse(e.data)
@@ -45,7 +45,7 @@
         }
 
         else if (mensagem.tipo == "logado") {
-            id_contrato.attr('disabled', false)
+            id_contratos.attr('disabled', false)
             
             if (mensagem.data == "erro") {
                  window.location.replace("http://" + window.location.host + "/teste/");
@@ -53,18 +53,28 @@
 
             formData.submit(function(event){
                 event.preventDefault()
-                dados = {
-                    'tipo': 'contrato',
-                    'dados': id_contrato.val(),
-                    'username': '{{ user }}',
-                    'token': token
-                }
-                socket.send(JSON.stringify(dados))
-                tabela.append("<tr class='"+id_contrato.val()+"'><td>"+id_contrato.val()+"</td><td colspan='3' style='color: DarkOrange'>Buscando...</td><td colspan='2' style='color: DarkOrange'>Buscando...</td></tr>")
-                id_contrato.val('')
-                id_contrato.focus()
-            })
 
+                var contratos = id_contratos.val()
+                console.log(contratos)
+                var contratos_list = contratos.replace(" ", "").split(",")
+
+                for (i in contratos_list) {
+                    if (!isNaN(contratos_list[i])) {
+                        console.log(contratos_list[i])
+                        
+                        dados = {
+                            'tipo': 'contrato',
+                            'dados': parseInt(contratos_list[i]),
+                            'username': '{{ user }}',
+                            'token': token
+                        }
+                        socket.send(JSON.stringify(dados))
+                        tabela.append("<tr class='"+contratos_list[i]+"'><td>"+contratos_list[i]+"</td><td colspan='3' style='color: DarkOrange'>Buscando...</td><td colspan='2' style='color: DarkOrange'>Buscando...</td></tr>")
+                    }
+                }
+                id_contratos.val('')
+                id_contratos.focus()
+            })
         }
         else if (mensagem.tipo == "contrato") {
             var linha = $("."+mensagem.dados.contrato).last()

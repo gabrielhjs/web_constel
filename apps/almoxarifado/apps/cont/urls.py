@@ -53,6 +53,26 @@ urlpatterns = [
         name='almoxarifado_cont_consulta_tecnicos_carga_detalhes',
     ),
     path(
+        'almoxarifado/cont/consultas/saidas/',
+        views.consulta_saidas,
+        name='almoxarifado_cont_consulta_saidas',
+    ),
+    path(
+        'almoxarifado/cont/consultas/saidas/<int:ordem>/',
+        views.consulta_saidas_detalhe,
+        name='almoxarifado_cont_consulta_saidas_detalhes',
+    ),
+    path(
+        'almoxarifado/cont/consultas/devolucoes/',
+        views.consulta_devolucoes,
+        name='almoxarifado_cont_consulta_devolucoes',
+    ),
+    path(
+        'almoxarifado/cont/consultas/devolucoes/<int:ordem>/',
+        views.consulta_devolucoes_detalhe,
+        name='almoxarifado_cont_consulta_devolucoes_detalhes',
+    ),
+    path(
         'almoxarifado/cont/consultas/ont/',
         views.consulta_ont,
         name='almoxarifado_cont_consulta_ont',
@@ -93,18 +113,33 @@ urlpatterns = [
         name='almoxarifado_cont_baixa_psw_contrato',
     ),
     path(
-        'almoxarifado/cont/defeito',
-        views.defeito,
+        'almoxarifado/cont/fechamentos',
+        views.fechamentos,
         name='almoxarifado_cont_defeito',
     ),
     path(
-        'almoxarifado/cont/defeito/entrada',
+        'almoxarifado/cont/fechamento/entrada/defeito',
         views.defeito_registra,
-        name='almoxarifado_cont_defeito_entrada',
+        name='almoxarifado_cont_entrada_defeito',
     ),
     path(
-        'almoxarifado/cont/defeito/entrada/limpa',
+        'almoxarifado/cont/fechamento/entrada/defeito/limpa',
         views.defeito_registra_limpa,
-        name='almoxarifado_cont_defeito_entrada_lima',
+        name='almoxarifado_cont_entrada_defeito_limpa',
+    ),
+    path(
+        'almoxarifado/cont/fechamento/entrada/manutencao_1',
+        views.manutencao_registra_1,
+        name='almoxarifado_cont_entrada_manutencao_1',
+    ),
+    path(
+        'almoxarifado/cont/fechamento/entrada/manutencao_2',
+        views.manutencao_registra_2,
+        name='almoxarifado_cont_entrada_manutencao_2',
+    ),
+    path(
+        'almoxarifado/cont/fechamento/entrada/manutencao/limpa',
+        views.manutencao_registra_limpa,
+        name='almoxarifado_cont_entrada_manutencao_limpa',
     ),
 ]

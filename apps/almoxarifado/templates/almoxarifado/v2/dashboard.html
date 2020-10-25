@@ -1,0 +1,323 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6 m-0 p-0" id="almoxarifado"></div>
+        <div class="col-lg-6 m-0 p-0" id="conector"></div>
+        <div class="col-lg-12 m-0 p-0" id="conector_protetor_cumulativo"></div>
+        <div class="col-lg-12 m-0 p-0" id="cabos_mes"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+<script type="text/javascript">
+        Highcharts.chart('almoxarifado', {
+        chart: {
+          type: 'spline',
+          backgroundColor:'#6c757d',
+          style: {
+            color: 'white',
+          }
+        },
+        title: {
+          text: 'Saída - Cabos'
+        },
+        xAxis: {
+            labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Mês',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+          categories: [
+            {% for entry in almoxarifado %}"{{ entry.mes|date:'M/y' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          crosshair: true
+        },
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}m',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Drop',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            }
+
+            }, { // Secondary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Low',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}m',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 80,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+            },
+        series: [{
+          name: 'Drop',
+          type: 'areaspline',
+          data: [
+            {% for entry in almoxarifado %}{{ entry.total_1 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        },{
+          name: 'Low',
+          type: 'areaspline',
+          yAxis: 1,
+          data: [
+            {% for entry in almoxarifado %}{{ entry.total_2 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ]
+        }]
+     });
+  Highcharts.chart('conector', {
+        chart: {
+          type: 'spline',
+          backgroundColor:'#6c757d',
+          style: {
+            color: 'white',
+          }
+        },
+        title: {
+          text: 'Saída - Conector x Protetor'
+        },
+        xAxis: {
+            labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Mês',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+          categories: [
+            {% for entry in almoxarifado %}"{{ entry.mes|date:'M/y' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          crosshair: true
+        },
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}un',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Conector',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            }
+
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 80,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true
+            },
+        series: [{
+          name: 'Conector',
+          type: 'areaspline',
+          data: [
+            {% for entry in almoxarifado %}{{ entry.total_3 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        },{
+          name: 'Protetor',
+          type: 'areaspline',
+          data: [
+            {% for entry in almoxarifado %}{{ entry.total_4 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ]
+        }]
+  });
+  Highcharts.chart('cabos_mes', {
+        chart: {
+          type: 'spline',
+          backgroundColor:'#6c757d',
+          style: {
+            color: 'white',
+          }
+        },
+        title: {
+          text: 'Saída - Cabos (mês atual)'
+        },
+        xAxis: {
+            labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Dia',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+          categories: [
+            {% for entry in cabos_mes %}"{{ entry.dia|date:'d' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          crosshair: true
+        },
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}m',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Drop',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            }
+
+            }, { // Secondary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Low',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}m',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 80,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+            },
+        series: [{
+          name: 'Drop',
+          type: 'areaspline',
+          data: [
+            {% for entry in cabos_mes %}{{ entry.total_1 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        },{
+          name: 'Low',
+          type: 'areaspline',
+          yAxis: 1,
+          data: [
+            {% for entry in cabos_mes %}{{ entry.total_2 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ]
+        }]
+     });
+     Highcharts.chart('conector_protetor_cumulativo', {
+        chart: {
+          type: 'spline',
+          backgroundColor:'#6c757d',
+          style: {
+            color: 'white',
+          }
+        },
+        title: {
+          text: 'Saída - Conector x Protetor (acumulado até dia atual do mês)'
+        },
+        xAxis: {
+            labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Dia',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+          categories: [
+            {% for entry in conector_protetor_cumulativo %}"{{ entry.mes|date:'M/y' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          crosshair: true
+        },
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}un',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Drop',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            }
+
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 80,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+            },
+        series: [{
+          name: 'Conector',
+          type: 'areaspline',
+          data: [
+            {% for entry in conector_protetor_cumulativo %}{{ entry.total_1 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+        },{
+          name: 'Protetor',
+          type: 'areaspline',
+          data: [
+            {% for entry in conector_protetor_cumulativo %}{{ entry.total_2 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ]
+        }]
+     });
+</script>
+{% endblock %}

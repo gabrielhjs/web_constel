@@ -64,7 +64,12 @@
                             href="{% url 'almoxarifado_cont_menu_principal' %}">Cont2</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" role="button" href="{% url 'constel_menu_admin' %}">Administração</a>
+                        <a class="nav-link {% if app == 'Gerência' %}active{% endif %} px-3" role="button"
+                            href="{% url 'constel_gerencia' %}">Gerência</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" role="button"
+                            href="{% url 'constel_admin' %}">Administração</a>
                     </li>
                 </ul>
 
@@ -84,8 +89,8 @@
     </header>
 
     <!-- Corpo do consteúdo dos aplicativos -->
-    <div class="container-fluid" style="margin-top: 10vh;">
-        <div class="row" id="content">
+    <div class="container-fluid">
+        <div class="row m-0" id="content">
             {% block body_content %}
             {% endblock %}
         </div>

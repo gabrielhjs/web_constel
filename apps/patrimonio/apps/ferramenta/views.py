@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 
@@ -8,7 +9,7 @@ from .forms import *
 from .models import *
 
 from constel.apps.controle_acessos.decorator import permission
-from ...menu import menu_cadastros, menu_entradas, menu_saidas, menu_consultas
+from ...menu import menu_principal, menu_cadastros, menu_entradas, menu_saidas, menu_consultas, menu_consultas_modelos
 
 from constel.forms import FormFiltraQ
 
@@ -247,8 +248,27 @@ def saida_ferramenta(request):
             ferramenta = form.cleaned_data['ferramenta']
             ferramenta.quantidade.quantidade -= form.cleaned_data['quantidade']
 
+            if FerramentaQuantidadeFuncionario.objects.filter(
+                user=form.cleaned_data['user_to'],
+                ferramenta=ferramenta
+            ).exists():
+
+                carga = FerramentaQuantidadeFuncionario.objects.get(
+                    user=form.cleaned_data['user_to'],
+                    ferramenta=ferramenta
+                )
+                carga.quantidade += form.cleaned_data['quantidade']
+
+            else:
+                carga = FerramentaQuantidadeFuncionario(
+                    user=form.cleaned_data['user_to'],
+                    ferramenta=ferramenta,
+                    quantidade=form.cleaned_data['quantidade']
+                )
+
             ferramenta.quantidade.save()
             saida.save()
+            carga.save()
 
             return HttpResponseRedirect('/patrimonio/saidas/ferramenta')
 
@@ -266,8 +286,62 @@ def saida_ferramenta(request):
 
 @login_required
 @permission('patrimonio', )
+def fechamento_ferramenta(request):
+    menu = menu_principal(request)
+
+    if request.method == 'POST':
+        form = FormFechamentoFerramenta(request.POST)
+
+        if form.is_valid():
+            ferramenta = form.cleaned_data['ferramenta']
+            status = form.cleaned_data['status']
+
+            fechamento = FerramentaFechamento(
+                ferramenta=ferramenta,
+                status=form.cleaned_data['status'],
+                quantidade=form.cleaned_data['quantidade'],
+                observacao=form.cleaned_data['observacao'],
+                user_from=form.cleaned_data['user_from'],
+                user=request.user,
+            )
+
+            print(status)
+
+            if int(status) == 0:
+                ferramenta.quantidade.quantidade += form.cleaned_data['quantidade']
+                messages.success(request, 'Fechamento realizado e ferramentas (RE)inseridas no estoque')
+
+            else:
+                messages.success(request, 'Fechamento realizado')
+
+            carga = FerramentaQuantidadeFuncionario.objects.get(
+                user=form.cleaned_data['user_from'],
+                ferramenta=ferramenta
+            )
+            carga.quantidade -= form.cleaned_data['quantidade']
+
+            fechamento.save()
+            ferramenta.quantidade.save()
+            carga.save()
+
+            return HttpResponseRedirect('/patrimonio/fechamento/ferramenta')
+
+    else:
+        form = FormFechamentoFerramenta()
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Registrar fechamento',
+    }
+    context.update(menu)
+
+    return render(request, 'patrimonio/v2/entrada.html', context)
+
+
+@login_required
+@permission('patrimonio', )
 def consulta_ferramenta(request):
-    menu = menu_consultas(request)
+    menu = menu_consultas_modelos(request)
 
     ferramenta = request.GET.get('q', '')
 

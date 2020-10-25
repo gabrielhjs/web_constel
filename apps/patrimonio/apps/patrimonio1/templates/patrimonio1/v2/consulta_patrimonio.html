@@ -20,7 +20,7 @@
                 <td>{{ item.nome|title }}</td>
                 <td>{{ item.descricao|lower }}</td>
                 <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
-                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }} {{ item.user__password|title }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
             </tr>
         {% endfor %}
     </table>

@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AdminPasswordChangeForm
 from django.contrib.auth.models import User
 
 from .models import Veiculo
@@ -237,10 +237,11 @@ class FormFiltraQ(forms.Form):
         required=False
     )
 
-    def __init__(self, descricao='', *args, **kwargs):
+    def __init__(self, field_name='Filtrar por', descricao='', *args, **kwargs):
         super(FormFiltraQ, self).__init__(*args, **kwargs)
 
         self.fields['q'].widget = forms.TextInput(attrs={'placeholder': descricao})
+        self.fields['q'].label = field_name
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
@@ -274,3 +275,31 @@ class FormFiltraQData(forms.Form):
             self.errors['data_inicial'] = ['A data inicial não pode ser mais recente que a data final']
 
         return form_data
+
+
+class FormUsuarioEdita(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super(FormUsuarioEdita, self).__init__(*args, **kwargs)
+
+        self.fields['first_name'].label = 'Nome'
+        self.fields['last_name'].label = 'Sobrenome'
+        self.fields['email'].label = 'Email'
+        self.fields['username'].help_text = None
+        self.fields['username'].error_messages.update({'unique': 'Já existe um usuário com esta matrícula'})
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+
+class FormUsuarioSenha(AdminPasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super(FormUsuarioSenha, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})

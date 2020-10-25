@@ -6,6 +6,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INSTALLED_APPS = [
     'constel',
     'constel.apps.controle_acessos',
+    'constel.apps.gerencia',
     'apps.almoxarifado',
     'apps.almoxarifado.apps.cont',
     'apps.almoxarifado.apps.lista_saida',
@@ -68,7 +69,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'teste',
         'USER': 'postgres',
-        'PASSWORD': 'admin123',
+        'PASSWORD': 'admin',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }

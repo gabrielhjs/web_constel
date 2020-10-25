@@ -62,7 +62,17 @@ urlpatterns = [
     path(
         'patrimonio/combustivel/talao/vales/entrega-2/',
         views.entregar_vale_2,
-        name='patrimonio_combustivel_talao_entregar_vale_1'
+        name='patrimonio_combustivel_talao_entregar_vale_2'
+    ),
+    path(
+        'patrimonio/combustivel/talao/vales/edicao/',
+        views.vales_buscar_vale_entregue,
+        name='patrimonio_combustivel_talao_vales_buscar_vale_entregue'
+    ),
+    path(
+        'patrimonio/combustivel/talao/vales/edicao/<int:vale_id>/',
+        views.vales_editar_entrega,
+        name='patrimonio_combustivel_talao_vales_editar_entrega'
     ),
     path(
         'patrimonio/combustivel/talao/consultas/',

@@ -1,0 +1,51 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <tbody>
+            <tr class="text-md-left">
+                <td>Código</td>
+                <td>{{ patrimonio.codigo }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Modelo</td>
+                <td>{{ patrimonio.patrimonio.nome|title }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Status atual</td>
+                <td>{{ patrimonio.get_status_display|title }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0 mt-1">
+        <thead>
+            <tr>
+                <th scope="col" colspan="5">Histórico</th>
+            </tr>
+            <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Operação</th>
+                <th scope="col">Data</th>
+                <th scope="col">Responsável</th>
+                <th scope="col">Para</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in page_obj %}
+            <tr>
+                <td>{{ item.patrimonio__codigo }}</td>
+                <td>{{ item.tipo }}</td>
+                <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                <td>{{ item.user_to_first_name|default_if_none:''|title }} {{ item.user_to_last_name|default_if_none:''|title }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'patrimonio_saida_patrimonio_status' %}?{{ request.GET.urlencode }}">voltar</a>
+</div>
+{% endblock %}

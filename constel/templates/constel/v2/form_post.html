@@ -19,8 +19,8 @@
             </div>
 
             {% if field.help_text %}
-            <div class="col-md-12">
-                <p><small class="form-text text-center">{{ field.help_text }}</small></p>
+            <div class="col-md-12 alert alert-primary text-center" role="alert">
+                {{ field.help_text }}
             </div>
             {% endif %}
         </div>
@@ -36,6 +36,6 @@
     
     {% endfor %}
     <div class="text-center w-md-50">
-        <button type="submit" class="btn btn-success mb-3">{{ form_submit_text }}</button>
+        <button type="submit" class="btn btn-success mb-3 w-50">{{ form_submit_text }}</button>
     </div>
 </form>
