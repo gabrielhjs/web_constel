@@ -16,6 +16,7 @@ from django.db.models import (
     F,
     ExpressionWrapper
 )
+
 from django.db.models.functions import TruncWeek
 from django.core.paginator import Paginator
 from django.conf import settings
@@ -32,35 +33,6 @@ from constel.forms import FormFuncionario, FormFiltraQ
 @permission('almoxarifado', )
 def index(request):
     context = menu_principal(request)
-
-    # total = Ont.objects.filter(
-    #     status__in=[0, 1]
-    # ).aggregate(
-    #     total=Count('id')
-    # )
-    #
-    # print(total)
-    #
-    # onts = Ont.objects.filter(
-    #     status__in=[0, 1]
-    # ).values(
-    #     'status'
-    # ).annotate(
-    #     quantidade=ExpressionWrapper(
-    #         Count('id'), output_field=FloatField()
-    #     )/Value(
-    #         total['total'], output_field=FloatField()
-    #     )
-    # )
-    #
-    # print(onts.values_list('status', 'quantidade'))
-    #
-    # context = {
-    #     'onts': onts
-    # }
-    # context.update(menu)
-    #
-    # return render(request, 'cont/v2/dashboard.html', context)
 
     return render(request, 'constel/v2/app.html', context)
 

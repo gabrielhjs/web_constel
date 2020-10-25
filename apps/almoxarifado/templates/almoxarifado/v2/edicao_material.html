@@ -11,6 +11,7 @@
                 <th scope="col">Código</th>
                 <th scope="col">Nome</th>
                 <th scope="col">Descrição</th>
+                <th scope="col">Status</th>
                 <th scope="col">Data de cadastro/edição</th>
                 <th scope="col">Cadastrado por</th>
                 <th scope="col">Edição</th>
@@ -22,6 +23,11 @@
                 <td>{{ item.codigo }}</td>
                 <td>{{ item.material }}</td>
                 <td>{{ item.descricao }}</td>
+                <td>
+                    {% if item.status %}
+                        <i class="fas fa-check"></i>
+                    {% endif %}
+                </td>
                 <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
                 <td>

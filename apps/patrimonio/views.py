@@ -15,6 +15,13 @@ from .menu import (
 
 @login_required
 @permission('patrimonio', )
+def view_menu_relatorios(request):
+
+    return render(request, 'patrimonio/menu_relatorios.html')
+
+
+@login_required
+@permission('patrimonio', )
 def index(request):
 
     context = menu_principal(request)

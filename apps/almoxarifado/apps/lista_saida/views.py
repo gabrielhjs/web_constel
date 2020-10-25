@@ -136,7 +136,7 @@ def lista_entrega(request, user_to):
 
         itens[0].lista.delete()
 
-        return HttpResponseRedirect('/almoxarifado/saidas/material/lista/conclui/' + str(ordem.id) + '/')
+        return HttpResponseRedirect(f'/almoxarifado/saidas/material/lista/conclui/{str(ordem.id)}')
 
 
 @login_required
