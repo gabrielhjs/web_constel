@@ -23,7 +23,11 @@
                 <td>{{ item.codigo }}</td>
                 <td>{{ item.material }}</td>
                 <td>{{ item.descricao }}</td>
-                <td>{{ item.status }}</td>
+                <td>
+                    {% if item.status %}
+                        <i class="fas fa-check"></i>
+                    {% endif %}
+                </td>
                 <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
                 <td>

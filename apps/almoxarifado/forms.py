@@ -195,6 +195,18 @@ class FormMaterialEdita(forms.ModelForm):
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
 
+    def clean(self):
+        super(FormMaterialEdita, self).clean()
+
+        form_data = self.cleaned_data
+        model_instance = self.instance
+
+        if not form_data["status"] and model_instance.quantidade.quantidade != 0:
+            self.errors["status"] = [
+                "Você só pode desabilitar materiais que não possuem estoque",
+                f"Estoque atual: {model_instance.quantidade.quantidade}"
+            ]
+
 
 class FormMaterialFornecedorPrazo(forms.ModelForm):
 
