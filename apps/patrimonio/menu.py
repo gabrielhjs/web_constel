@@ -11,6 +11,7 @@ def menu_principal(request):
         {'link': '/patrimonio/cadastros', 'text': 'Cadastros'},
         {'link': '/patrimonio/entradas', 'text': 'Entradas'},
         {'link': '/patrimonio/saidas', 'text': 'Saídas'},
+        {'link': '/patrimonio/fechamento/ferramenta', 'text': 'Fechamento (ferramentas)'},
         {'link': '/patrimonio/consultas', 'text': 'Consultas'},
     ]
     button_return = {'link': '/', 'text': 'Voltar'}
@@ -55,7 +56,7 @@ def menu_entradas(request):
 
     menu_buttons = [
         {'link': '/patrimonio/entradas/ferramenta', 'text': 'Entrada de ferramenta'},
-        {'link': '/patrimonio/entradas/patrimonio', 'text': 'Entrada de patrimônio'},
+        {'link': '/patrimonio/entradas/patrimonio_1', 'text': 'Entrada de patrimônio'},
     ]
     button_return = {'link': '/patrimonio', 'text': 'Voltar'}
 
@@ -98,16 +99,37 @@ def menu_consultas(request):
     """
 
     menu_buttons = [
-        {'link': '/patrimonio/consultas/ferramenta', 'text': 'Modelos de ferramenta'},
-        {'link': '/patrimonio/consultas/patrimonio', 'text': 'Modelos de patrimônio'},
+        {'link': '/patrimonio/consultas/modelos', 'text': 'Modelos'},
         {'link': '/patrimonio/consultas/ferramenta/estoque', 'text': 'Estoque de ferramentas'},
-        {'link': '/patrimonio/consultas/patrimonio/status', 'text': 'Status dos patrimônio'},
+        {'link': '/patrimonio/consultas/patrimonio/status', 'text': 'Status de patrimônio'},
     ]
     button_return = {'link': '/patrimonio', 'text': 'Voltar'}
 
     context = {
         'app': 'Patrimônio',
         'menu': 'Consultas',
+        'menu_buttons': menu_buttons,
+        'button_return': button_return,
+    }
+
+    return context
+
+
+def menu_consultas_modelos(request):
+    """
+    Funcão que contém as configurações do menu de consultas de modelos do patrimônio.
+    Retorna um dicionário com as configurações
+    """
+
+    menu_buttons = [
+        {'link': '/patrimonio/consultas/ferramenta', 'text': 'Ferramentas'},
+        {'link': '/patrimonio/consultas/patrimonio', 'text': 'Patrimônio'},
+    ]
+    button_return = {'link': '/patrimonio/consultas', 'text': 'Voltar'}
+
+    context = {
+        'app': 'Patrimônio',
+        'menu': 'Modelos',
         'menu_buttons': menu_buttons,
         'button_return': button_return,
     }

@@ -4,31 +4,6 @@ from . import views
 
 
 urlpatterns = [
-    path(
-        'patrimonio/menu-cadastros/patrimonio/',
-        views.view_cadastrar_patrimonio,
-        name='patrimonio_cadastrar_patrimonio',
-    ),
-    path(
-        'patrimonio/menu-entradas/patrimonio/',
-        views.view_entrada_patrimonio,
-        name='patrimonio_entrada_patrimonio',
-    ),
-    path(
-        'patrimonio/menu-saidas/patrimonio/',
-        views.view_saida_patrimonio,
-        name='patrimonio_saida_patrimonio',
-    ),
-    path(
-        'patrimonio/menu-consultas/patrimonio-modelo/',
-        views.view_consulta_patrimonios_modelos,
-        name='patrimonio_consulta_patrimonios_modelos',
-    ),
-    path(
-        'patrimonio/menu-consultas/patrimonio/',
-        views.view_consulta_patrimonios,
-        name='patrimonio_consulta_patrimonios',
-    ),
 
     # Novas urls
 
@@ -38,9 +13,14 @@ urlpatterns = [
         name='patrimonio_cadastrar_patrimonio',
     ),
     path(
-        'patrimonio/entradas/patrimonio/',
-        views.entrada_patrimonio,
-        name='patrimonio_entrada_patrimonio',
+        'patrimonio/entradas/patrimonio_1',
+        views.entrada_patrimonio_1,
+        name='patrimonio_entrada_patrimonio_1',
+    ),
+    path(
+        'patrimonio/entradas/patrimonio_2',
+        views.entrada_patrimonio_2,
+        name='patrimonio_entrada_patrimonio_2',
     ),
     path(
         'patrimonio/saidas/patrimonio/',
@@ -56,5 +36,10 @@ urlpatterns = [
         'patrimonio/consultas/patrimonio/status/',
         views.consulta_patrimonio_status,
         name='patrimonio_saida_patrimonio_status',
+    ),
+    path(
+        'patrimonio/consultas/patrimonio/status/<int:patrimonio>/',
+        views.consulta_patrimonio_status_detalhe,
+        name='patrimonio_saida_patrimonio_status_detalhe',
     ),
 ]

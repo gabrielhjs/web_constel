@@ -1,142 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q, Subquery, OuterRef, Max
+from django.db.models import Q, Subquery, OuterRef, Max, ExpressionWrapper, Value, F, CharField
 
 from .forms import *
 from .models import *
 from constel.apps.controle_acessos.decorator import permission
 
-from ...menu import menu_cadastros, menu_entradas, menu_saidas, menu_consultas
+from ...menu import menu_cadastros, menu_entradas, menu_saidas, menu_consultas, menu_consultas_modelos
 
 from constel.forms import FormFiltraQ
-
-
-@login_required
-@permission('patrimonio', )
-def view_cadastrar_patrimonio(request):
-
-    if request.method == 'POST':
-        form = FormCadastraPatrimonio(request.POST)
-
-        if form.is_valid():
-            Patrimonio(
-                nome=form.cleaned_data['nome'],
-                descricao=form.cleaned_data['descricao'],
-                user=request.user,
-            ).save()
-
-            return HttpResponseRedirect('/patrimonio/menu-cadastros/')
-    else:
-        form = FormCadastraPatrimonio()
-
-    context = {
-        'patrimonios': Patrimonio.objects.all().order_by('nome', 'data'),
-        'form': form,
-        'pagina_titulo': 'Patrimônio',
-        'menu_titulo': 'Cadastro de patrimônio',
-        'callback': 'patrimonio_menu_cadastros',
-        'button_submit_text': 'Cadastrar patrimônio',
-        'callback_text': 'Cancelar',
-    }
-
-    return render(request, 'patrimonio1/cadastrar_patrimonio.html', context)
-
-
-@login_required
-@permission('patrimonio', )
-def view_entrada_patrimonio(request):
-
-    if request.method == 'POST':
-        form = FormEntradaPatrimonio(request.POST)
-
-        if form.is_valid():
-            PatrimonioEntrada(
-                patrimonio=form.cleaned_data['patrimonio'],
-                codigo=form.cleaned_data['codigo'],
-                valor=form.cleaned_data['valor'],
-                observacao=form.cleaned_data['observacao'],
-                user=request.user,
-            ).save()
-
-            return HttpResponseRedirect('/patrimonio/menu-entradas/')
-
-    else:
-        form = FormEntradaPatrimonio()
-
-    context = {
-        'form': form,
-        'callback': 'patrimonio_menu_entradas',
-        'button_submit_text': 'Registrar entrada',
-        'callback_text': 'Cancelar',
-        'pagina_titulo': 'Patrimônio',
-        'menu_titulo': 'Aquisição de patrimônio',
-    }
-
-    return render(request, 'patrimonio/entrada.html', context)
-
-
-@login_required
-@permission('patrimonio', )
-def view_saida_patrimonio(request):
-
-    if request.method == 'POST':
-        form = FormSaidaPatrimonio(request.POST)
-
-        if form.is_valid():
-            entrada = form.cleaned_data['entrada']
-            PatrimonioSaida(
-                entrada=entrada,
-                patrimonio=entrada.patrimonio,
-                observacao=form.cleaned_data['observacao'],
-                user=request.user,
-                user_to=form.cleaned_data['user_to'],
-            ).save()
-            entrada.status = 1
-            entrada.save()
-
-            return HttpResponseRedirect('/patrimonio/menu-saidas/')
-
-    else:
-        form = FormSaidaPatrimonio()
-
-    context = {
-        'form': form,
-        'callback': 'patrimonio_menu_saidas',
-        'button_submit_text': 'Registrar entrega',
-        'callback_text': 'Cancelar',
-        'pagina_titulo': 'Patrimônio',
-        'menu_titulo': 'Entrega de patrimônio',
-    }
-
-    return render(request, 'patrimonio/entrada.html', context)
-
-
-@login_required
-@permission('patrimonio', )
-def view_consulta_patrimonios_modelos(request):
-
-    context = {
-        'patrimonios': Patrimonio.objects.all().order_by('nome'),
-        'pagina_titulo': 'Patrimônio',
-        'menu_titulo': 'Patrimônios cadastrados',
-    }
-
-    return render(request, 'patrimonio1/consulta_patrimonios_modelos.html', context=context)
-
-
-@login_required
-@permission('patrimonio', )
-def view_consulta_patrimonios(request):
-
-    context = {
-        'patrimonios': PatrimonioEntrada.objects.all().order_by('patrimonio__nome'),
-        'pagina_titulo': 'Patrimônio',
-        'menu_titulo': 'Patrimônio',
-    }
-
-    return render(request, 'patrimonio1/consulta_patrimonios.html', context=context)
 
 
 @login_required
@@ -183,38 +58,92 @@ def cadastra_patrimonio(request):
 
 @login_required
 @permission('patrimonio', )
-def entrada_patrimonio(request):
+def entrada_patrimonio_1(request):
     menu = menu_entradas(request)
 
     if request.method == 'POST':
-        form = FormEntradaPatrimonio(request.POST)
+        initial = {
+            'codigo': request.session.get('patrimonio_entrada_codigo', None),
+        }
+        form = FormEntradaPatrimonio1(data=request.POST, initial=initial)
 
         if form.is_valid():
-            codigo = form.cleaned_data['codigo']
+            request.session['patrimonio_entrada_codigo'] = form.cleaned_data['codigo']
 
-            if PatrimonioEntrada.objects.filter(codigo=codigo).exists():
-                pass
-
-            PatrimonioEntrada(
-                patrimonio=form.cleaned_data['patrimonio'],
-                codigo=form.cleaned_data['codigo'],
-                valor=form.cleaned_data['valor'],
-                observacao=form.cleaned_data['observacao'],
-                user=request.user,
-            ).save()
-
-            return HttpResponseRedirect('/patrimonio/entradas/patrimonio')
+            return HttpResponseRedirect('/patrimonio/entradas/patrimonio_2')
 
     else:
-        form = FormEntradaPatrimonio()
+        form = FormEntradaPatrimonio1()
 
     context = {
         'form': form,
-        'form_submit_text': 'Registrar entrada',
+        'form_submit_text': 'Avançar',
     }
     context.update(menu)
 
     return render(request, 'patrimonio/v2/entrada.html', context)
+
+
+def entrada_patrimonio_2(request):
+    menu = menu_entradas(request)
+
+    if request.session.get('patrimonio_entrada_codigo') is None:
+        return HttpResponseRedirect('/patrimonio/entradas/patrimonio_1')
+
+    codigo = request.session.get('patrimonio_entrada_codigo')
+
+    if PatrimonioId.objects.filter(codigo=codigo).exists():
+        patrimonio = PatrimonioId.objects.get(codigo=codigo)
+
+        if patrimonio.status != 0:
+            PatrimonioEntrada1(
+                patrimonio=patrimonio,
+                user=request.user
+            ).save()
+
+            patrimonio.status = 0
+            patrimonio.save()
+
+            messages.success(request, 'Patrimônio (RE)inserido no estoque com sucesso')
+
+        else:
+            messages.error(request, 'Patrimônio já em estoque')
+
+        return HttpResponseRedirect('/patrimonio/entradas/patrimonio_1')
+
+    else:
+
+        if request.method == 'POST':
+            form = FormEntradaPatrimonio2(request.POST)
+
+            if form.is_valid():
+                patrimonio = PatrimonioId(
+                    codigo=request.session.get('patrimonio_entrada_codigo'),
+                    status=0,
+                    patrimonio=form.cleaned_data['patrimonio'],
+                    valor=form.cleaned_data['valor'],
+                )
+                patrimonio.save()
+
+                PatrimonioEntrada1(
+                    patrimonio=patrimonio,
+                    user=request.user
+                ).save()
+
+                messages.success(request, 'Patrimônio cadastrado e inserido no estoque com sucesso')
+
+                return HttpResponseRedirect('/patrimonio/entradas/patrimonio_1')
+
+        else:
+            form = FormEntradaPatrimonio2()
+
+        context = {
+            'form': form,
+            'form_submit_text': 'Inserir em estoque',
+        }
+        context.update(menu)
+
+        return render(request, 'patrimonio/v2/entrada.html', context)
 
 
 @login_required
@@ -226,16 +155,25 @@ def saida_patrimonio(request):
         form = FormSaidaPatrimonio(request.POST)
 
         if form.is_valid():
-            entrada = form.cleaned_data['entrada']
+            patrimonio = form.cleaned_data['patrimonio']
+
+            entrada = PatrimonioEntrada1.objects.filter(
+                patrimonio=patrimonio,
+            ).last()
+
+            print(entrada)
+
             PatrimonioSaida(
                 entrada=entrada,
-                patrimonio=entrada.patrimonio,
+                patrimonio=patrimonio,
                 observacao=form.cleaned_data['observacao'],
                 user=request.user,
                 user_to=form.cleaned_data['user_to'],
             ).save()
-            entrada.status = 1
-            entrada.save()
+            patrimonio.status = 1
+            patrimonio.save()
+
+            messages.success(request, 'Entrega registrada com sucesso')
 
             return HttpResponseRedirect('/patrimonio/saidas/patrimonio')
 
@@ -254,7 +192,7 @@ def saida_patrimonio(request):
 @login_required
 @permission('patrimonio', )
 def consulta_patrimonio(request):
-    menu = menu_consultas(request)
+    menu = menu_consultas_modelos(request)
 
     patrimonio = request.GET.get('q', '')
 
@@ -316,17 +254,20 @@ def consulta_patrimonio_status(request):
         )
 
     subquery = PatrimonioSaida.objects.filter(
-        entrada=OuterRef('pk')
+        patrimonio=OuterRef('pk')
+    ).values(
+        'user_to__first_name',
+        'user_to__last_name',
     ).annotate(
-        Max('data')
+        ultima_data=Max('data')
     )
 
-    itens = PatrimonioEntrada.objects.filter(
+    itens = PatrimonioId.objects.filter(
         query
     ).annotate(
         user_to_first_name=Subquery(subquery.values('user_to__first_name')),
         user_to_last_name=Subquery(subquery.values('user_to__last_name')),
-        ultima_entrega=Subquery(subquery.values('data')),
+        ultima_entrega=Subquery(subquery.values('ultima_data')),
     ).values(
         'codigo',
         'patrimonio__nome',
@@ -348,3 +289,58 @@ def consulta_patrimonio_status(request):
     context.update(menu)
 
     return render(request, 'patrimonio1/v2/consulta_patrimonio_status.html', context=context)
+
+
+def consulta_patrimonio_status_detalhe(request, patrimonio):
+    menu = menu_consultas(request)
+
+    patrimonio = PatrimonioId.objects.get(codigo=patrimonio)
+
+    entradas = patrimonio.patrimonio_entrada.values(
+        'patrimonio__codigo',
+        'data',
+        'user__first_name',
+        'user__last_name',
+    ).annotate(
+        tipo=Value("Entrada", output_field=CharField()),
+        user_to_first_name=Value(None, output_field=CharField()),
+        user_to_last_name=Value(None, output_field=CharField()),
+    )
+
+    saidas = patrimonio.patrimonio_saida.values(
+        'patrimonio__codigo',
+        'data',
+        'user__first_name',
+        'user__last_name',
+    ).annotate(
+        tipo=Value("Saída", output_field=CharField()),
+        user_to_first_name=ExpressionWrapper(F('user_to__first_name'), output_field=CharField()),
+        user_to_last_name=ExpressionWrapper(F('user_to__last_name'), output_field=CharField()),
+    )
+
+    paginator = Paginator(
+        entradas.union(
+            saidas,
+            all=True
+        ).values(
+            'patrimonio__codigo',
+            'data',
+            'user__first_name',
+            'user__last_name',
+            'user_to_first_name',
+            'user_to_last_name',
+            'tipo',
+        ).order_by('-data'),
+        50
+    )
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'patrimonio': patrimonio,
+    }
+    context.update(menu)
+
+    return render(request, "patrimonio1/v2/consulta_patrimonio_status_detalhe.html", context)

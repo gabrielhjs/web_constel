@@ -139,7 +139,7 @@ class EntregaVale(models.Model):
     """
 
     vale = models.ForeignKey(Vale, on_delete=models.CASCADE, related_name='vale_entrega')
-    data = models.DateTimeField(auto_now=True)
+    data = models.DateTimeField(auto_now=True, editable=True)
     combustivel = models.ForeignKey(Combustivel, on_delete=models.PROTECT, verbose_name='Combustível')
     valor = models.FloatField(null=True)
     observacao = models.TextField('Observações', blank=True, max_length=255)

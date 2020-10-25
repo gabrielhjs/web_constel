@@ -6,6 +6,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INSTALLED_APPS = [
     'constel',
     'constel.apps.controle_acessos',
+    'constel.apps.gerencia',
     'apps.almoxarifado',
     'apps.almoxarifado.apps.cont',
     'apps.almoxarifado.apps.lista_saida',

@@ -3,18 +3,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('menu-admin/controle-acessos/', views.view_menu_controle_acessos, name='constel_menu_controle_acessos'),
-    path('menu-admin/controle-acessos/grupos/', views.view_menu_grupos, name='constel_controle_menu_grupos'),
-    path('menu-admin/controle-acessos/grupos/criar/', views.view_grupos_criar, name='constel_controle_grupos_criar'),
-    path(
-        'menu-admin/controle-acessos/grupos/usuarios/',
-        views.view_grupos_usuarios,
-        name='constel_controle_grupos_usuarios'
-    ),
-    path(
-        'menu-admin/controle-acessos/grupos/usuario/<int:usuario_id>',
-        views.view_grupos_usuario,
-        name='constel_controle_grupos_usuario'
-    ),
-    path('acesso-restrito/', views.view_acesso_negado, name='constel_acesso_restrito'),
+    path('acesso-restrito/', views.acesso_negado, name='constel_acesso_restrito'),
+    path('administracao/acesso/', views.index, name='constel_acesso_menu_principal'),
+    path('administracao/acesso/usuarios/', views.usuarios, name='constel_acesso_usuarios'),
+    path('administracao/acesso/usuarios/<str:username>', views.usuarios_grupos, name='constel_acesso_usuarios_grupos'),
+    path('administracao/acesso/grupos/', views.grupos, name='constel_acesso_grupos'),
+    path('administracao/acesso/grupos/<int:grupo>', views.grupos_usuarios, name='constel_acesso_grupos_usuarios'),
 ]

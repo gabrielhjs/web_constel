@@ -26,8 +26,9 @@
                     {% if ont.status == 0 %}Estoque
                     {% elif ont.status == 1 %}Campo
                     {% elif ont.status == 2 %}Aplicada
-                    {% elif ont.status == 3 %}Defeito: Estoque
-                    {% elif ont.status == 4 %}Defeito: Devolvida
+                    {% elif ont.status == 3 %}Estoque: Defeito
+                    {% elif ont.status == 4 %}Devolvida
+                    {% elif ont.status == 5 %}Estoque: Retirada de manutenção
                     {% endif %}
                 </td>
             </tr>

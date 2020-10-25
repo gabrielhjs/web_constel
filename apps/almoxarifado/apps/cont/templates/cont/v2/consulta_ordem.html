@@ -1,0 +1,46 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                {% if tipo %}
+                <th scope="col" colspan="6">Ordens de saída</th>
+                {% else %}
+                <th scope="col" colspan="4">Ordens de entrada</th>
+                {% endif %}
+            </tr>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Data</th>
+                <th scope="col">Responsável</th>
+                {% if tipo %}
+                <th scope="col">Para</th>
+                {% endif %}
+                <th scope="col">Qde Onts</th>
+                <th scope="col">Detalhes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.id }}</td>
+                <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                {% if tipo %}
+                <td>{{ item.user_to_first_name|title }} {{ item.user_to_last_name|title }}</td>
+                {% endif %}
+                <td>{{ item.quantidade }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                        href="{% url 'almoxarifado_cont_consulta_saidas_detalhes' item.id %}?{{ request.GET.urlencode }}">
+                        Detalhes
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

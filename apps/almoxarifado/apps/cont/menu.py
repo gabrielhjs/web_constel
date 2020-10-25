@@ -14,7 +14,7 @@ def menu_principal(request):
         {'link': '/almoxarifado/cont/entrada-1', 'text': 'Entrada de ONT\'s'},
         {'link': '/almoxarifado/cont/saidas/lista', 'text': 'Saída de ONT\'s'},
         {'link': '/almoxarifado/cont/baixa/psw-login', 'text': 'Aplicação de ONT\'s'},
-        {'link': '/almoxarifado/cont/defeito', 'text': 'Gestão de ONT\'s com defeito'},
+        {'link': '/almoxarifado/cont/fechamentos', 'text': 'Fechamento de ONT\'s'},
         {'link': '/almoxarifado/cont/consultas', 'text': 'Consultas'},
     ]
     button_return = {'link': '/', 'text': 'Voltar'}
@@ -60,6 +60,7 @@ def menu_consultas(request):
     menu_buttons = [
         {'link': '/almoxarifado/cont/consultas/situacao', 'text': 'Status'},
         {'link': '/almoxarifado/cont/consultas/cargas', 'text': 'Cargas de ONT\'s'},
+        {'link': '/almoxarifado/cont/consultas/saidas', 'text': 'Registro de saídas'},
         {'link': '/almoxarifado/cont/consultas/ont', 'text': 'Busca serial'},
         {'link': '/almoxarifado/cont/consultas/dashboard', 'text': 'Dashboard'},
     ]
@@ -75,15 +76,16 @@ def menu_consultas(request):
     return context
 
 
-def menu_defeitos(request):
+def menu_fechamento(request):
     """
-    Funcão que contém as configurações do menu de onts com defeito do Cont2.
+    Funcão que contém as configurações do menu de fechamento de onts do Cont2.
     Retorna um dicionário com as configurações
     """
 
     menu_buttons = [
-        {'link': '/almoxarifado/cont/defeito/entrada', 'text': 'Registrar ONT\'s com defeito'},
-        {'link': '/almoxarifado/cont/defeito/saidas/lista', 'text': 'Registrar devolução de ONT\'s'},
+        {'link': '/almoxarifado/cont/fechamento/entrada/defeito', 'text': 'Entrada de ONT\'s com defeito'},
+        {'link': '/almoxarifado/cont/fechamento/entrada/manutencao_1', 'text': 'Entrada de ONT\'s de manutenção'},
+        {'link': '/almoxarifado/cont/defeito/saidas/lista', 'text': 'Registrar devolução fornecedor'},
     ]
     button_return = {'link': '/almoxarifado/cont', 'text': 'Voltar'}
 

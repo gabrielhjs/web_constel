@@ -5,7 +5,7 @@
     <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
         <thead>
             <tr>
-                <th scope="col" colspan="5">Modelos de património</th>
+                <th scope="col" colspan="6">Modelos de património</th>
             </tr>
             <tr>
                 <th scope="col">Código</th>
@@ -13,6 +13,7 @@
                 <th scope="col">Status</th>
                 <th scope="col">Última entrega</th>
                 <th scope="col">Com colaborador</th>
+                <th scope="col">#</th>
             </tr>
         </thead>
         <tbody>
@@ -21,8 +22,14 @@
                 <td>{{ item.codigo|title }}</td>
                 <td>{{ item.patrimonio__nome|title }}</td>
                 <td>{% if item.status %}Em uso{% else %}Estoque{% endif %}</td>
-                <td>{{ item.ultima_entrega|date:'d/m/Y H:i:s'|default_if_none:'' }}</td>
-                <td>{{ item.user_to_first_name|default_if_none:'' }} {{ item.user_to_last_name|default_if_none:'' }}</td>
+                <td>{{ item.ultima_entrega|default_if_none:''|date:'d/m/Y H:i:s' }}</td>
+                <td>{{ item.user_to_first_name|default_if_none:''|title }} {{ item.user_to_last_name|default_if_none:''|title }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                        href="{% url 'patrimonio_saida_patrimonio_status_detalhe' item.codigo %}?q={% firstof request.GET.q '' %}">
+                        Histórico
+                    </a>
+                </td>
             </tr>
         {% endfor %}
     </table>

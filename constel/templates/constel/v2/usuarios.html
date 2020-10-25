@@ -1,0 +1,45 @@
+{% extends 'constel/v2/app.html' %}
+{% load humanize %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="5">Usuários</th>
+            </tr>
+            <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Acesso</th>
+                <th scope="col">Último acesso</th>
+                <th scope="col">#</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.username|title }}</td>
+                <td>{{ item.first_name|title }} {{ item.last_name|title }}</td>
+                <td>
+                    {% if not item.user_type__is_passive %}
+                        <i class="fas fa-check"></i>
+                    {% endif %}
+                </td>
+                <td>{{ item.last_login|default:""|date:'d/m/Y H:i:s' }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm w-25"
+                        href="{% url 'constel_admin_usuarios_edita' item.username %}?{{ request.GET.urlencode }}">
+                        <i class="fas fa-user-edit"></i>
+                    </a>
+                    <a class="btn btn-primary btn-sm w-25"
+                        href="{% url 'constel_admin_usuarios_info' item.username %}?{{ request.GET.urlencode }}">
+                        <i class="fas fa-info"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

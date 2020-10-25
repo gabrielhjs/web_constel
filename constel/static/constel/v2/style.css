@@ -3,18 +3,40 @@ html {
     background: var(--secondary);
 }
 
+body {
+	height:100%;
+	width:100%;
+}
+
+header {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 70px;
+	right: 0px;
+	overflow: hidden;
+}
+
 #nav {
-    min-height: 10vh;
+    min-height: 70px;
 }
 
 #content {
-    min-height: 80vh;
-    margin-top: 10vh;
-    margin-bottom: 10vh;
+    position: absolute;
+    top: 70px;
+    bottom: 70px;
+    left: 0px;
+    right: 0px;
+    overflow: auto;
 }
 
 #footer {
-    height: 10vh;
+    position: absolute;
+    bottom: 0px;
+    height: 70px;
+    left: 0px;
+    right: 0px;
+    overflow: hidden;
 }
 
 #footer img {
@@ -37,7 +59,7 @@ html {
 }
 
 .scroll {
-    max-height: 80vh;
+		height: 100%;
     overflow: auto;
 }
 
@@ -57,4 +79,10 @@ html {
 
 .card {
     width: 20em;
+}
+
+.page-title h1 {
+    margin: 0;
+    font-size: 4rem;
+    color: orange;
 }

@@ -15,7 +15,9 @@ from django.db.models import (
     IntegerField,
     ExpressionWrapper,
     DecimalField,
+    Window
 )
+from django.db.models.functions import TruncMonth, Coalesce, TruncDay
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -36,9 +38,62 @@ from .models import Material, Fornecedor, MaterialEntrada, MaterialFornecedorPra
 @login_required()
 @permission('almoxarifado', )
 def index(request):
-    context = menu_principal(request)
+    menu = menu_principal(request)
 
-    return render(request, 'constel/v2/app.html', context)
+    almoxarifado = MaterialSaida.objects.filter(
+        material__codigo__in=[20014434, 20010213, 15022859, 15018751]
+    ).annotate(
+        mes=TruncMonth('data')
+    ).values(
+        'mes',
+    ).annotate(
+        total_1=Coalesce(Sum('quantidade', filter=Q(material__codigo=20014434)), 0),
+        total_2=Coalesce(Sum('quantidade', filter=Q(material__codigo=20010213)), 0),
+        total_3=Coalesce(Sum('quantidade', filter=Q(material__codigo=15022859)), 0),
+        total_4=Coalesce(Sum('quantidade', filter=Q(material__codigo=15018751)), 0),
+    ).order_by(
+        'mes'
+    )
+
+    hoje = datetime.datetime.today()
+
+    cabos_mes = MaterialSaida.objects.filter(
+        material__codigo__in=[20014434, 20010213],
+        data__year=hoje.year,
+        data__month=hoje.month,
+    ).annotate(
+        dia=TruncDay('data')
+    ).values(
+        'dia',
+    ).annotate(
+        total_1=Coalesce(Sum('quantidade', filter=Q(material__codigo=20014434)), 0),
+        total_2=Coalesce(Sum('quantidade', filter=Q(material__codigo=20010213)), 0),
+    ).order_by(
+        'dia'
+    )
+
+    conector_protetor_cumulativo = MaterialSaida.objects.filter(
+        material__codigo__in=[15022859, 15018751],
+        data__day__lte=hoje.day,
+    ).annotate(
+        mes=TruncMonth('data')
+    ).values(
+        'mes',
+    ).annotate(
+        total_1=Coalesce(Sum('quantidade', filter=Q(material__codigo=15022859)), 0),
+        total_2=Coalesce(Sum('quantidade', filter=Q(material__codigo=15018751)), 0),
+    ).order_by(
+        'mes'
+    )
+
+    context = {
+        'almoxarifado': almoxarifado,
+        'cabos_mes': cabos_mes,
+        'conector_protetor_cumulativo': conector_protetor_cumulativo,
+    }
+    context.update(menu)
+
+    return render(request, 'almoxarifado/v2/dashboard.html', context)
 
 
 @login_required()
@@ -520,8 +575,7 @@ def consulta_ordem_saida(request):
     ).annotate(
         user_to_first_name=Min('almoxarifado_ordem_saida__user_to__first_name'),
         user_to_last_name=Min('almoxarifado_ordem_saida__user_to__last_name'),
-    )
-    itens = itens.values(
+    ).values(
         'id',
         'data',
         'user__first_name',

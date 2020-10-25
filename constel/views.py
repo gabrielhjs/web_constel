@@ -1,24 +1,23 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.db.models import Q, Count, Sum
+from django.core.paginator import Paginator
 
 from .forms import (
     FormCadastraUsuario,
-    FormLogin
+    FormLogin,
+    FormFiltraQ,
+    FormUsuarioEdita,
+    FormUsuarioSenha,
 )
 from .models import UserType, Veiculo
 from .objects import Button
 from .apps.controle_acessos.decorator import permission
-
-
-@login_required
-@permission('admin', )
-def view_admin(request):
-
-    return HttpResponseRedirect('/admin')
+from .menu import menu_principal
 
 
 @login_required
@@ -37,34 +36,6 @@ def view_menu_gerenciamento_sistema(request):
             button_2,
         ],
         'rollback': rollback,
-    }
-
-    return render(request, 'constel/menu.html', context)
-
-
-@login_required
-def index(request):
-    """
-    View da página inicial do sistema
-    :param request: None
-    :return: Renderiza página inicial
-    """
-
-    button_1 = Button('almoxarifado_menu_principal', 'Almoxarifado')
-    button_2 = Button('patrimonio_menu_principal', 'Patrimônio')
-    button_3 = Button('constel_menu_admin', 'Administração do sistema')
-    button_logout = Button('logout', 'Logout')
-
-    context = {
-        'admin': request.user.is_superuser,
-        'guia_titulo': 'Constel',
-        'pagina_titulo': 'Constel',
-        'buttons': [
-            button_1,
-            button_2,
-            button_3,
-        ],
-        'rollback': button_logout,
     }
 
     return render(request, 'constel/menu.html', context)
@@ -101,76 +72,6 @@ def view_cadastrar_usuario(request):
     }
 
     return render(request, 'constel/v2/form_cadastro.html', context)
-
-
-# @login_required
-# @permission('patrimonio - combustivel', )
-# def view_cadastrar_usuario_passivo(request):
-#     """
-#     View de cadastro de novos usuários passivos.
-#     :param request: POST form
-#     :return:
-#     """
-#
-#     if request.method == 'POST':
-#         form = FormCadastraUsuarioPassivo(request.POST)
-#
-#         if form.is_valid():
-#             form.save()
-#             user = User.objects.get(username=form.cleaned_data['username'])
-#             modelo = form.cleaned_data['modelo']
-#             placa = form.cleaned_data['placa']
-#             cor = form.cleaned_data['cor']
-#             user_type = UserType(user=user)
-#             user_type.save()
-#             veiculo = Veiculo(user=user, modelo=modelo, placa=placa, cor=cor)
-#             veiculo.save()
-#
-#             return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
-#     else:
-#         form = FormCadastraUsuarioPassivo()
-#
-#     context = {
-#         'form': form,
-#         'callback': 'gc_menu_cadastros',
-#         'button_submit_text': 'Cadastrar beneficiário',
-#         'callback_text': 'Cancelar',
-#         'pagina_titulo': 'Combustível',
-#         'menu_titulo': 'Cadastro de beneficiário',
-#     }
-#
-#     return render(request, 'constel/cadastra_usuario_passivo.html', context)
-#
-#
-# @login_required
-# @permission('patrimonio - combustivel', )
-# def view_cadastrar_veiculo(request):
-#     """
-#     View de cadastro de veículos de funcionários existentes
-#     :param request:
-#     :return: formulário de cadastro
-#     """
-#
-#     if request.method == 'POST':
-#         form = FormCadastrarVeiculo(request.POST)
-#
-#         if form.is_valid():
-#             form.save()
-#
-#             return HttpResponseRedirect('/patrimonio/combustivel/menu-cadastros/')
-#     else:
-#         form = FormCadastrarVeiculo()
-#
-#     context = {
-#         'form': form,
-#         'callback': 'gc_menu_cadastros',
-#         'button_submit_text': 'Cadastrar veículo',
-#         'callback_text': 'Cancelar',
-#         'pagina_titulo': 'Combustível',
-#         'menu_titulo': 'Cadastro de veículo',
-#     }
-#
-#     return render(request, 'constel/cadastra_veiculo.html', context)
 
 
 def view_login(request):
@@ -251,3 +152,193 @@ def indexv2(request):
     }
 
     return render(request, 'constel/v2/index.html', context)
+
+
+@login_required
+@permission('admin',)
+def admin(request):
+    context = menu_principal(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required
+@permission('admin',)
+def usuarios(request):
+    menu = menu_principal(request)
+
+    q = request.GET.get('q', '')
+
+    initial = {
+        'q': q
+    }
+
+    form = FormFiltraQ(
+        initial=initial,
+        descricao='Nome ou matrícula'
+    )
+
+    query = Q()
+
+    if q != '':
+        query = query & Q(
+            Q(username__icontains=q) |
+            Q(first_name__icontains=q) |
+            Q(last_name__icontains=q))
+
+    itens = User.objects.filter(
+        query
+    ).values(
+        'username',
+        'first_name',
+        'last_name',
+        'last_login',
+        'user_type__is_passive',
+    ).order_by(
+        'first_name',
+        'last_name',
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'form': form,
+        'form_submit_text': 'Filtrar',
+    }
+    context.update(menu)
+
+    return render(request, 'constel/v2/usuarios.html', context)
+
+
+@login_required
+@permission('admin',)
+def usuarios_edita(request, matricula):
+    menu = menu_principal(request)
+
+    user = get_object_or_404(User, username=matricula)
+    form = FormUsuarioEdita(request.POST or None, request.FILES or None, instance=user)
+
+    if request.method == 'POST':
+
+        if matricula == 'admin':
+            messages.error(request, 'Negado')
+
+            return HttpResponseRedirect(
+                f'/administracao/usuarios/{matricula}?{request.GET.urlencode()}'
+            )
+
+        if form.is_valid():
+            form.save()
+
+            return HttpResponseRedirect(
+                f'/administracao/usuarios/{form.cleaned_data["username"]}?{request.GET.urlencode()}'
+            )
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Salvar edição',
+        'user_id': user.id,
+    }
+    context.update(menu)
+
+    return render(request, 'constel/v2/usuarios_edita.html', context)
+
+
+@login_required
+@permission('admin',)
+def usuarios_info(request, matricula):
+    menu = menu_principal(request)
+
+    get_object_or_404(User, username=matricula)
+
+    taloes = User.objects.filter(username=matricula).values(
+        'talao_user_to__talao__talao',
+        'talao_user_to__user__first_name',
+        'talao_user_to__user__last_name',
+        'talao_user_to__data',
+    ).annotate(
+        n_vales=Count('talao_user_to__talao__talao_vales', filter=Q(talao_user_to__talao__talao_vales__status=2)),
+        valor_agregado=Sum('talao_user_to__talao__talao_vales__vale_entrega__valor'),
+    ).exclude(
+        talao_user_to__talao__talao=None
+    ).order_by(
+        '-talao_user_to__data'
+    )
+
+    vales = User.objects.filter(username=matricula).values(
+        'vale_user_to__vale__vale',
+        'vale_user_to__user__first_name',
+        'vale_user_to__user__last_name',
+        'vale_user_to__data',
+        'vale_user_to__valor',
+    ).exclude(
+        vale_user_to__vale__vale=None
+    ).order_by(
+        '-vale_user_to__data'
+    )
+
+    vales_total = vales.aggregate(
+        quantidade=Count('vale_user_to__vale__vale'),
+        total=Sum('vale_user_to__valor'),
+    )
+
+    materiais = User.objects.filter(username=matricula).values(
+        'almoxarifado_retiradas__material__codigo',
+        'almoxarifado_retiradas__material__material',
+    ).annotate(
+        quantidade=Sum('almoxarifado_retiradas__quantidade')
+    ).exclude(
+        almoxarifado_retiradas__material__codigo=None
+    ).order_by(
+        'almoxarifado_retiradas__material__material'
+    )
+
+    context = {
+        'taloes': taloes,
+        'vales': vales,
+        'vales_total': vales_total,
+        'materiais': materiais,
+    }
+    context.update(menu)
+
+    return render(request, 'constel/v2/usuarios_info.html', context)
+
+
+@login_required
+@permission('admin',)
+def usuarios_senha(request, user):
+    menu = menu_principal(request)
+
+    user = get_object_or_404(User, id=user)
+    form = FormUsuarioSenha(user=user, data=request.POST or None)
+
+    if request.method == 'POST':
+
+        if user.username == 'admin':
+            messages.error(request, 'Negado')
+
+            return HttpResponseRedirect(
+                f'/administracao/usuarios/senha/{str(user.id)}/?{request.GET.urlencode()}'
+            )
+
+        print(form.is_valid())
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Senha alterada com sucesso')
+
+            return HttpResponseRedirect(
+                f'/administracao/usuarios/senha/{str(user.id)}/?{request.GET.urlencode()}'
+            )
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Alterar senha',
+        'user_username': user.username,
+    }
+    context.update(menu)
+
+    return render(request, 'constel/v2/usuarios_senha.html', context)
