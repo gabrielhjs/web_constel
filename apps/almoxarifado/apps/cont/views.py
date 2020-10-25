@@ -1,14 +1,11 @@
-import json
-
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q, Max, Min, Value, CharField, IntegerField, FloatField, F, ExpressionWrapper, OuterRef, Subquery, Sum
-from django.db.models.functions import TruncDate, TruncMonth, TruncWeek
+from django.db.models import Count, Q, Max, Min, Value, CharField, IntegerField, FloatField, F, ExpressionWrapper
+from django.db.models.functions import TruncWeek
 from django.core.paginator import Paginator
 from django.conf import settings
-from django.core import serializers
 
 from .forms import *
 from .models import Secao, Modelo, OntDefeitoHistorico
