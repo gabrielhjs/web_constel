@@ -14,7 +14,9 @@ from django.db.models import (
     IntegerField,
     FloatField,
     F,
-    ExpressionWrapper
+    ExpressionWrapper,
+    OuterRef,
+    Subquery,
 )
 
 from django.db.models.functions import TruncWeek
@@ -285,12 +287,16 @@ def consulta_status_detalhe(request, status, secao, modelo):
         max_saida=Max('saida_ont__data'),
         max_aplicada=Max('aplicado_ont__data'),
         max_devolucao=Max('devolucao_ont__data'),
+        max_contrato=Max('cliente_ont__contrato'),
     ).order_by(
         'max_entrada',
         'max_saida',
         'max_aplicada',
         'max_devolucao',
+        'max_contrato',
     )
+
+    # print(itens.values_list('cliente_ont__contrato'))
     
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')
@@ -321,6 +327,7 @@ def consulta_status_exporta_csv(request, status, secao, modelo):
         max_saida=Max('saida_ont__data'),
         max_aplicada=Max('aplicado_ont__data'),
         max_devolucao=Max('devolucao_ont__data'),
+        max_contrato=Max('cliente_ont__contrato'),
     ).order_by(
         'max_entrada',
         'max_saida',
@@ -333,7 +340,7 @@ def consulta_status_exporta_csv(request, status, secao, modelo):
 
     writer = csv.writer(response)
 
-    writer.writerow(('Serial', 'Seção', 'Modelo', 'Entrada', 'Saída', 'Aplicação', 'Devolução'))
+    writer.writerow(('Serial', 'Seção', 'Modelo', 'Entrada', 'Saída', 'Aplicação', 'Devolução', 'Contrato'))
 
     for item in itens.values_list(
         'codigo',
@@ -343,6 +350,7 @@ def consulta_status_exporta_csv(request, status, secao, modelo):
         'max_saida',
         'max_aplicada',
         'max_devolucao',
+        'max_contrato',
     ):
         writer.writerow(item)
 
