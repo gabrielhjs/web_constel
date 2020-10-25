@@ -407,10 +407,6 @@ def consulta_estoque(request):
         ultima_entrada=Max("entradas__data"),
     ).exclude(
         entradas__isnull=True,
-    ).exclude(
-        Q(quantidade__quantidade=0) & Q(
-            ultima_entrada__lte=datetime.datetime.today() - datetime.timedelta(days=60)
-        )
     ).order_by('material')
 
     paginator = Paginator(itens, 50)
