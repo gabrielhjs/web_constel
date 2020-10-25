@@ -211,7 +211,9 @@ def consulta_patrimonio(request):
     itens = Patrimonio.objects.filter(
         query
     ).values(
+        'id',
         'nome',
+        'descricao',
         'data',
         'user__first_name',
         'user__last_name',
@@ -229,6 +231,31 @@ def consulta_patrimonio(request):
     context.update(menu)
 
     return render(request, 'patrimonio1/v2/consulta_patrimonio.html', context=context)
+
+
+def edita_modelo_patrimonio(request, modelo_id):
+    menu = menu_consultas_modelos(request)
+
+    modelo_patrimonio = Patrimonio.objects.get(id=modelo_id)
+
+    form = FormEditaModeloPatrimonio(data=request.POST or None, instance=modelo_patrimonio)
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Alterações salvas com sucesso')
+
+            return HttpResponseRedirect(f'/patrimonio/edicao/patrimonio/modelo/{modelo_id}')
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Salvar alterações',
+    }
+    context.update(menu)
+
+    return render(request, 'patrimonio1/v2/edita_modelo_patrimonio.html', context)
 
 
 @login_required
@@ -269,6 +296,7 @@ def consulta_patrimonio_status(request):
         user_to_last_name=Subquery(subquery.values('user_to__last_name')),
         ultima_entrega=Subquery(subquery.values('ultima_data')),
     ).values(
+        'id',
         'codigo',
         'patrimonio__nome',
         'status',
@@ -289,6 +317,31 @@ def consulta_patrimonio_status(request):
     context.update(menu)
 
     return render(request, 'patrimonio1/v2/consulta_patrimonio_status.html', context=context)
+
+
+def edita_patrimonio(request, patrimonio_id):
+    menu = menu_consultas_modelos(request)
+
+    patrimonio = PatrimonioId.objects.get(id=patrimonio_id)
+
+    form = FormEditaPatrimonio(data=request.POST or None, instance=patrimonio)
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Alterações salvas com sucesso')
+
+            return HttpResponseRedirect(f'/patrimonio/edicao/patrimonio/{patrimonio_id}')
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Salvar alterações',
+    }
+    context.update(menu)
+
+    return render(request, 'patrimonio1/v2/edita_patrimonio.html', context)
 
 
 def consulta_patrimonio_status_detalhe(request, patrimonio):

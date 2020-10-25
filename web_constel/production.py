@@ -7,9 +7,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-DEBUG = False
+DEBUG = (os.environ.get('DEBUG_VALUE', 'False') == 'True')
 
-ALLOWED_HOSTS = ['constel.herokuapp.com', '0.0.0.0', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['constel.herokuapp.com']
 
 CONTWE2_TOKEN = os.environ.get('CONTWE2_TOKEN')
 CONTWE2_URL = os.environ.get('CONTWE2_URL')

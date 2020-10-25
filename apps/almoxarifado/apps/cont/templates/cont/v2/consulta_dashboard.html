@@ -9,18 +9,10 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script type="text/javascript">
-
-    fetch("http://" + window.location.host + "/teste/2/")
-    .then(function(response) {
-        response.json().then(function(data) {
-            console.log(data.data);
-         })
-    }
-    );
     Highcharts.chart('fluxo', {
       chart: {
-          type: 'spline',
-          backgroundColor:'#343a40',
+          type: 'areaspline',
+          backgroundColor:'#6c757d',
           style: {
             color: 'white'
           }
@@ -29,9 +21,33 @@
           text: 'Entradas x Saídas'
       },
       xAxis: {
+          labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Semana',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
           categories: [
             {% for entry in entradas %}"{{ entry.mes|date:'d/m/Y' }}"{% if not forloop.last %}, {% endif %}{% endfor %}
           ]
+      },
+      yAxis: {
+        labels: {
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Quantidade',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            }
       },
       series: [{
           name: 'Entradas',

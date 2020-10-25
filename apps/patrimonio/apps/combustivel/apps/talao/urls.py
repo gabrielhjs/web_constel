@@ -50,6 +50,11 @@ urlpatterns = [
         name='patrimonio_combustivel_talao_entregar_talao'
     ),
     path(
+        'patrimonio/combustivel/talao/taloes/devolucao/',
+        views.devolucao_talao,
+        name='patrimonio_combustivel_talao_devolucao_talao'
+    ),
+    path(
         'patrimonio/combustivel/talao/vales/',
         views.vales,
         name='patrimonio_combustivel_talao_vales'

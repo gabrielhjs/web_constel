@@ -14,8 +14,7 @@ from django.db.models import (
     F,
     IntegerField,
     ExpressionWrapper,
-    DecimalField,
-    Window
+    DecimalField
 )
 from django.db.models.functions import TruncMonth, Coalesce, TruncDay
 from django.http import HttpResponseRedirect
@@ -919,19 +918,16 @@ def consulta_material_saida_detalhe(request, codigo):
         'user_to__last_name',
     ).annotate(
         total=Sum(F('quantidade')),
-        qtde=Count(F('quantidade')),
+        qtde=Count(F('id')),
     ).order_by(
         '-total',
     ).exclude(
         total__lte=0,
     )
 
-    material = Material.objects.filter(
+    material = Material.objects.get(
         codigo=codigo
-    ).values(
-        'codigo',
-        'material',
-    )[0]
+    )
 
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')
@@ -941,7 +937,8 @@ def consulta_material_saida_detalhe(request, codigo):
         'page_obj': page_obj,
         'form': form,
         'form_submit_text': 'filtrar',
-        'material': material,
+        'material_codigo': material.codigo,
+        'material_material': material.material,
     }
     context.update(menu)
 

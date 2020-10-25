@@ -85,7 +85,8 @@ def menu_fechamento(request):
     menu_buttons = [
         {'link': '/almoxarifado/cont/fechamento/entrada/defeito', 'text': 'Entrada de ONT\'s com defeito'},
         {'link': '/almoxarifado/cont/fechamento/entrada/manutencao_1', 'text': 'Entrada de ONT\'s de manutenção'},
-        {'link': '/almoxarifado/cont/defeito/saidas/lista', 'text': 'Registrar devolução fornecedor'},
+        {'link': '/almoxarifado/cont/defeito/saidas/lista', 'text': 'Devolução de ONT\'s com defeito'},
+        {'link': '/almoxarifado/cont/manutencao/saidas/lista', 'text': 'Devolução de ONT\'s de manutenção'},
     ]
     button_return = {'link': '/almoxarifado/cont', 'text': 'Voltar'}
 

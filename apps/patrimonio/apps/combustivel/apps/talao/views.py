@@ -267,6 +267,39 @@ def entregar_talao(request):
 
 
 @login_required()
+@permission('patrimonio', 'patrimonio - combustivel', 'gestor')
+def devolucao_talao(request):
+    """
+    View de carregamento e gestão de entrega de talões cadastrados no sistema,
+    deve ser acessado apenas pelo adm e funcionãrios autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
+    menu = menu_taloes(request)
+
+    form = FormRetiraTalao(request.POST or None)
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+            talao = form.cleaned_data['talao']
+            talao.status = 0
+            talao.save()
+
+            messages.success(request, 'Talão devolvido com sucesso')
+
+            return HttpResponseRedirect('/patrimonio/combustivel/talao/taloes/devolucao/')
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Entregar talão',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/entregar_talao.html', context)
+
+
+@login_required()
 def vales(request):
     context = menu_vales(request)
 

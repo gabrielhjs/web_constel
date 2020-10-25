@@ -3,7 +3,14 @@ from django.contrib.auth.decorators import login_required
 
 from constel.apps.controle_acessos.decorator import permission
 
-from .menu import menu_principal, menu_cadastros, menu_entradas, menu_saidas, menu_consultas, menu_consultas_modelos
+from .menu import (
+    menu_principal,
+    menu_cadastros,
+    menu_entradas,
+    menu_saidas,
+    menu_consultas,
+    menu_consultas_modelos,
+)
 
 
 @login_required

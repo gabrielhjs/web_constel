@@ -1,7 +1,12 @@
 from fpdf import FPDF
 from io import BytesIO
+from calendar import monthrange
+
+from django.db.models import Count
+
 from apps.almoxarifado.models import MaterialEntrada, MaterialSaida
 from ..cont.models import OntSaida, OntDevolucao
+from web_constel.base import BASE_DIR
 
 
 class FichaMateriais(FPDF):
@@ -37,9 +42,9 @@ class FichaMateriais(FPDF):
         self.cell(self.epw, self.th * 2, cabecalho_texto, align='C', border=1)
         self.ln(self.th * 2)
         self.set_font_size(8)
-        
-        data = str(self.ordem.data.day) + '/' + str(self.ordem.data.month) + '/' + str(self.ordem.data.year)
-        hora = str(self.ordem.data.hour) + ':' + str(self.ordem.data.minute) + ':' + str(self.ordem.data.second)
+
+        data = self.ordem.data.strftime('%d/%m/%Y')
+        hora = self.ordem.data.strftime('%H:%M:%S')
         colunas = [self.epw * .15, self.epw * .15, self.epw * .3, self.epw * .3, self.epw * .1]
         responsavel = self.ordem.user.get_full_name().title()
         responsavel_id = self.ordem.user.username
@@ -148,8 +153,8 @@ class FichaOnts(FPDF):
         self.ln(self.th * 2)
         self.set_font_size(8)
 
-        data = str(self.ordem.data.day) + '/' + str(self.ordem.data.month) + '/' + str(self.ordem.data.year)
-        hora = str(self.ordem.data.hour) + ':' + str(self.ordem.data.minute) + ':' + str(self.ordem.data.second)
+        data = self.ordem.data.strftime('%d/%m/%Y')
+        hora = self.ordem.data.strftime('%H:%M:%S')
         colunas = [self.epw * .15, self.epw * .15, self.epw * .3, self.epw * .3, self.epw * .1]
         responsavel = self.ordem.user.get_full_name().title()
         responsavel_id = self.ordem.user.username
@@ -254,8 +259,8 @@ class FichaOntsDefeito(FPDF):
         self.ln(self.th * 2)
         self.set_font_size(8)
 
-        data = str(self.ordem.data.day) + '/' + str(self.ordem.data.month) + '/' + str(self.ordem.data.year)
-        hora = str(self.ordem.data.hour) + ':' + str(self.ordem.data.minute) + ':' + str(self.ordem.data.second)
+        data = self.ordem.data.strftime('%d/%m/%Y')
+        hora = self.ordem.data.strftime('%H:%M:%S')
         colunas = [self.epw * .15, self.epw * .15, self.epw * .3, self.epw * .3, self.epw * .1]
         responsavel = self.ordem.user.get_full_name().title()
         responsavel_id = self.ordem.user.username
@@ -324,6 +329,105 @@ class FichaOntsDefeito(FPDF):
         self.cell(self.w / 2 - self.r_margin * 3, self.th * 2, 'Responsável do fornecedor', align='C')
         self.set_xy(self.w/2 + self.r_margin, self.h - 40 + self.th * 2)
         self.cell(self.w / 2 - self.r_margin * 3, self.th * 2, tecnico.title(), align='C')
+
+    def file(self):
+
+        return BytesIO(self.output(dest='S').encode('latin-1'))
+
+
+class FichaOntsManutencao(FPDF):
+
+    def __init__(self, ordem, format1='A4', unit='mm', orientation='P'):
+        super().__init__(orientation, unit, format1)
+
+        self.set_auto_page_break(False)
+        self.ordem = ordem
+
+        for i in range(1):
+            self.add_page()
+            self.set_font('Times', size=12)
+            self.epw = self.w - 2 * self.l_margin
+            self.th = self.font_size
+            self.cabecalho()
+            self.tabela()
+
+    def cabecalho(self):
+
+        self.set_font_size(10)
+        # self.cell(self.epw, self.th * 2, cabecalho_texto, align='C', border=1)
+        self.image(BASE_DIR + '/apps/almoxarifado/apps/pdf/assets/copel_telecom.jpg', h=4*self.th, w=self.epw*.2)
+        self.set_xy(self.epw*.2 + self.l_margin, self.t_margin)
+        self.image(BASE_DIR + '/apps/almoxarifado/apps/pdf/assets/titulo.jpg', h=4*self.th, w=self.epw*.5)
+        self.set_xy(self.l_margin, self.t_margin)
+        self.cell(h=4 * self.th, w=self.epw * .2, border=1)
+        self.cell(h=4 * self.th, w=self.epw * .5, border=1)
+        self.set_xy(self.epw * .7 + self.l_margin, self.t_margin)
+        self.multi_cell(self.epw*.3, self.th, 'Copel Telecomunicações', align='L', border='LTR')
+        self.set_xy(self.epw * .7 + self.l_margin, self.t_margin + self.th)
+        self.multi_cell(self.epw*.3, self.th, 'R: José Izidoro Biazetto, 158', align='L', border='LR')
+        self.set_xy(self.epw * .7 + self.l_margin, self.t_margin + self.th*2)
+        self.multi_cell(self.epw * .3, self.th, 'Bloco A - Mossunguê', align='L', border='LR')
+        self.set_xy(self.epw * .7 + self.l_margin, self.t_margin + self.th*3)
+        self.multi_cell(self.epw * .3, self.th, 'Departamento de manutenção', align='L', border='LRB')
+
+        self.th = self.th + 2
+
+        self.cell(self.epw*.3, self.th, 'EMPRESA PARCEIRA', border=1)
+        self.cell(self.epw*.7, self.th, 'Copel / Winikes Engenharia Elétrica LTDA (Constel)', border=1)
+        self.ln(self.th)
+        self.cell(self.epw * .3, self.th, 'RESPONSÁVEL', border=1)
+        self.cell(self.epw * .7, self.th, f'Copel / {self.ordem.user.get_full_name().title()}', border=1)
+        self.ln(self.th)
+        self.cell(self.epw * .3, self.th, 'PERÍODO TRIAGEM', border=1)
+        self.cell(self.epw * .35, self.th, f'DE: 01/{self.ordem.data.strftime("%m/%Y")}', border=1)
+        self.cell(
+            self.epw * .35,
+            self.th,
+            f'ATÉ: {monthrange(self.ordem.data.year, self.ordem.data.month)[1]}/{self.ordem.data.strftime("%m/%Y")}',
+            border=1
+        )
+        self.ln(self.th)
+        self.cell(self.epw * .3, self.th, 'IDENTIFICAÇÃO', border=1)
+        self.cell(self.epw * .7, self.th, str(self.ordem.id), border=1)
+
+    def tabela(self):
+
+        materiais = OntDevolucao.objects.filter(ordem=self.ordem).order_by('ont__modelo__nome', 'ont__codigo')
+
+        modelos = materiais.values(
+            'ont__modelo__nome'
+        ).annotate(
+            quantidade=Count('ont')
+        ).order_by(
+            '-quantidade'
+        )
+
+        print(modelos)
+
+        self.ln(2 * self.th)
+
+        self.cell(self.epw*.25, self.th, 'Modelo de ONT', align='C', border=1)
+        self.cell(self.epw*.25, self.th, 'Quantidade', align='C', border=1)
+        self.ln(self.th)
+
+        for modelo in modelos:
+            self.cell(self.epw*.25, self.th, modelo['ont__modelo__nome'], align='C', border=1)
+            self.cell(self.epw*.25, self.th, str(modelo['quantidade']), align='C', border=1)
+            self.ln(self.th)
+
+        colunas = [self.epw * .5, self.epw * .5]
+
+        self.ln(self.th)
+
+        self.cell(colunas[0], self.th, 'Modelo de ONT', align='C', border=1)
+        self.cell(colunas[1], self.th, 'Serial', align='C', border=1)
+
+        for material in materiais:
+            self.ln(self.th)
+            if self.get_y() >= (self.h - self.b_margin - 2*self.th):
+                self.add_page()
+            self.cell(colunas[0], self.th, material.ont.modelo.nome.upper(), align='C', border=1)
+            self.cell(colunas[1], self.th, str(material.ont.codigo).upper(), align='C', border=1)
 
     def file(self):
 

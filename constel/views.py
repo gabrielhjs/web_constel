@@ -13,6 +13,7 @@ from .forms import (
     FormFiltraQ,
     FormUsuarioEdita,
     FormUsuarioSenha,
+    FormCadastraUsuarioPassivo
 )
 from .models import UserType, Veiculo
 from .objects import Button
@@ -331,7 +332,7 @@ def usuarios_senha(request, user):
             messages.success(request, 'Senha alterada com sucesso')
 
             return HttpResponseRedirect(
-                f'/administracao/usuarios/senha/{str(user.id)}/?{request.GET.urlencode()}'
+                f'/administracao/usuarios/{str(user.username)}?{request.GET.urlencode()}'
             )
 
     context = {
@@ -342,3 +343,44 @@ def usuarios_senha(request, user):
     context.update(menu)
 
     return render(request, 'constel/v2/usuarios_senha.html', context)
+
+
+@login_required()
+@permission('admin',)
+def cadastrar_usuario_passivo(request):
+    """
+    View de carregamento e gestão do cadastro de usuários passivos que não acessam o sistema,
+    Deve ser acessada somente pelo adm e funcionários autorizados
+    :param request: informações do formulário
+    :return: carregamento do formulário
+    """
+    menu = menu_principal(request)
+
+    if request.method == 'POST':
+        form = FormCadastraUsuarioPassivo(request.POST)
+
+        if form.is_valid():
+            if form.is_valid():
+                form.save()
+                user = User.objects.get(username=form.cleaned_data['username'])
+                modelo = form.cleaned_data['modelo']
+                placa = form.cleaned_data['placa']
+                cor = form.cleaned_data['cor']
+                user_type = UserType(user=user)
+                user_type.save()
+                veiculo = Veiculo(user=user, modelo=modelo, placa=placa, cor=cor)
+                veiculo.save()
+
+                messages.success(request, 'Funcionário cadastrado com sucesso')
+
+                return HttpResponseRedirect('/administracao/usuarios/cadastro/sem_acesso')
+    else:
+        form = FormCadastraUsuarioPassivo()
+
+    context = {
+        'form': form,
+        'form_submit_text': 'Cadastrar usuário sem acesso',
+    }
+    context.update(menu)
+
+    return render(request, 'talao/v2/cadastrar_talao.html', context)

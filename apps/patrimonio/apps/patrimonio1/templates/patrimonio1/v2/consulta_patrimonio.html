@@ -12,6 +12,7 @@
                 <th scope="col">Descrição</th>
                 <th scope="col">Data de cadastro</th>
                 <th scope="col">Cadastrado por</th>
+                <th scope="col">#</th>
             </tr>
         </thead>
         <tbody>
@@ -21,6 +22,12 @@
                 <td>{{ item.descricao|lower }}</td>
                 <td>{{ item.data|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm w-100"
+                        href="{% url 'patrimonio_edita_modelo_patrimonio' item.id %}?{{ request.GET.urlencode }}">
+                        <i class="far fa-edit"></i>
+                    </a>
+                </td>
             </tr>
         {% endfor %}
     </table>

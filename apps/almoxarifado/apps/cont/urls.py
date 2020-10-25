@@ -43,6 +43,11 @@ urlpatterns = [
         name='almoxarifado_cont_consulta_situacao_detalhe',
     ),
     path(
+        'almoxarifado/cont/consultas/situacao/csv/<int:status>/<int:secao>/<int:modelo>/',
+        views.consulta_status_exporta_csv,
+        name='almoxarifado_cont_consulta_status_exporta_csv',
+    ),
+    path(
         'almoxarifado/cont/consultas/cargas/',
         views.consulta_tecnicos_carga,
         name='almoxarifado_cont_consulta_tecnicos_carga',

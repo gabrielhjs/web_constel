@@ -30,9 +30,13 @@
                 <td>{{ item.modelo__nome }}</td>
                 <td>{{ item.codigo__count }}</td>
                 <td>
-                    <a class="btn btn-primary btn-sm"
+                    <a class="btn btn-primary btn-sm w-50"
                         href="{% url 'almoxarifado_cont_consulta_situacao_detalhe' item.status item.secao__id item.modelo__id %}">
-                        ONT's
+                        <i class="fas fa-info"></i>
+                    </a>
+                    <a class="btn btn-primary btn-sm w-50"
+                        href="{% url 'almoxarifado_cont_consulta_status_exporta_csv' item.status item.secao__id item.modelo__id %}">
+                        <i class="fas fa-file-csv"></i>
                     </a>
                 </td>
             </tr>
