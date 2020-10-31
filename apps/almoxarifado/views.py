@@ -406,6 +406,7 @@ def consulta_estoque(request):
         pt_max=ExpressionWrapper(F('pt') - Min('almoxarifado_material_prazo__dias'), output_field=IntegerField()),
     ).exclude(
         entradas__isnull=True,
+        status=False,
     ).order_by('material')
 
     paginator = Paginator(itens, 50)
