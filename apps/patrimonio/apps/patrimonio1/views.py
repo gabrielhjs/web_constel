@@ -3,13 +3,15 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q, Subquery, OuterRef, Max, ExpressionWrapper, Value, F, CharField
+from django.db.models import Q, ExpressionWrapper, Value, F, CharField
+from django.http import FileResponse
 
 from .forms import *
 from .models import *
 from constel.apps.controle_acessos.decorator import permission
 
 from ...menu import menu_cadastros, menu_entradas, menu_saidas, menu_consultas, menu_consultas_modelos
+from ..pdf.objects import FichaPatrimonio
 
 from constel.forms import FormFiltraQ
 
@@ -163,19 +165,20 @@ def saida_patrimonio(request):
 
             print(entrada)
 
-            PatrimonioSaida(
+            patrimonio_saida = PatrimonioSaida(
                 entrada=entrada,
                 patrimonio=patrimonio,
                 observacao=form.cleaned_data['observacao'],
                 user=request.user,
                 user_to=form.cleaned_data['user_to'],
-            ).save()
+            )
+            patrimonio_saida.save()
             patrimonio.status = 1
             patrimonio.save()
 
             messages.success(request, 'Entrega registrada com sucesso')
 
-            return HttpResponseRedirect('/patrimonio/saidas/patrimonio')
+            return HttpResponseRedirect(f'/patrimonio/saidas/patrimonio/conclui/{patrimonio_saida.id}/')
 
     else:
         form = FormSaidaPatrimonio()
@@ -187,6 +190,34 @@ def saida_patrimonio(request):
     context.update(menu)
 
     return render(request, 'patrimonio/v2/entrada.html', context)
+
+
+@login_required
+@permission('almoxarifado', 'almoxarifado - saida', )
+def saida_patrimonio_conclui(request, ordem_id):
+    menu = menu_saidas(request)
+
+    context = {
+        'ordem_id': ordem_id,
+    }
+    context.update(menu)
+
+    return render(request, 'patrimonio1/v2/conclui.html', context)
+
+
+@login_required
+@permission('almoxarifado', 'almoxarifado - saida', )
+def saida_patrimonio_imprime(request, ordem_id):
+
+    if PatrimonioSaida.objects.filter(id=ordem_id).exists():
+        data = PatrimonioSaida.objects.get(id=ordem_id)
+
+    else:
+        return HttpResponseRedirect('/patrimonio/saidas/patrimonio/')
+
+    ficha = FichaPatrimonio(data)
+
+    return FileResponse(ficha.file(), filename='ficha_patrimonio' + str(data.id) + '.pdf')
 
 
 @login_required
@@ -280,30 +311,9 @@ def consulta_patrimonio_status(request):
             Q(patrimonio__nome__icontains=patrimonio)
         )
 
-    subquery = PatrimonioSaida.objects.filter(
-        patrimonio=OuterRef('pk')
-    ).values(
-        'user_to__first_name',
-        'user_to__last_name',
-    ).annotate(
-        ultima_data=Max('data')
-    )
+    itens = PatrimonioId.objects.filter(query).order_by('patrimonio__nome', 'codigo')
 
-    itens = PatrimonioId.objects.filter(
-        query
-    ).annotate(
-        user_to_first_name=Subquery(subquery.values('user_to__first_name')),
-        user_to_last_name=Subquery(subquery.values('user_to__last_name')),
-        ultima_entrega=Subquery(subquery.values('ultima_data')),
-    ).values(
-        'id',
-        'codigo',
-        'patrimonio__nome',
-        'status',
-        'user_to_first_name',
-        'user_to_last_name',
-        'ultima_entrega',
-    ).order_by('patrimonio__nome', 'codigo')
+    print(itens.values_list())
 
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')
