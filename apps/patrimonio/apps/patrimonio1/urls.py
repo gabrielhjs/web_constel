@@ -28,6 +28,16 @@ urlpatterns = [
         name='patrimonio_saida_patrimonio',
     ),
     path(
+        'patrimonio/saidas/patrimonio/conclui/<int:ordem_id>/',
+        views.saida_patrimonio_conclui,
+        name='patrimonio_saida_patrimonio_conclui',
+    ),
+    path(
+        'patrimonio/saidas/patrimonio/imprime/<int:ordem_id>/',
+        views.saida_patrimonio_imprime,
+        name='patrimonio_saida_patrimonio_imprime',
+    ),
+    path(
         'patrimonio/consultas/patrimonio/',
         views.consulta_patrimonio,
         name='patrimonio_consulta_patrimonio',
