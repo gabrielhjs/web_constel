@@ -165,7 +165,7 @@ def view_limpa(request, fornecedor):
 
     fornecedor = Fornecedor.objects.get(id=fornecedor)
 
-    if not DefeitoOntLista.objects.filter(forneedor=fornecedor).exists():
+    if not DefeitoOntLista.objects.filter(fornecedor=fornecedor).exists():
         return HttpResponseRedirect('/almoxarifado/cont/saidas/lista/')
 
     else:
