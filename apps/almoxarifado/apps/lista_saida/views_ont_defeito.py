@@ -169,7 +169,7 @@ def view_limpa(request, fornecedor):
         return HttpResponseRedirect('/almoxarifado/cont/saidas/lista/')
 
     else:
-        itens = DefeitoOntLista.objects.filter(lista__fornecedor=fornecedor)
+        itens = DefeitoOntLista.objects.filter(fornecedor=fornecedor)
 
         for item in itens:
             item.delete()
