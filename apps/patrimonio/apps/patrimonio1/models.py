@@ -10,6 +10,7 @@ class Patrimonio(models.Model):
     descricao = models.TextField(verbose_name='Descrição', max_length=500)
     data = models.DateTimeField(auto_now=True, verbose_name='Data de entrada')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='patrimonios_cadastrados', default=None)
+    valor = models.FloatField(null=False, blank=False, default=0)
 
     def __str__(self):
 
@@ -33,7 +34,6 @@ class PatrimonioId(models.Model):
     status = models.IntegerField(choices=STATUS, default=0)
     patrimonio = models.ForeignKey(Patrimonio, on_delete=models.CASCADE, related_name='patrimonio_id')
     codigo = models.IntegerField(verbose_name='Código', null=False, blank=False, default=0)
-    valor = models.FloatField(null=False, blank=False, default=0)
 
     def __str__(self):
 

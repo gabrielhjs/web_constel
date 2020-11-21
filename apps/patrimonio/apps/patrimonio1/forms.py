@@ -9,10 +9,12 @@ class FormCadastraPatrimonio(forms.ModelForm):
 
     class Meta:
         model = Patrimonio
-        fields = ['nome', 'descricao', ]
+        fields = ('nome', 'descricao', 'valor')
 
     def __init__(self, *args, **kwargs):
         super(FormCadastraPatrimonio, self).__init__(*args, **kwargs)
+
+        self.fields['valor'].label = 'Valor (R$)'
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
@@ -36,10 +38,6 @@ class FormEntradaPatrimonio1(forms.Form):
 class FormEntradaPatrimonio2(forms.Form):
 
     patrimonio = None
-    valor = forms.FloatField(
-        required=True,
-        label='Valor agregado (R$)',
-    )
 
     def __init__(self, *args, **kwargs):
         super(FormEntradaPatrimonio2, self).__init__(*args, **kwargs)
@@ -106,10 +104,12 @@ class FormEditaModeloPatrimonio(forms.ModelForm):
 
     class Meta:
         model = Patrimonio
-        fields = ('nome', 'descricao')
+        fields = ('nome', 'descricao', 'valor')
 
     def __init__(self, *args, **kwargs):
         super(FormEditaModeloPatrimonio, self).__init__(*args, **kwargs)
+
+        self.fields['valor'].label = 'Valor agregado (R$)'
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
@@ -119,13 +119,12 @@ class FormEditaPatrimonio(forms.ModelForm):
 
     class Meta:
         model = PatrimonioId
-        fields = ('codigo', 'patrimonio', 'valor')
+        fields = ('codigo', 'patrimonio')
 
     def __init__(self, *args, **kwargs):
         super(FormEditaPatrimonio, self).__init__(*args, **kwargs)
 
         self.fields['patrimonio'].label = 'Modelo'
-        self.fields['valor'].label = 'Valor (R$)'
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})

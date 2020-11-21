@@ -123,7 +123,6 @@ def entrada_patrimonio_2(request):
                     codigo=request.session.get('patrimonio_entrada_codigo'),
                     status=0,
                     patrimonio=form.cleaned_data['patrimonio'],
-                    valor=form.cleaned_data['valor'],
                 )
                 patrimonio.save()
 
