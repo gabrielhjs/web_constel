@@ -119,13 +119,12 @@ class FormEditaPatrimonio(forms.ModelForm):
 
     class Meta:
         model = PatrimonioId
-        fields = ('codigo', 'patrimonio', 'valor')
+        fields = ('codigo', 'patrimonio')
 
     def __init__(self, *args, **kwargs):
         super(FormEditaPatrimonio, self).__init__(*args, **kwargs)
 
         self.fields['patrimonio'].label = 'Modelo'
-        self.fields['valor'].label = 'Valor (R$)'
 
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
