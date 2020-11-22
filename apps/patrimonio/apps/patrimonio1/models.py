@@ -60,6 +60,14 @@ class PatrimonioEntrada1(models.Model):
     objects = None
 
 
+class PatrimonioEntradaHistorico(models.Model):
+    patrimonio = models.ForeignKey(PatrimonioId, on_delete=models.CASCADE, related_name='patrimonio_historico_entrada')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='entrada_historico_patrimonio')
+
+    # Default fields (apenas para não gerar alertas na IDE)
+    objects = None
+
+
 class PatrimonioSaida(models.Model):
     """
     Model que gerencia a tabela de saídas de materiais do patrimônio
