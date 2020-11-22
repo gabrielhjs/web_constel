@@ -13,14 +13,19 @@ urlpatterns = [
         name='patrimonio_cadastrar_patrimonio',
     ),
     path(
-        'patrimonio/entradas/patrimonio_1',
+        'patrimonio/entradas/patrimonio_1/',
         views.entrada_patrimonio_1,
         name='patrimonio_entrada_patrimonio_1',
     ),
     path(
-        'patrimonio/entradas/patrimonio_2',
+        'patrimonio/entradas/patrimonio_2/',
         views.entrada_patrimonio_2,
         name='patrimonio_entrada_patrimonio_2',
+    ),
+    path(
+        'patrimonio/entradas/patrimonio_3/',
+        views.entrada_patrimonio_3,
+        name='patrimonio_entrada_patrimonio_3',
     ),
     path(
         'patrimonio/saidas/patrimonio/',

@@ -63,19 +63,13 @@ def cadastra_patrimonio(request):
 def entrada_patrimonio_1(request):
     menu = menu_entradas(request)
 
-    if request.method == 'POST':
-        initial = {
-            'codigo': request.session.get('patrimonio_entrada_codigo', None),
-        }
-        form = FormEntradaPatrimonio1(data=request.POST, initial=initial)
+    form = FormEntradaPatrimonio1(request.POST or None)
 
+    if request.method == "POST":
         if form.is_valid():
-            request.session['patrimonio_entrada_codigo'] = form.cleaned_data['codigo']
+            request.session["patrimonio_entrada_modelo"] = form.cleaned_data['patrimonio']
 
             return HttpResponseRedirect('/patrimonio/entradas/patrimonio_2')
-
-    else:
-        form = FormEntradaPatrimonio1()
 
     context = {
         'form': form,
@@ -86,43 +80,50 @@ def entrada_patrimonio_1(request):
     return render(request, 'patrimonio/v2/entrada.html', context)
 
 
+@login_required
+@permission('patrimonio', )
 def entrada_patrimonio_2(request):
+
+    modelo = request.session.get("patrimonio_entrada_modelo", None)
+
+    if modelo is None:
+        return HttpResponseRedirect("/patrimonio/entradas/patrimonio_1")
+
+    modelo = Patrimonio.objects.get(id=modelo)
     menu = menu_entradas(request)
+    form = FormEntradaPatrimonio2(request.POST or None)
 
-    if request.session.get('patrimonio_entrada_codigo') is None:
-        return HttpResponseRedirect('/patrimonio/entradas/patrimonio_1')
+    if request.method == "POST":
+        if form.is_valid():
+            codigo = form.cleaned_data["codigo"]
 
-    codigo = request.session.get('patrimonio_entrada_codigo')
+            if PatrimonioId.objects.filter(codigo=codigo).exists():
+                patrimonio = PatrimonioId.objects.get(codigo=codigo)
 
-    if PatrimonioId.objects.filter(codigo=codigo).exists():
-        patrimonio = PatrimonioId.objects.get(codigo=codigo)
+                if patrimonio.status != 0:
+                    PatrimonioEntrada1(
+                        patrimonio=patrimonio,
+                        user=request.user
+                    ).save()
 
-        if patrimonio.status != 0:
-            PatrimonioEntrada1(
-                patrimonio=patrimonio,
-                user=request.user
-            ).save()
+                    patrimonio.status = 0
+                    patrimonio.save()
 
-            patrimonio.status = 0
-            patrimonio.save()
+                    PatrimonioEntradaHistorico(
+                        patrimonio=patrimonio,
+                        user=request.user
+                    ).save()
 
-            messages.success(request, 'Patrimônio (RE)inserido no estoque com sucesso')
+                    messages.success(request, 'Patrimônio (RE)inserido no estoque com sucesso')
 
-        else:
-            messages.error(request, 'Patrimônio já em estoque')
+                else:
+                    messages.error(request, 'Patrimônio já em estoque')
 
-        return HttpResponseRedirect('/patrimonio/entradas/patrimonio_1')
-
-    else:
-
-        if request.method == 'POST':
-            form = FormEntradaPatrimonio2(request.POST)
-
-            if form.is_valid():
+            else:
                 patrimonio = PatrimonioId(
-                    codigo=request.session.get('patrimonio_entrada_codigo'),
+                    codigo=codigo,
                     status=0,
-                    patrimonio=form.cleaned_data['patrimonio'],
+                    patrimonio=modelo,
                 )
                 patrimonio.save()
 
@@ -131,20 +132,36 @@ def entrada_patrimonio_2(request):
                     user=request.user
                 ).save()
 
+                PatrimonioEntradaHistorico(
+                    patrimonio=patrimonio,
+                    user=request.user
+                ).save()
+
                 messages.success(request, 'Patrimônio cadastrado e inserido no estoque com sucesso')
 
-                return HttpResponseRedirect('/patrimonio/entradas/patrimonio_1')
+            return HttpResponseRedirect('/patrimonio/entradas/patrimonio_2')
 
-        else:
-            form = FormEntradaPatrimonio2()
+    historico = PatrimonioEntradaHistorico.objects.filter(user=request.user).order_by('-id').values(
+        'patrimonio__codigo',
+    )
 
-        context = {
-            'form': form,
-            'form_submit_text': 'Inserir em estoque',
-        }
-        context.update(menu)
+    context = {
+        'form': form,
+        'form_submit_text': 'Inserir em estoque',
+        'historico': historico,
+        'modelo': modelo.nome.title()
+    }
+    context.update(menu)
 
-        return render(request, 'patrimonio/v2/entrada.html', context)
+    return render(request, 'patrimonio1/v2/entrada_2.html', context)
+
+
+@login_required()
+@permission('patrimonio', )
+def entrada_patrimonio_3(request):
+    PatrimonioEntradaHistorico.objects.filter(user=request.user).delete()
+
+    return HttpResponseRedirect('/patrimonio/entradas/patrimonio_2')
 
 
 @login_required

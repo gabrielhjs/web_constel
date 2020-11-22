@@ -1,0 +1,27 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %} 
+{% include 'constel/v2/form_post.html' %}
+<div class="row mx-0 mb-3 justify-content-center">
+    <a href="/patrimonio/entradas/patrimonio_3/" class="btn btn-primary px-4">Limpar histórico</a>
+</div>
+<div class="table-responsive table-content enumerated">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="5">Modelo: {{ modelo }}</th>
+            </tr>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Código</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in historico %}
+            <tr class="text-md-left">
+                <td></td>
+                <td>{{ item.patrimonio__codigo }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% endblock %}

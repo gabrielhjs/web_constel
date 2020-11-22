@@ -22,25 +22,10 @@ class FormCadastraPatrimonio(forms.ModelForm):
 
 class FormEntradaPatrimonio1(forms.Form):
 
-    codigo = forms.CharField(required=True, widget=NonstickyCharfield())
-
-    def __init__(self, *args, **kwargs):
-        super(FormEntradaPatrimonio1, self).__init__(*args, **kwargs)
-
-        self.fields['codigo'].widget.attrs.update(
-            {'autofocus': 'autofocus', 'required': 'required'}
-        )
-
-        for key in self.fields.keys():
-            self.fields[key].widget.attrs.update({'class': 'form-control'})
-
-
-class FormEntradaPatrimonio2(forms.Form):
-
     patrimonio = None
 
     def __init__(self, *args, **kwargs):
-        super(FormEntradaPatrimonio2, self).__init__(*args, **kwargs)
+        super(FormEntradaPatrimonio1, self).__init__(*args, **kwargs)
 
         patrimonio_itens = Patrimonio.objects.all().order_by('nome', 'descricao')
         patrimonio_lista = [(i.id, i.nome) for i in patrimonio_itens]
@@ -54,10 +39,20 @@ class FormEntradaPatrimonio2(forms.Form):
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
 
-    def clean(self):
-        super(FormEntradaPatrimonio2, self).clean()
 
-        self.cleaned_data['patrimonio'] = Patrimonio.objects.get(id=int(self.cleaned_data['patrimonio']))
+class FormEntradaPatrimonio2(forms.Form):
+
+    codigo = forms.CharField(required=True, widget=NonstickyCharfield())
+
+    def __init__(self, *args, **kwargs):
+        super(FormEntradaPatrimonio2, self).__init__(*args, **kwargs)
+
+        self.fields['codigo'].widget.attrs.update(
+            {'autofocus': 'autofocus', 'required': 'required'}
+        )
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
 
 
 class FormSaidaPatrimonio(forms.Form):
