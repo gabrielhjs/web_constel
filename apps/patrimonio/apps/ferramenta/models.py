@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from apps.patrimonio.models import Ordem
+
 
 class Ferramenta(models.Model):
     """
@@ -85,6 +87,13 @@ class FerramentaSaida(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='saidas')
     user_to = models.ForeignKey(User, on_delete=models.PROTECT, related_name='retiradas')
     observacao = models.TextField(verbose_name='Observação', max_length=500, null=True, blank=True)
+    ordem = models.ForeignKey(
+        Ordem,
+        on_delete=models.CASCADE,
+        default=None,
+        related_name='saida_ordem_ferramenta',
+        null=True
+    )
 
     def __str__(self):
 

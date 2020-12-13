@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('apps.patrimonio.apps.ferramenta.urls')),
     path('', include('apps.patrimonio.apps.patrimonio1.urls')),
     path('', include('apps.patrimonio.apps.combustivel.urls')),
+    path('', include('apps.patrimonio.apps.lista_saida_patrimonio.urls')),
 
     path(
         'patrimonio/',
