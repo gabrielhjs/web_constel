@@ -1,0 +1,33 @@
+<form action="{% url 'patrimonio_saidas_lista_itens_ferramenta' user_to.id %}" method="POST">
+    {% csrf_token %}
+
+    {% for field in form_ferramenta %}
+        
+        <div class="form-group row mx-0 px-0 mt-3">
+            <label for="{{ field.id_for_label }}" class="col-md-2 col-form-label text-md-right">{{ field.label_tag|title }}</label>
+            <div class="col-md-8 mx-0 px-0">
+                {{ field }}
+            </div>
+
+            {% if field.help_text %}
+            <div class="col-md-12 alert alert-primary text-center" role="alert">
+                {{ field.help_text }}
+            </div>
+            {% endif %}
+        </div>
+
+        {% for error in field.errors %}
+            <div class="col-md-12 text-md-center">
+                <div class="alert alert-danger mt-1">
+                    <a class="close" href="#" data-dismiss="alert">×</a>
+                    {{ error }}
+                </div>
+            </div>
+        {% endfor %}
+    
+    {% endfor %}
+    <div class="text-center w-md-50">
+        <button type="submit" class="btn btn-success w-50">{{ form_submit_ferramenta_text }}</button>
+        <a class="btn btn-warning px-5" href="{% url 'patrimonio_saidas_lista_limpa_ferramenta' user_to.id %}">limpar</a>
+    </div>
+</form>

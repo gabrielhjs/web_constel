@@ -169,8 +169,6 @@ def fechamento_ferramenta(request):
                 user=request.user,
             )
 
-            print(status)
-
             if int(status) == 0:
                 ferramenta.quantidade.quantidade += form.cleaned_data['quantidade']
                 messages.success(request, 'Fechamento realizado e ferramentas (RE)inseridas no estoque')

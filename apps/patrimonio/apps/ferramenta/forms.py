@@ -105,9 +105,6 @@ class FormFechamentoFerramenta(forms.Form):
         form_data['user_from'] = User.objects.get(id=int(form_data['user_from']))
         form_data['ferramenta'] = Ferramenta.objects.get(id=int(form_data['ferramenta']))
 
-        print(form_data['user_from'])
-        print(form_data['ferramenta'])
-
         if not FerramentaQuantidadeFuncionario.objects.filter(
             user=form_data['user_from'],
             ferramenta=form_data['ferramenta'],

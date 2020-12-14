@@ -325,7 +325,6 @@ def usuarios_senha(request, user):
                 f'/administracao/usuarios/senha/{str(user.id)}/?{request.GET.urlencode()}'
             )
 
-        print(form.is_valid())
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
