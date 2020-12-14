@@ -1,0 +1,86 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-response table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="2">Destinatário</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-md-left">
+                <td>Matrícula</td>
+                <td>{{ user_to.username }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Funcionário</td>
+                <td>{{ user_to.first_name|title }} {{ user_to.last_name|title }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="row mx-0 mt-1">
+    {% for message in messages %}
+        <div class="col-md-12 text-md-center">
+            <div class="alert alert-danger mt-1">
+                <a class="close" href="#" data-dismiss="alert">×</a>
+                {{ message }}
+            </div>
+        </div>
+    {% endfor %}
+    <div class="col-md-6 pl-0 pr-1">
+        <div class="table-responsive table-content enumerated">
+            <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+                <thead>
+                    <tr>
+                        <th scope="col" colspan="3">Ferramentas</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in lista_ferramenta %}
+                    <tr>
+                        <td></td>
+                        <td>{{ item.ferramenta__nome }}</td>
+                        <td>{{ item.quantidade }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% include 'lista_saida_patrimonio/v2/form_ferramenta.html' %}
+    </div>
+    <div class="col-md-6 px-0">
+        <div class="table-responsive table-content enumerated">
+            <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+                <thead>
+                    <tr>
+                        <th scope="col" colspan="3">Patrimônio</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Código</th>
+                        <th scope="col">Modelo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in lista_patrimonio %}
+                    <tr>
+                        <td></td>
+                        <td>{{ item.patrimonio__codigo }}</td>
+                        <td>{{ item.patrimonio__patrimonio__nome }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% include 'lista_saida_patrimonio/v2/form_patrimonio.html' %}
+    </div>
+</div>
+<div class="row justify-content-center m-0">
+    <a class="btn btn-primary px-5 my-3" href="{% url 'patrimonio_saidas_lista_entrega' user_to.id %}">entregar itens</a>
+    <a class="btn btn-warning px-5 my-3 ml-3" href="{% url 'patrimonio_saidas_lista_limpa' user_to.id %}">limpar tudo</a>
+</div>
+{% endblock %}

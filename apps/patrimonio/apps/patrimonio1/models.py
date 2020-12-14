@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from apps.patrimonio.models import Ordem
+
 
 class Patrimonio(models.Model):
     """
@@ -83,6 +85,13 @@ class PatrimonioSaida(models.Model):
     data = models.DateTimeField(auto_now=True, verbose_name='Data de saída')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='patrimonio_saidas')
     user_to = models.ForeignKey(User, on_delete=models.PROTECT, related_name='patrimonio_retiradas')
+    ordem = models.ForeignKey(
+        Ordem,
+        on_delete=models.CASCADE,
+        default=None,
+        related_name='saida_ordem_patrimonio',
+        null=True
+    )
 
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None

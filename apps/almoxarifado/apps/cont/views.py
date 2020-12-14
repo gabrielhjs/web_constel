@@ -296,8 +296,6 @@ def consulta_status_detalhe(request, status, secao, modelo):
         'max_contrato',
     )
 
-    # print(itens.values_list('cliente_ont__contrato'))
-    
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -536,8 +534,6 @@ def consulta_saidas_detalhe(request, ordem):
 
     ordem = Ordem.objects.get(id=ordem)
 
-    print(itens.values_list())
-
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -617,8 +613,6 @@ def consulta_devolucoes_detalhe(request, ordem):
     )
 
     ordem = Ordem.objects.get(id=ordem)
-
-    print(itens.values_list())
 
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')

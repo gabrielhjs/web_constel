@@ -402,8 +402,6 @@ class FichaOntsManutencao(FPDF):
             '-quantidade'
         )
 
-        print(modelos)
-
         self.ln(2 * self.th)
 
         self.cell(self.epw*.25, self.th, 'Modelo de ONT', align='C', border=1)

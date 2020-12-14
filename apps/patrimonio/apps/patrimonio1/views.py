@@ -179,8 +179,6 @@ def saida_patrimonio(request):
                 patrimonio=patrimonio,
             ).last()
 
-            print(entrada)
-
             patrimonio_saida = PatrimonioSaida(
                 entrada=entrada,
                 patrimonio=patrimonio,
@@ -328,8 +326,6 @@ def consulta_patrimonio_status(request):
         )
 
     itens = PatrimonioId.objects.filter(query).order_by('patrimonio__nome', 'codigo')
-
-    print(itens.values_list())
 
     paginator = Paginator(itens, 50)
     page_number = request.GET.get('page')

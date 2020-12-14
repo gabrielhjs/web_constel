@@ -74,7 +74,6 @@ class SerializerContrato(serializers.Serializer):
         serial = self.validated_data.get('serial').upper()
 
         ont = Ont.objects.get(codigo=serial)
-        print(serial)
         ont_saida = OntSaida.objects.filter(ont=ont).latest('data')
         user = User.objects.get(username=self.validated_data.get('username'))
 
