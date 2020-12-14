@@ -10,7 +10,7 @@ def menu_principal(request):
         {'link': '/patrimonio/combustivel/talao', 'text': 'Combustível'},
         {'link': '/patrimonio/cadastros', 'text': 'Cadastros'},
         {'link': '/patrimonio/entradas', 'text': 'Entradas'},
-        {'link': '/patrimonio/saidas', 'text': 'Saídas'},
+        {'link': '/patrimonio/saidas/lista', 'text': 'Saídas'},
         {'link': '/patrimonio/fechamento/ferramenta', 'text': 'Fechamento (ferramentas)'},
         {'link': '/patrimonio/consultas', 'text': 'Consultas'},
     ]

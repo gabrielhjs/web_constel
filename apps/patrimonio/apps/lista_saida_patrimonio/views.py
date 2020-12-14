@@ -100,10 +100,7 @@ def lista_insere_ferramenta(request, user_to):
     form_ferramenta = FormInsereFerramenta(user_to=user_to, data=request.POST)
     lista, created = Lista.objects.get_or_create(user_to__id=user_to)
 
-    print(form_ferramenta.errors)
-
     if form_ferramenta.is_valid():
-      print("entrou aqui")
       ferramenta = form_ferramenta.cleaned_data['ferramenta']
       quantidade = form_ferramenta.cleaned_data['quantidade']
 
@@ -160,6 +157,7 @@ def lista_entrega(request, user_to):
     ordem.save()
 
     user_to_object = User.objects.get(id=user_to)
+
     if ItemFerramenta.objects.filter(lista__user_to__id=user_to).exists():
       itens_ferramenta = ItemFerramenta.objects.filter(lista__user_to__id=user_to)
 
@@ -200,29 +198,28 @@ def lista_entrega(request, user_to):
         saida.save()
         carga.save()
 
-      itens_ferramenta[0].lista.delete()
-
     if ItemPatrimonio.objects.filter(lista__user_to__id=user_to).exists():
       itens_patrimonio = ItemPatrimonio.objects.filter(lista__user_to__id=user_to)
 
-      for patrimonio in itens_patrimonio:
+      for item in itens_patrimonio:
         entrada = PatrimonioEntrada1.objects.filter(
-          patrimonio=patrimonio,
+          patrimonio=item.patrimonio,
         ).last()
 
         patrimonio_saida = PatrimonioSaida(
           entrada=entrada,
-          patrimonio=patrimonio,
+          patrimonio=item.patrimonio,
           user=request.user,
           user_to=user_to_object,
           ordem=ordem,
         )
 
         patrimonio_saida.save()
-        patrimonio.status = 1
-        patrimonio.save()
+        item.patrimonio.status = 1
+        item.patrimonio.save()
 
-      itens_patrimonio[0].lista.delete()
+    if Lista.objects.filter(user_to__id=user_to).exists():
+      Lista.objects.get(user_to__id=user_to).delete()
 
     return HttpResponseRedirect(f'/patrimonio/saidas/lista/conclui/{ordem.id}')
 

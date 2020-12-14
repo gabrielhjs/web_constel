@@ -29,8 +29,6 @@ class FichaPatrimonio(FPDF):
     else:
       self.patrimonios = []
 
-    print(self.patrimonios)
-
     if self.ferramentas:
       self.data = self.ferramentas[0].data
       self.responsavel = self.ferramentas[0].user.get_full_name().title()
@@ -41,9 +39,9 @@ class FichaPatrimonio(FPDF):
     else:
       self.data = self.patrimonios[0].data
       self.responsavel = self.patrimonios[0].user.get_full_name().title()
-      self.responsavel_id = self.patrimonios[0].username
+      self.responsavel_id = self.patrimonios[0].user.username
       self.colaborador = self.patrimonios[0].user_to.get_full_name().title()
-      self.colaborador_id = self.patrimonios[0].username
+      self.colaborador_id = self.patrimonios[0].user.username
 
     self.cabecalho()
     self.termos_de_uso()

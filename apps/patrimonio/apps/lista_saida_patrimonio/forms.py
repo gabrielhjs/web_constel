@@ -25,8 +25,6 @@ class FormInsereFerramenta(forms.ModelForm):
   def clean(self):
     form_data = super(FormInsereFerramenta, self).clean()
 
-    print(form_data)
-
     estoque = FerramentaQuantidade.objects.get(ferramenta=form_data['ferramenta']).quantidade
 
     if ItemFerramenta.objects.filter(
