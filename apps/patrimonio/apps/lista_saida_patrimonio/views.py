@@ -163,7 +163,10 @@ def lista_entrega(request, user_to):
 
       for item in itens_ferramenta:
         if (item.ferramenta.quantidade.quantidade - item.quantidade) < 0:
-          messages.error(request, 'Não há quantidade disponível em estoque! estoque: (%d)' % item.ferramenta.quantidade)
+          messages.error(
+            request,
+            'Não há quantidade disponível em estoque! estoque: (%d)' % item.ferramenta.quantidade.quantidade
+          )
           return HttpResponseRedirect(f'/patrimonio/saidas/lista/itens/{user_to}/')
 
         saida = FerramentaSaida(
