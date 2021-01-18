@@ -8,6 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('patrimonio', '0001_initial'),
+        ('patrimonio1', '0001_initial'),
     ]
 
     operations = [
