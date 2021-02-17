@@ -7,7 +7,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 CONTWE2_TOKEN = "zi3AvF41SP7MUBMkUw8Z"
-CONTWE2_URL = 'wss://contwe2.herokuapp.com/ws/'
+CONTWE2_URL = "wss://contwe2.herokuapp.com/ws/"
+SENTINELA_WE = "ws://127.0.0.1:5000"
 
 DATABASES = {
     'default': {

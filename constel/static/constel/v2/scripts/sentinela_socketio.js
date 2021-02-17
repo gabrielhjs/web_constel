@@ -16,15 +16,23 @@ $(document).ready(function() {
 
     socket.on("send_data", response => {
         console.log(response)
+        console.log(table)
 
-        for (const i in response.response) {
-            table.append(`
+        const html = `
             <tr>
-                <td>${response.response[i][0]}</td>
-                <td>${response.response[i][1]}</td>
-                <td>${response.response[i][2]}</td>
+                <td>${response.response["contrato"]}</td>
+                <td>${response.response["ok"]}</td>
+                <td>${response.response["logoff"]}</td>
+                <td>${response.response["sinal_ont"]}</td>
+                <td>${response.response["sinal_olt"]}</td>
             </tr>
-        `)
+        `
+
+        if (table.children().length == 0) {
+            table.append(html)
+        }
+        else {
+            table.children().first().before(html)
         }
     });
 
