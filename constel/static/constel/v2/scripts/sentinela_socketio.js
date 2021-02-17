@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    const socket = io("ws://127.0.0.1:5000");
+    const socket = io("ws://sentinela-web.herokuapp.com/");
     const button_activate = document.querySelector("#activate_sentinel");
     const button_deactivate = document.querySelector("#deactivate_sentinel");
     const light = document.querySelector("#sentinel_is_active_light");
