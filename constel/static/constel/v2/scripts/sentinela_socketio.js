@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    const socket = io("ws://sentinela-web.herokuapp.com/");
+    const socket = io("wss://sentinela-web.herokuapp.com/");
     const button_activate = document.querySelector("#activate_sentinel");
     const button_deactivate = document.querySelector("#deactivate_sentinel");
     const light = document.querySelector("#sentinel_is_active_light");
@@ -19,12 +19,13 @@ $(document).ready(function() {
         console.log(table)
 
         const html = `
-            <tr>
+            <tr style="background-color:rgb(${response.response['ok'] ? '34, 153, 84' : '192, 57, 43'});">
                 <td>${response.response["contrato"]}</td>
-                <td>${response.response["ok"]}</td>
-                <td>${response.response["logoff"]}</td>
+                <td>${response.response["tipo"]}</td>
+                <td>${response.response["recurso"]}</td>
                 <td>${response.response["sinal_ont"]}</td>
                 <td>${response.response["sinal_olt"]}</td>
+                <td>${response.response["created_at"]}</td>
             </tr>
         `
 

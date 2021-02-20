@@ -14,7 +14,12 @@ def consulta_queue(request: HttpRequest) -> HttpResponse:
 
   page_obj = SentinelaContratos.objects.all().order_by("-id").values(
     "contrato",
-    "status"
+    "recurso",
+    "sinal_ont",
+    "sinal_olt",
+    "created_at",
+    "status_sentinela",
+    "tipo",
   )
 
   context = {

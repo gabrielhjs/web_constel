@@ -12,28 +12,30 @@
     <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
         <thead>
             <tr>
-                <th scope="col" colspan="5">Histórico</th>
+                <th scope="col" colspan="6">Histórico</th>
             </tr>
             <tr>
-                <th scope="col" colspan="2">Wfm</th>
+                <th scope="col" colspan="3">Wfm</th>
                 <th scope="col" colspan="3">Cob</th>
             </tr>
             <tr>
                 <th scope="col">Contrato</th>
-                <th scope="col">exemplo</th>
-                <th scope="col">Status</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Recurso</th>
                 <th scope="col">Sinal ONT</th>
                 <th scope="col">Sinal OLT</th>
+                <th scope="col">Horário</th>
             </tr>
         </thead>
         <tbody id="my_table">
             {% for item in page_obj %}
-            <tr class="text-md-left">
+            <tr class="text-md-left" style="background-color: rgb({% if item.status_sentinela %}34, 153, 84{% else %}192, 57, 43{% endif %}">
                 <td>{{ item.contrato }}</td>
-                <td>{{ item.status }}</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
+                <td>{{ item.tipo }}</td>
+                <td>{{ item.recurso }}</td>
+                <td>{{ item.sinal_ont }}</td>
+                <td>{{ item.sinal_olt }}</td>
+                <td>{{ item.created_at|date:'d/m/Y H:i:s' }}</td>
             </tr>
             {% endfor %}
     </table>
