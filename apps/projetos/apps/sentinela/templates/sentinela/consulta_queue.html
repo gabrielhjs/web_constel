@@ -1,0 +1,49 @@
+{% extends 'constel/v2/app.html' %}
+{% load static %}
+{% block app_content %}
+<span id="sentinel_is_active_light"></span>
+<button class="btn btn-primary btn-lg" id="activate_sentinel" disabled="">
+    ativar
+</button>
+<button class="btn btn-primary btn-lg" id="deactivate_sentinel" disabled="">
+    desativar
+</button>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="6">Histórico</th>
+            </tr>
+            <tr>
+                <th scope="col" colspan="3">Wfm</th>
+                <th scope="col" colspan="3">Cob</th>
+            </tr>
+            <tr>
+                <th scope="col">Contrato</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Recurso</th>
+                <th scope="col">Sinal ONT</th>
+                <th scope="col">Sinal OLT</th>
+                <th scope="col">Horário</th>
+            </tr>
+        </thead>
+        <tbody id="my_table">
+            {% for item in page_obj %}
+            <tr class="text-md-left" style="background-color: rgb({% if item.status_sentinela %}34, 153, 84{% else %}192, 57, 43{% endif %}">
+                <td>{{ item.contrato }}</td>
+                <td>{{ item.tipo }}</td>
+                <td>{{ item.recurso }}</td>
+                <td>{{ item.sinal_ont }}</td>
+                <td>{{ item.sinal_olt }}</td>
+                <td>{{ item.created_at|date:'d/m/Y H:i:s' }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+<script>
+    const table = $("#my_table");
+</script>
+<script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+<script src="{% static 'constel/v2/scripts/sentinela_socketio.js' %}"></script>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

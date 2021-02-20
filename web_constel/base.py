@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     'apps.patrimonio.apps.combustivel',
     'apps.patrimonio.apps.lista_saida_patrimonio',
     'apps.patrimonio.apps.combustivel.apps.talao',
+    'apps.projetos.apps.sentinela',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
