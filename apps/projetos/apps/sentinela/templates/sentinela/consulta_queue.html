@@ -29,22 +29,11 @@
         <tbody id="my_table">
             {% for item in page_obj %}
             <tr class="text-md-left">
-                <td>{{ item.codigo }}</td>
-                <td>{{ item.material }}</td>
-                <td style="font-size: 1.2em;">{{item.quantidade__quantidade }}</td>
-                <td style="font-size: 1.2em; color: {% if item.pt <= 15 %}Red{% elif item.pt <= 30 %}Yellow{% else %}Lime{% endif %};">{{ item.pt|default_if_none:'' }}</td>
-                <td style="font-size: 1.2em; color: {% if item.pt_min <= 5 %}Red{% elif item.pt_min <= 10 %}Yellow{% else %}Lime{% endif %};">
-                    {{ item.pt_min|default_if_none:'' }}
-                </td>
-                <td style="font-size: 1.2em; color: {% if item.pt_max <= 5 %}Red{% elif item.pt_max <= 10 %}Yellow{% else %}Lime{% endif %};">
-                    {{ item.pt_max|default_if_none:'' }}
-                </td>
-                <td>
-                    <a class="btn btn-primary btn-sm"
-                        href="{% url 'almoxarifado_consulta_estoque_detalhe' item.codigo %}?{{ request.GET.urlencode }}">
-                        <i class="fas fa-chart-line"></i>
-                    </a>
-                </td>
+                <td>{{ item.contrato }}</td>
+                <td>{{ item.status }}</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
             </tr>
             {% endfor %}
     </table>
