@@ -1,0 +1,79 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <tbody>
+            <tr class="text-md-left">
+                <td>ID</td>
+                <td>{{ ordem.id }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Data</td>
+                <td>{{ ordem.data|date:'d/m/Y H:i:s' }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Tipo</td>
+                <td>{{ ordem.get_tipo_display }}</td>
+            </tr>
+            <tr class="text-md-left">
+                <td>Responsável</td>
+                <td>{{ ordem.user.get_full_name|title }}</td>
+            </tr>
+            {% if tipo %}
+            <tr class="text-md-left">
+                <td>Para</td>
+                {% if ordem.almoxarifado_ordem_saida.first.user_to %}
+                    <td>{{ ordem.saida_ordem_ferramenta.first.user_to.get_full_name|title }}</td>
+                {% else %}
+                    <td>{{ ordem.saida_ordem_patrimonio.first.user_to.get_full_name|title }}</td>
+                {% endif %}
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0 mt-1">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Lista de ferramentas</th>
+            </tr>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in ferramentas %}
+            <tr>
+                <td>{{ item.ferramenta__nome }}</td>
+                <td>{{ item.quantidade }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0 mt-1">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Lista de patrimônios</th>
+            </tr>
+            <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Tipo</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in patrimonios %}
+            <tr>
+                <td>{{ item.patrimonio__codigo }}</td>
+                <td>{{ item.patrimonio__patrimonio__nome }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'patrimonio_consultas_ordem_saida' %}?{{ request.GET.urlencode }}">voltar</a>
+    <a class="btn btn-primary px-5 my-3 ml-3" href="{% url 'patrimonio_saidas_lista_imprime' ordem.id %}" target="_blank">imprimir ficha</a>
+</div>
+{% endblock %}

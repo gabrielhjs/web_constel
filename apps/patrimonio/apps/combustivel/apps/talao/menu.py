@@ -105,6 +105,7 @@ def menu_consultas(request):
 
     menu_buttons = [
         {'link': '/patrimonio/combustivel/talao/consultas/taloes', 'text': 'Talões'},
+        {'link': '/patrimonio/combustivel/talao/consultas/vales', 'text': 'Vales'},
         {'link': '/patrimonio/combustivel/talao/consultas/usuario/taloes', 'text': 'Meus talões'},
         {'link': '/patrimonio/combustivel/talao/consultas/usuario/vales', 'text': 'Meus vales'},
         {'link': '/patrimonio/combustivel/talao/consultas/funcionarios', 'text': 'Funcionários'},

@@ -110,6 +110,11 @@ urlpatterns = [
         name='patrimonio_combustivel_talao_consultar_funcionarios'
     ),
     path(
+        'patrimonio/combustivel/talao/consultas/vales/',
+        views.consulta_vales,
+        name='patrimonio_combustivel_talao_consultar_vales'
+    ),
+    path(
         'patrimonio/combustivel/talao/relatorios/',
         views.relatorios,
         name='patrimonio_combustivel_talao_relatorios'

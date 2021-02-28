@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
 from django.db.models import Sum, Max, Count, Q, F
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -559,6 +559,57 @@ def consulta_talao_detalhe(request, talao):
 
     return render(request, 'talao/v2/consulta_talao_detalhe.html', context)
 
+
+@login_required()
+@permission("patrimonio - combustivel - talao", "gerencia")
+def consulta_vales(request: HttpRequest) -> HttpResponse:
+    menu = menu_consultas(request)
+
+    q = request.GET.get("q", "")
+
+    form = FormFiltraQ(
+        "Código do vale ou matrícula",
+        initial={
+            "q": q,
+        }
+    )
+
+    query = Q()
+
+    if q != "":
+        query = query & Q(
+            Q(vale__icontains=q) |
+            Q(vale_entrega__user__username__icontains=q) |
+            Q(vale_entrega__user_to__username__icontains=q)
+        )
+    
+    itens = Vale.objects.filter(query).order_by(
+        "vale"
+    ).values(
+        "vale",
+        "status",
+        "talao__talao",
+        "vale_entrega__data",
+        "vale_entrega__user_to__first_name",
+        "vale_entrega__user_to__last_name",
+        "vale_entrega__combustivel__combustivel",
+        "vale_entrega__valor",
+        "vale_entrega__posto__posto",
+    )
+
+    paginator = Paginator(itens, 50)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        "page_obj": page_obj,
+        "form": form,
+        "form_submit_text": 'Filtrar'
+    }
+    context.update(menu)
+
+    return render(request, "talao/v2/consulta_vale.html", context)
+    
 
 @login_required()
 def consulta_meu_talao(request):
