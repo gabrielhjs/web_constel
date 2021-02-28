@@ -10,18 +10,17 @@
             </tr>
             <tr>
                 <th scope="col" colspan="3">Vale</th>
-                <th scope="col" colspan="6">Entrega</th>
+                <th scope="col" colspan="5">Entrega</th>
             </tr>
             <tr>
                 <th scope="col">Código</th>
                 <th scope="col">Talão</th>
                 <th scope="col">Status</th>
-                <th scope="col">Responsável</th>
+                <th scope="col">Colaborador</th>
                 <th scope="col">Data</th>
                 <th scope="col">Valor</th>
                 <th scope="col">Combustível</th>
                 <th scope="col">Posto</th>
-                <th scope="col">Observação</th>
             </tr>
         </thead>
         <tbody>
@@ -35,12 +34,11 @@
                     {% elif item.status == 2 %}Entregue
                     {% endif %}
                 </td>
-                <td>{{ item.vale_entrega__user__first_name|default_if_none:""|title }} {{ item.vale_entrega__user__last_name|default_if_none:""|title }}</td>
+                <td>{{ item.vale_entrega__user_to__first_name|default_if_none:""|title }} {{ item.vale_entrega__user_to__last_name|default_if_none:""|title }}</td>
                 <td>{{ item.vale_entrega__data|default_if_none:""|date:'d/m/Y H:i:s' }}</td>
                 <td>R$ {{ item.vale_entrega__valor|floatformat:2|intcomma }}</td>
                 <td>{{ item.vale_entrega__combustivel__combustivel|default_if_none:""|title }}</td>
                 <td>{{ item.vale_entrega__posto__posto|default_if_none:""|title }}</td>
-                <td>{{ item.vale_entrega__observacao|default_if_none:""|lower }}</td>
             </tr>
             {% endfor %}
     </table>
