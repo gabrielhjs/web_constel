@@ -241,7 +241,7 @@ def lista_conclui(request, ordem_id):
 
 
 @login_required
-@permission('almoxarifado', 'almoxarifado - saida', )
+@permission('patrimonio', )
 def lista_imprime(request, ordem_id):
     if not Ordem.objects.filter(id=ordem_id).exists():
         return HttpResponseRedirect('/patrimonio/consultas/ordens/saidas/')

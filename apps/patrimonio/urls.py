@@ -40,4 +40,14 @@ urlpatterns = [
         views.consultas_modelos,
         name='patrimonio_menu_consultas_modelos',
     ),
+    path(
+        'patrimonio/consultas/saidas/',
+        views.consultas_ordem_saida,
+        name='patrimonio_consultas_ordem_saida',
+    ),
+    path(
+        'patrimonio/consultas/saidas/<int:ordem>',
+        views.consultas_ordem_saida_detalhe,
+        name='patrimonio_consultas_ordem_saida_detalhe',
+    ),
 ]
