@@ -98,4 +98,4 @@ aplicação externa é realizadada através de web socket (consultas) e API (reg
 
 ---
 
-by **Gabriel Sá** | Backend Developer
+by **Gabriel Sá** | Backend Developer :D
