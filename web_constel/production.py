@@ -15,4 +15,5 @@ CONTWE2_TOKEN = os.environ.get('CONTWE2_TOKEN')
 CONTWE2_URL = os.environ.get('CONTWE2_URL')
 SENTINELA_WE = os.environ.get('SENTINELA_WE')
 
+
 django_heroku.settings(locals())
