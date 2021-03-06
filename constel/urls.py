@@ -23,5 +23,6 @@ urlpatterns = [
         name='constel_admin_cadastro_usuario_passivo'
     ),
     path('consulta/usuarios/next=<str:rollback>', views.view_consulta_funcionarios, name='consulta_funcionarios'),
+    path('administracao/cadastro/', views.cadastros, name='constel_admin_cadastros'),
     path('consulta/veiculos/next=<str:rollback>', views.view_consulta_veiculos, name='consulta_veiculos'),
 ]
