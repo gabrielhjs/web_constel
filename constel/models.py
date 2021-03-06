@@ -23,3 +23,26 @@ class Veiculo(models.Model):
     # Default fields (apenas para não gerar alertas na IDE)
     objects = None
     DoesNotExist = None
+
+
+class Cargo(models.Model):
+    """
+    Classe que contém os cargos disponiveis na empresa
+    """
+    objects = models.manager.Manager
+
+    cargo = models.CharField(unique=True, max_length=255, null=False)
+
+
+class CargoUser(models.Model):
+    objects = models.manager.Manager
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cargo")
+    cargo = models.ForeignKey(Cargo, on_delete=models.PROTECT)
+
+
+class GestorUser(models.Model):
+    objects = models.manager.Manager
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="gestor")
+    gestor = models.ForeignKey(User, on_delete=models.PROTECT, related_name="subordinados")

@@ -16,30 +16,8 @@ from .forms import (
     FormCadastraUsuarioPassivo
 )
 from .models import UserType, Veiculo
-from .objects import Button
 from .apps.controle_acessos.decorator import permission
-from .menu import menu_principal
-
-
-@login_required
-@permission('admin', )
-def view_menu_gerenciamento_sistema(request):
-    button_1 = Button('constel_view_admin', 'Administração Django')
-    button_2 = Button('constel_menu_controle_acessos', 'Controle de acessos')
-    rollback = Button('index', 'Voltar')
-
-    context = {
-        'admin': request.user.is_superuser,
-        'guia_titulo': 'Constel',
-        'pagina_titulo': 'Constel',
-        'buttons': [
-            button_1,
-            button_2,
-        ],
-        'rollback': rollback,
-    }
-
-    return render(request, 'constel/menu.html', context)
+from .menu import menu_principal, menu_cadastros
 
 
 def view_cadastrar_usuario(request):
@@ -165,6 +143,14 @@ def admin(request):
 
 @login_required
 @permission('admin',)
+def cadastros(request):
+    context = menu_cadastros(request)
+
+    return render(request, 'constel/v2/app.html', context)
+
+
+@login_required
+@permission('admin',)
 def usuarios(request):
     menu = menu_principal(request)
 
@@ -233,6 +219,8 @@ def usuarios_edita(request, matricula):
 
         if form.is_valid():
             form.save()
+
+
 
             return HttpResponseRedirect(
                 f'/administracao/usuarios/{form.cleaned_data["username"]}?{request.GET.urlencode()}'
@@ -353,7 +341,7 @@ def cadastrar_usuario_passivo(request):
     :param request: informações do formulário
     :return: carregamento do formulário
     """
-    menu = menu_principal(request)
+    menu = menu_cadastros(request)
 
     if request.method == 'POST':
         form = FormCadastraUsuarioPassivo(request.POST)

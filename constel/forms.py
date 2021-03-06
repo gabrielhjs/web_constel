@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AdminPasswordChangeForm
 from django.contrib.auth.models import User
 
-from .models import Veiculo
+from .models import Veiculo, Cargo, CargoUser, GestorUser
 
 
 class FormCadastraUsuario(UserCreationForm):
@@ -279,6 +279,8 @@ class FormFiltraQData(forms.Form):
 
 class FormUsuarioEdita(forms.ModelForm):
 
+    cargo = forms.ChoiceField()
+    gestor = forms.ChoiceField()
     ativo = forms.BooleanField(required=False)
 
     class Meta:
@@ -296,6 +298,31 @@ class FormUsuarioEdita(forms.ModelForm):
 
         self.fields['ativo'].initial = not self.instance.user_type.is_passive
 
+        cargos = Cargo.objects.all().order_by('cargo')
+        cargos_lista = [(i.id, i.cargo) for i in cargos]
+        cargos_lista.insert(0, ('', '-------'))
+
+        self.fields['cargo'] = forms.ChoiceField(
+            choices=cargos_lista,
+            label='Cargo',
+            required=False,
+        )
+
+        gestores = User.objects.all().exclude(id=self.instance.id).order_by("first_name", "last_name")
+        gestores_lista = [(i.id, i.get_full_name().title()) for i in gestores]
+        gestores_lista.insert(0, ('', '-------'))
+
+        self.fields['gestor'] = forms.ChoiceField(
+            choices=gestores_lista,
+            label='Gestor',
+            required=False,
+            initial=(
+                GestorUser.objects.get(user=self.instance).gestor.id
+                if GestorUser.objects.filter(user=self.instance).exists()
+                else None
+            )
+        )
+
         for key in self.fields.keys():
             self.fields[key].widget.attrs.update({'class': 'form-control'})
 
@@ -310,9 +337,31 @@ class FormUsuarioEdita(forms.ModelForm):
                 'Cadastre uma senha para o usuário',
             ]
 
-        else:
-            self.instance.user_type.is_passive = not form_data['ativo']
-            self.instance.user_type.save()
+    def save(self, commit=True):
+        super(FormUsuarioEdita, self).save(commit)
+
+        self.instance.user_type.is_passive = not self.cleaned_data['ativo']
+        self.instance.user_type.save()
+
+        if self.cleaned_data["cargo"]:
+            cargo, updated = CargoUser.objects.update_or_create(
+                user_id=self.instance.id,
+                defaults={
+                    "cargo": Cargo.objects.get(id=self.cleaned_data["cargo"])
+                }
+            )
+            cargo.save()
+
+        print(self.cleaned_data["gestor"], type(self.cleaned_data["gestor"]))
+
+        if self.cleaned_data["gestor"]:
+            gestor, updated = GestorUser.objects.update_or_create(
+                user_id=self.instance.id,
+                defaults={
+                    "gestor": User.objects.get(id=self.cleaned_data["gestor"])
+                }
+            )
+            gestor.save()
 
 
 class FormUsuarioSenha(AdminPasswordChangeForm):
