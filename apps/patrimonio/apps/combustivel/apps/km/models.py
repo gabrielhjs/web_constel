@@ -2,21 +2,11 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class _Km(models.Model):
+class Km(models.Model):
   objects: models.manager.Manager
 
-  km = models.FloatField(null=False)
-  user = models.ForeignKey(User, on_delete=models.PROTECT, null=False)
-  user_to = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+  km_initial = models.FloatField(null=False)
+  km_final = models.FloatField(null=True)
+  user = models.ForeignKey(User, on_delete=models.PROTECT, null=False, related_name="%(class)s_users+")
+  user_to = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="%s(class)s_users_to+")
   date = models.DateField(auto_now_add=True)
-
-  class Meta:
-    abstract = True
-
-
-class KmInicial(_Km):
-  pass
-
-
-class KmFinal(_Km):
-  km_inicial = models.OneToOneField(KmInicial, on_delete=models.CASCADE)

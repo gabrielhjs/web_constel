@@ -39,7 +39,7 @@ def registros(request):
 def consultas(request):
 
   menu_buttons = [
-
+    {'link': '/patrimonio/combustivel/km/consultas/equipe', 'text': 'Minha equipe'}
   ]
   button_return = {'link': '/patrimonio/combustivel/km', 'text': 'Voltar'}
 

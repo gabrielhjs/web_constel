@@ -14,7 +14,6 @@ INSTALLED_APPS = [
     'apps.patrimonio.apps.ferramenta',
     'apps.patrimonio.apps.patrimonio1',
     'apps.patrimonio.apps.combustivel',
-    'apps.patrimonio.apps.combustivel',
     'apps.patrimonio.apps.combustivel.apps.talao',
     'apps.patrimonio.apps.combustivel.apps.km',
     'apps.patrimonio.apps.lista_saida_patrimonio',
