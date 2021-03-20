@@ -8,6 +8,7 @@ def menu_principal(request):
 
     menu_buttons = [
         {'link': '/patrimonio/combustivel/talao', 'text': 'Combustível'},
+        {'link': '/patrimonio/combustivel/km', 'text': 'Km'},
         {'link': '/patrimonio/cadastros', 'text': 'Cadastros'},
         {'link': '/patrimonio/entradas', 'text': 'Entradas'},
         {'link': '/patrimonio/saidas/lista', 'text': 'Saídas'},

@@ -1,0 +1,31 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="5">Painel diário de pendências por gestor</th>
+            </tr>
+            <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Gestor</th>
+                <th scope="col">Equipe</th>
+                <th scope="col">Pen. km inicial</th>
+                <th scope="col">Pen. km final</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.gestor__username }}</td>
+                <td>{{ item.gestor__first_name|title }} {{ item.gestor__last_name|title }}</td>
+                <td>{{ item.total|default_if_none:"" }}</td>
+                <td>{{ item.initial|default_if_none:"" }}</td>
+                <td>{{ item.final|default_if_none:"" }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}
