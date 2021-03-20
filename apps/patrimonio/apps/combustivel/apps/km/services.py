@@ -110,7 +110,7 @@ def query_km(query: Q = Q()) -> QuerySet:
   return km
 
 
-def query_today_pending(user_id: int, query: Q = Q()) -> QuerySet:
+def query_today_pending(query: Q = Q()) -> QuerySet:
   registred_initial = Km.objects.filter(
     user__id=OuterRef("gestor__id"),
     date__gte=date.today()
@@ -129,9 +129,6 @@ def query_today_pending(user_id: int, query: Q = Q()) -> QuerySet:
   ).annotate(
     total=Count(F("user_to__id"))
   ).values("total")
-
-  # print(list(registred_initial))
-  # print(list(registred_final))
 
   pendency = get_user_team(query).values(
     "gestor__first_name",

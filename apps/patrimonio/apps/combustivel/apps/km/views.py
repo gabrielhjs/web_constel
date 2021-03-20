@@ -123,7 +123,7 @@ def view_consulta_km_pendencias_hoje(request: HttpRequest) -> HttpResponse:
     }
   )
 
-  query = Q(gestor__id=request.user.id)
+  query = Q()
 
   if q != "":
     query = query & Q(
@@ -132,7 +132,7 @@ def view_consulta_km_pendencias_hoje(request: HttpRequest) -> HttpResponse:
       Q(gestor__username__icontains=q)
     )
 
-  itens = services.query_today_pending(request.user.id, query)
+  itens = services.query_today_pending(query)
 
   paginator = Paginator(itens, 50)
   page_number = request.GET.get("page")
