@@ -25,4 +25,11 @@ class KmForm(forms.Form):
         if not services.is_team(self.user_id, self.gestor_id):
             self.errors["km"] = ["Este colaborador não pertence à sua equipe."]
 
+        verify, km_inicial = services.is_final_gte_initial(self.user_id, self.gestor_id, form_data["km"])
+        if not verify:
+            self.errors["km"] = [
+                "A quilometragem final deve ser maior ou igual a inicial.",
+                f"Quilometragem inicial: {km_inicial} km"
+            ]
+
         return form_data

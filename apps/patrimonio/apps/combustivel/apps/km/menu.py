@@ -21,8 +21,8 @@ def principal(request):
 def registros(request):
 
   menu_buttons = [
-    {'link': '/patrimonio/combustivel/km/registros/inicial', 'text': 'Quilometragem inicial'},
-    {'link': '/patrimonio/combustivel/km/registros/final', 'text': 'Quilometragem final'},
+    {'link': '/patrimonio/combustivel/km/registros/inicial', 'text': 'Inicial dia'},
+    {'link': '/patrimonio/combustivel/km/registros/final', 'text': 'Final dia'},
   ]
   button_return = {'link': '/patrimonio/combustivel/km', 'text': 'Voltar'}
 
@@ -39,7 +39,9 @@ def registros(request):
 def consultas(request):
 
   menu_buttons = [
-    {'link': '/patrimonio/combustivel/km/consultas/equipe', 'text': 'Minha equipe'}
+    {'link': '/patrimonio/combustivel/km/consultas/equipe', 'text': 'Minha equipe'},
+    {'link': '/patrimonio/combustivel/km/consultas/hoje', 'text': 'Registros de hoje'},
+    {'link': '/patrimonio/combustivel/km/consultas/pendencias/hoje', 'text': 'Painel diário de pendências'}
   ]
   button_return = {'link': '/patrimonio/combustivel/km', 'text': 'Voltar'}
 

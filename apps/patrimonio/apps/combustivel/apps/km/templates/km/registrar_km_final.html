@@ -16,11 +16,11 @@
         <tbody>
             {% for item in page_obj %}
             <tr class="text-md-left">
-                <td>{{ item.user__username }}</td>
-                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                <td>{{ item.user_to__username }}</td>
+                <td>{{ item.user_to__first_name|title }} {{ item.user_to__last_name|title }}</td>
                 <td>
                     <a class="btn btn-primary btn-sm"
-                        href="{% url details item.user__id %}?next={{ request.get_full_path }}">
+                        href="{% url details item.user_to__id %}?next={{ request.get_full_path }}">
                         registrar
                     </a>
                 </td>

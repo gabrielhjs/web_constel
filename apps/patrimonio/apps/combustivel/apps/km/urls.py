@@ -11,13 +11,28 @@ urlpatterns = [
     ),
     path(
         'patrimonio/combustivel/km/registros/',
-        views.view_registrar_km_inicial,
+        views.view_menu_registros,
         name='patrimonio_combustivel_km_registros'
+    ),
+    path(
+        'patrimonio/combustivel/km/registros/inicial/',
+        views.view_registrar_km_inicial,
+        name='patrimonio_combustivel_km_registros_inicial'
+    ),
+    path(
+        'patrimonio/combustivel/km/registros/final/',
+        views.view_registrar_km_final,
+        name='patrimonio_combustivel_km_registros_final'
     ),
     path(
         'patrimonio/combustivel/km/registros/inicial/<int:user_id>/',
         views.view_registrar_km_inicial_detalhes,
         name='patrimonio_combustivel_km_registros_inicial',
+    ),
+    path(
+        'patrimonio/combustivel/km/registros/final/<int:user_id>/',
+        views.view_registrar_km_final_detalhes,
+        name='patrimonio_combustivel_km_registros_final',
     ),
     path(
         'patrimonio/combustivel/km/consultas/',
@@ -28,5 +43,15 @@ urlpatterns = [
         'patrimonio/combustivel/km/consultas/equipe/',
         views.view_consulta_km_time,
         name='patrimonio_combustivel_km_consultas_time'
+    ),
+    path(
+        'patrimonio/combustivel/km/consultas/hoje/',
+        views.view_consulta_km_hoje,
+        name='patrimonio_combustivel_km_consultas_hoje'
+    ),
+    path(
+        'patrimonio/combustivel/km/consultas/pendencias/hoje/',
+        views.view_consulta_km_pendencias_hoje,
+        name='patrimonio_combustivel_km_consultas_pendencias_hoje'
     ),
 ]
