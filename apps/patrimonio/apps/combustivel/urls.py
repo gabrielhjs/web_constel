@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     # Apps
     path('', include('apps.patrimonio.apps.combustivel.apps.talao.urls')),
-
+    path('', include('apps.patrimonio.apps.combustivel.apps.km.urls')),
 
     path('patrimonio/combustivel/', views.view_menu_principal, name='gc_menu_principal'),
     path('patrimonio/combustivel/menu-cadastros/', views.view_menu_cadastros, name='gc_menu_cadastros'),
