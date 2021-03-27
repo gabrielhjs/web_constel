@@ -67,4 +67,9 @@ urlpatterns = [
         views.edita_patrimonio,
         name='patrimonio_edita_patrimonio',
     ),
+    path(
+        'patrimonio/excluir/patrimonio/<int:patrimonio_id>/',
+        views.excluir_patrimonio,
+        name='patrimonio_excluir_patrimonio',
+    ),
 ]
