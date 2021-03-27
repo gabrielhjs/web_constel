@@ -24,16 +24,39 @@
                 <td>{% if item.status %}Em uso{% else %}Estoque{% endif %}</td>
                 <td>{{ item.patrimonio_saida.last.data|default_if_none:''|date:'d/m/Y H:i:s' }}</td>
                 <td>{{ item.patrimonio_saida.last.user_to.get_full_name|default_if_none:''|title }}</td>
-                <td>
-                    <a class="btn btn-primary btn-sm w-50"
+                <td class="btn-group w-100" role="group" aria-label="Exemplo básico">
+                    <a class="btn btn-primary btn-sm"
                         href="{% url 'patrimonio_consulta_patrimonio_status_detalhe' item.codigo %}?{{ request.GET.urlencode }}">
                         <i class="fas fa-history"></i>
                     </a>
-                    <a class="btn btn-primary btn-sm w-50"
+                    <a class="btn btn-primary btn-sm"
                         href="{% url 'patrimonio_edita_patrimonio' item.id %}?{{ request.GET.urlencode }}">
                         <i class="far fa-edit"></i>
                     </a>
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal{{item.id}}" {% if item.status != 0 %}disabled{% endif %}>
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </td>
+                <!-- Modal Todo: Criar um único formulário dinâmico -->
+                <div class="modal fade" id="deleteModal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModal{{item.id}}Label" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModal{{item.id}}Label">Confirmar<span id="asd"></span></h5>
+                      </div>
+                      <div class="modal-body">
+                          Deseja mesmo excluir o patrímonio: {{ item.patrimonio.nome|title }}
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                          <a class="btn btn-danger"
+                            href="{% url 'patrimonio_excluir_patrimonio' item.id %}?{{ request.GET.urlencode }}">
+                            Excluir
+                          </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </tr>
         {% endfor %}
     </table>

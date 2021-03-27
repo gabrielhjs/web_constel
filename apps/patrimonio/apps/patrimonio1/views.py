@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -364,6 +364,18 @@ def edita_patrimonio(request, patrimonio_id):
     context.update(menu)
 
     return render(request, 'patrimonio1/v2/edita_patrimonio.html', context)
+
+
+def excluir_patrimonio(request: HttpRequest, patrimonio_id: int) -> HttpResponse:
+    patrimonio = get_object_or_404(PatrimonioId, id=patrimonio_id)
+
+    if patrimonio.status != 0:
+        messages.error(request, "O patrimônio dever estar em estoque para ser excluído!")
+
+    else:
+        patrimonio.delete()
+
+    return HttpResponseRedirect(f"/patrimonio/consultas/patrimonio/status/?{request.GET.urlencode()}")
 
 
 def consulta_patrimonio_status_detalhe(request, patrimonio):
