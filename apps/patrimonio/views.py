@@ -1,15 +1,16 @@
 import datetime
 
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.db.models import Q, Min, Case, When, F
+from django.db.models import Q, Min, Case, When, F, OuterRef, Subquery, Sum, IntegerField, ExpressionWrapper, Count, Max, Value
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 from constel.apps.controle_acessos.decorator import permission
-from constel.forms import FormDataInicialFinal
-from .apps.ferramenta.models import FerramentaSaida
-from .apps.patrimonio1.models import PatrimonioSaida
+from constel.forms import FormDataInicialFinal, FormFiltraQ
+from .apps.ferramenta.models import FerramentaSaida, FerramentaFechamento
+from .apps.patrimonio1.models import PatrimonioSaida, PatrimonioId
 
 from .menu import (
     menu_principal,
@@ -131,7 +132,6 @@ def consultas_ordem_saida(request: HttpRequest) -> HttpResponse:
 @login_required()
 @permission('patrimonio', )
 def consultas_ordem_saida_detalhe(request, **kwargs):
-    menu = menu_consultas(request)
 
     if Ordem.objects.filter(id=kwargs.get('ordem')).exists():
         menu = menu_consultas(request)
@@ -158,6 +158,106 @@ def consultas_ordem_saida_detalhe(request, **kwargs):
 
     else:
         return HttpResponseRedirect('/patrimonio/consultas/')
+
+
+@login_required
+@permission('patrimonio', )
+def consulta_colaboradores(request: HttpRequest) -> HttpResponse:
+    menu = menu_consultas(request)
+
+    q = request.GET.get("q", "")
+
+    form = FormFiltraQ(
+        initial={"q": q},
+        descricao="nome ou matrícula"
+    )
+
+    query = Q()
+
+    if q:
+        query = query & Q(
+            Q(username__icontains=q) |
+            Q(first_name__icontains=q) |
+            Q(last_name__icontains=q)
+        )
+
+    itens = User.objects.filter(query).values(
+        "username",
+        "first_name",
+        "last_name",
+    ).annotate(
+        total_p=Count(F("patrimonio_retiradas"), filter=Q(patrimonio_retiradas__patrimonio__status=1), distinct=True),
+        total_f=Count(F("retiradas__ferramenta"))
+    ).exclude(
+        total_p__lte=0,
+        total_f__lte=0,
+    ).order_by(
+        "first_name",
+        "last_name",
+    )
+
+    paginator = Paginator(itens, 50)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'page_obj': page_obj,
+        'tipo': 1,
+        'form': form,
+        'form_submit_text': 'filtar',
+    }
+    context.update(menu)
+
+    return render(request, 'patrimonio/v2/consulta_colaboradores.html', context)
+
+
+@login_required
+@permission('patrimonio', )
+def consulta_colaboradores_detalhes(request: HttpRequest, user: str) -> HttpResponse:
+    menu = menu_consultas(request)
+
+    descontos = FerramentaFechamento.objects.filter(
+        user_from__username=user,
+        ferramenta=OuterRef("ferramenta")
+    ).annotate(
+        total_quantidade=Sum(F("quantidade"))
+    )
+
+    lista_ferramenta = FerramentaSaida.objects.filter(user_to__username=user).annotate(
+        descontos=Subquery(descontos.values("total_quantidade")[:1])
+    ).values(
+        "ferramenta__nome"
+    ).annotate(
+        total=Case(
+            When(descontos__isnull=True, then="quantidade"),
+            default=ExpressionWrapper(F("quantidade") - F("descontos"), output_field=IntegerField())
+        ),
+    ).values(
+        "ferramenta__nome",
+        "total",
+    ).order_by(
+        "ferramenta__nome"
+    )
+
+    lista_patrimonio = PatrimonioSaida.objects.filter(
+        user_to__username=user,
+        patrimonio__status=1
+    ).values(
+        "patrimonio__codigo",
+        "patrimonio__patrimonio__nome",
+    ).order_by(
+        "patrimonio__patrimonio__nome",
+        "patrimonio__codigo"
+    )
+
+    context = {
+        "lista_patrimonio": lista_patrimonio,
+        "lista_ferramenta": lista_ferramenta,
+        "user_to": User.objects.get(username=user),
+    }
+    context.update(menu)
+
+    return render(request, "patrimonio/v2/consulta_colaboradores_detalhes.html", context)
 
 
 @login_required

@@ -50,4 +50,14 @@ urlpatterns = [
         views.consultas_ordem_saida_detalhe,
         name='patrimonio_consultas_ordem_saida_detalhe',
     ),
+    path(
+        'patrimonio/consultas/colaboradores/',
+        views.consulta_colaboradores,
+        name='patrimonio_consulta_colaboradores',
+    ),
+    path(
+        'patrimonio/consultas/colaboradores/<str:user>/',
+        views.consulta_colaboradores_detalhes,
+        name='patrimonio_consulta_colaboradores_detalhes',
+    ),
 ]
