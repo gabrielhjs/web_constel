@@ -1,0 +1,36 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="5">Colaboradores</th>
+            </tr>
+            <tr>
+                <th scope="col">Mtrícula</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Patrímônios</th>
+                <th scope="col">Ferramentas</th>
+                <th scope="col">#</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in page_obj %}
+            <tr>
+                <td>{{ item.username|title }}</td>
+                <td>{{ item.first_name|title }} {{ item.last_name|title }}</td>
+                <td>{{ item.total_p }}</td>
+                <td>{{ item.total_f }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                        href="{% url 'patrimonio_consulta_colaboradores_detalhes' item.username %}?{{ request.GET.urlencode }}">
+                        Detalhes
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}

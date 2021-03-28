@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q, ExpressionWrapper, Value, F, CharField
+from django.db.models import Q, ExpressionWrapper, Value, F, CharField, Subquery, OuterRef, Max
 from django.http import FileResponse
 
 from .forms import *
