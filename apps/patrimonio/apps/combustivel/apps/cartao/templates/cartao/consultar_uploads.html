@@ -1,0 +1,36 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="5">Lista de depósitos</th>
+            </tr>
+            <tr>
+                <th scope="col">Colaborador</th>
+                <th scope="col">Nome do arquivo</th>
+                <th scope="col">Data de registro</th>
+                <th scope="col">Data de referêcia</th>
+                <th scope="col">#</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                <td>{{ item.file_name }}</td>
+                <td>{{ item.data|default_if_none:""|date:'d/m/Y' }}</td>
+                <td>{{ item.data_referencia|default_if_none:""|date:'d/m/Y' }}</td>
+                <td class="btn-group w-100 p-0" role="group">
+                    <a class="btn btn-primary m-1 p-0"
+                       href="{% url 'patrimonio_combustivel_cartao_consulta_depositos_detalhe' item.id %}?{{ request.GET.urlencode }}">
+                        Detalhes
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+{% endblock %}
