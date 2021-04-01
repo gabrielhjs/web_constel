@@ -1,11 +1,13 @@
 from datetime import datetime
 
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
 
 from apps.patrimonio.apps.combustivel.apps.talao.menu import menu_consultas
+from constel.apps.controle_acessos.decorator import permission
 from constel.forms import FormDataInicialFinal, FormFiltraQ
 
 from .menu import menu_principal
@@ -13,12 +15,15 @@ from .forms import FormUploadCSV
 from .import services
 
 
+@login_required()
 def index(request: HttpRequest) -> HttpResponse:
   context = menu_principal(request)
 
   return render(request, "constel/v2/app.html", context)
 
 
+@login_required()
+@permission('patrimonio',)
 def importa_csv(request: HttpRequest) -> HttpResponse:
   menu = menu_principal(request)
 
@@ -39,6 +44,8 @@ def importa_csv(request: HttpRequest) -> HttpResponse:
   return render(request, "cartao/importar_dados.html", context)
 
 
+@login_required()
+@permission('patrimonio',)
 def consulta_depositos(request: HttpRequest) -> HttpResponse:
   menu = menu_consultas(request)
 
@@ -78,6 +85,8 @@ def consulta_depositos(request: HttpRequest) -> HttpResponse:
   return render(request, "cartao/consultar_uploads.html", context)
 
 
+@login_required()
+@permission('patrimonio',)
 def consulta_depositos_detalhe(request: HttpRequest, upload: int) -> HttpResponse:
   menu = menu_consultas(request)
 

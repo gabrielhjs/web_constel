@@ -17,7 +17,7 @@ def handle_csv_file(file: InMemoryUploadedFile, form_data: Dict, request: HttpRe
   data_list = []
 
   with StringIO(file.read().decode("latin-1")) as csv_file:
-    data = csv.reader(csv_file)
+    data = csv.reader(csv_file, delimiter=";")
     next(data)
 
     try:
