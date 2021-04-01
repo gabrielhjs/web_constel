@@ -181,13 +181,23 @@ def consulta_colaboradores(request: HttpRequest) -> HttpResponse:
             Q(last_name__icontains=q)
         )
 
+    subquery = FerramentaSaida.objects.filter(
+        user_to__id=OuterRef("id")
+    ).values(
+        "user_to"
+    ).annotate(
+        total=Count("id")
+    ).values(
+        "total"
+    )
+
     itens = User.objects.filter(query).values(
         "username",
         "first_name",
         "last_name",
     ).annotate(
         total_p=Count(F("patrimonio_retiradas"), filter=Q(patrimonio_retiradas__patrimonio__status=1), distinct=True),
-        total_f=Count(F("retiradas__ferramenta"))
+        total_f=Subquery(subquery)
     ).exclude(
         total_p__lte=0,
         total_f__lte=0,

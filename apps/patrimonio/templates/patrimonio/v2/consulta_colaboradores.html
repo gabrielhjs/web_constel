@@ -20,8 +20,8 @@
             <tr>
                 <td>{{ item.username|title }}</td>
                 <td>{{ item.first_name|title }} {{ item.last_name|title }}</td>
-                <td>{{ item.total_p }}</td>
-                <td>{{ item.total_f }}</td>
+                <td>{{ item.total_p|default_if_none:0 }}</td>
+                <td>{{ item.total_f|default_if_none:0 }}</td>
                 <td>
                     <a class="btn btn-primary btn-sm"
                         href="{% url 'patrimonio_consulta_colaboradores_detalhes' item.username %}?{{ request.GET.urlencode }}">
