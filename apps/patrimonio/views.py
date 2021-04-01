@@ -235,13 +235,15 @@ def consulta_colaboradores_detalhes(request: HttpRequest, user: str) -> HttpResp
 
     lista_ferramenta = FerramentaSaida.objects.filter(user_to__username=user).annotate(
         descontos=Subquery(descontos.values("total_quantidade")[:1])
-    ).values(
-        "ferramenta__nome"
     ).annotate(
         total=Case(
             When(descontos__isnull=True, then="quantidade"),
             default=ExpressionWrapper(F("quantidade") - F("descontos"), output_field=IntegerField())
         ),
+    ).values(
+        "ferramenta__nome"
+    ).annotate(
+        total=Sum(F("total"))
     ).values(
         "ferramenta__nome",
         "total",
