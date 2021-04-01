@@ -33,24 +33,31 @@ def handle_csv_file(file: InMemoryUploadedFile, form_data: Dict, request: HttpRe
 
     else:
       for row in data:
-        name = row[4].split(" ", maxsplit=1)
+        if (
+          row[0]
+          and row[3]
+          and row[4]
+          and row[6]
+          and row[11]
+        ):
+          name = row[4].split(" ", maxsplit=1)
 
-        user_to, created = User.objects.get_or_create(
-          username=row[3],
-          defaults={"first_name": name[0], "last_name": name[1]}
-        )
+          user_to, created = User.objects.get_or_create(
+            username=row[3],
+            defaults={"first_name": name[0], "last_name": name[1]}
+          )
 
-        if created:
-          user_to.save()
+          if created:
+            user_to.save()
 
-        Cartao(
-          user_to=user_to,
-          user_to_name=row[4],
-          user_to_cpf=row[0],
-          user_to_birthday=date(day=int(row[6][:2]), month=int(row[6][2:4]), year=int(row[6][4:6])),
-          value=float(row[11]) if row[11] else 0,
-          upload=upload
-        ).save()
+          Cartao(
+            user_to=user_to,
+            user_to_name=row[4],
+            user_to_cpf=row[0],
+            user_to_birthday=date(day=int(row[6][:2]), month=int(row[6][2:4]), year=int(row[6][4:6])),
+            value=float(row[11]) if row[11] else 0,
+            upload=upload
+          ).save()
 
 
 def get_uploads(query: Q = Q()) -> QuerySet:
