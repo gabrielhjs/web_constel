@@ -2,7 +2,8 @@ import datetime
 from datetime import date
 
 from django.contrib.auth.models import User
-from django.db.models import QuerySet, Subquery, OuterRef, F, Q, Count, ExpressionWrapper, FloatField, Sum
+from django.db.models import QuerySet, Subquery, OuterRef, F, Q, Count, ExpressionWrapper, FloatField, Sum, Case, When, \
+  CharField, Value
 from django.db.models.functions import Coalesce
 
 from constel.models import GestorUser
@@ -218,7 +219,13 @@ def query_general_report(initial_date: str, final_date: str, owner: str) -> Quer
     total_vale=Coalesce(Subquery(vales, FloatField()), 0),
     total_cartao=Coalesce(Subquery(cartao, FloatField()), 0),
   ).annotate(
-    indice=ExpressionWrapper(F("total_distancia")/(F("total_vale") + F("total_cartao")), FloatField()),
+    indice=Case(
+      When(
+        Q(Q(total_vale=0) & Q(total_cartao=0)),
+        then=None,
+      ),
+      default=ExpressionWrapper(F("total_distancia")/(F("total_vale") + F("total_cartao")), FloatField())
+    ),
     total=ExpressionWrapper(F("total_vale") + F("total_cartao"), FloatField()),
   ).values(
     "user__first_name",
