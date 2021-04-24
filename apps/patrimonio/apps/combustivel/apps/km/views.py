@@ -1,10 +1,12 @@
+import datetime
+
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
-from constel.forms import FormFiltraQ
+from constel.forms import FormFiltraQ, FormDataInicialFinalFuncionario
 from constel.apps.controle_acessos.decorator import permission
 from . import menu as mn, services, forms
 
@@ -146,6 +148,37 @@ def view_consulta_km_pendencias_hoje(request: HttpRequest) -> HttpResponse:
   context.update(menu)
 
   return render(request, "km/consultar_pendencias_hoje.html", context)
+
+
+def view_menu_relatorios(request: HttpRequest) -> HttpResponse:
+  context = mn.relatorios(request)
+
+  return render(request, "constel/v2/app.html", context)
+
+
+def view_relatorio_geral(request: HttpRequest) -> HttpResponse:
+  menu = mn.relatorios(request)
+
+  funcionario = request.GET.get("funcionario", "")
+  data_inicial = request.GET.get("data_inicial", "")
+  data_final = request.GET.get("data_final", "")
+
+  form = FormDataInicialFinalFuncionario(initial={
+    "funcionario": funcionario,
+    "data_inicial": data_inicial,
+    "data_final": data_final
+  })
+
+  itens = services.query_general_report(data_inicial, data_final, funcionario)
+
+  context = {
+    "itens": itens,
+    "form": form,
+    "form_submit_text": "Filtrar"
+  }
+  context.update(menu)
+
+  return render(request, "km/relatorio_geral.html", context)
 
 
 @login_required()

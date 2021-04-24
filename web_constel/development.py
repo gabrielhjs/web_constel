@@ -13,7 +13,7 @@ SENTINELA_WE = "ws://127.0.0.1:5000"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'b011',
+        'NAME': 'b012',
         'USER': 'postgres',
         'PASSWORD': 'admin',
         'HOST': '127.0.0.1',

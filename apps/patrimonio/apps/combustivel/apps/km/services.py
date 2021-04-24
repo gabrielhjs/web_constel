@@ -1,10 +1,14 @@
+import datetime
 from datetime import date
 
 from django.contrib.auth.models import User
-from django.db.models import QuerySet, Subquery, OuterRef, F, Q, Count
+from django.db.models import QuerySet, Subquery, OuterRef, F, Q, Count, ExpressionWrapper, FloatField, Sum
+from django.db.models.functions import Coalesce
 
 from constel.models import GestorUser
 from .models import Km
+from ..cartao.models import Cartao
+from ..talao.models import EntregaVale
 
 
 def get_user_team(query: Q = Q()) -> QuerySet:
@@ -148,3 +152,91 @@ def query_today_pending(query: Q = Q()) -> QuerySet:
     "final",
   )
 
+
+def query_general_report(initial_date: str, final_date: str, owner: str) -> QuerySet:
+
+  query = Q()
+  query_cartao = Q()
+  query_vales = Q()
+
+  if owner:
+    query = query & Q(
+      Q(user_to__username__icontains=owner) |
+      Q(user_to__first_name__icontains=owner) |
+      Q(user_to__last_name__icontains=owner))
+
+    query_cartao = query_cartao & Q(
+      Q(user_to__username__icontains=owner) |
+      Q(user_to__first_name__icontains=owner) |
+      Q(user_to__last_name__icontains=owner))
+
+    query_vales = query_vales & Q(
+      Q(user_to__username__icontains=owner) |
+      Q(user_to__first_name__icontains=owner) |
+      Q(user_to__last_name__icontains=owner))
+
+  if initial_date:
+    data_inicial = datetime.datetime.strptime(initial_date, "%Y-%m-%d").date()
+    query = query & Q(date__gte=data_inicial)
+    query_cartao = query_cartao & Q(upload__data_referencia__gte=data_inicial)
+    query_vales = query_vales & Q(data__gte=data_inicial)
+
+  if final_date:
+    data_final = datetime.datetime.strptime(final_date, "%Y-%m-%d").date()
+    query = query & Q(date__lte=data_final)
+    query_cartao = query_cartao & Q(upload__data_referencia__lte=data_final)
+    query_vales = query_vales & Q(data__lte=data_final)
+
+  vales = EntregaVale.objects.filter(
+    query_vales,
+    user_to=OuterRef("user_to")
+  ).values(
+    "user_to"
+  ).annotate(
+    total=Sum(F("valor"))
+  ).values(
+    "total"
+  )
+
+  cartao = Cartao.objects.filter(
+    query_cartao,
+    user_to=OuterRef("user_to")
+  ).values(
+    "user_to"
+  ).annotate(
+    total=Sum(F("value"))
+  ).values(
+    "total"
+  )
+
+  km = Km.objects.filter(query).annotate(
+    distancia=ExpressionWrapper(F("km_final") - F("km_initial"), FloatField())
+  ).values(
+    "user_to"
+  ).annotate(
+    total_distancia=Sum(F("distancia")),
+    total_vale=Coalesce(Subquery(vales, FloatField()), 0),
+    total_cartao=Coalesce(Subquery(cartao, FloatField()), 0),
+  ).annotate(
+    indice=ExpressionWrapper(F("total_distancia")/(F("total_vale") + F("total_cartao")), FloatField()),
+    total=ExpressionWrapper(F("total_vale") + F("total_cartao"), FloatField()),
+  ).values(
+    "user__first_name",
+    "user__last_name",
+    "user_to__first_name",
+    "user_to__last_name",
+    "total_distancia",
+    "total_vale",
+    "total_cartao",
+    "total",
+    "km_final",
+    "indice"
+  ).exclude(
+    total_distancia__isnull=True
+  ).exclude(
+    total__isnull=True
+  ).order_by(
+    "-indice"
+  )
+
+  return km
