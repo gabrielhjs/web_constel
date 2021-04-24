@@ -8,7 +8,6 @@ def menu_principal(request):
 
     menu_buttons = [
         {'link': '/patrimonio/combustivel/talao', 'text': 'Combustível'},
-        {'link': '/patrimonio/combustivel/km', 'text': 'Km'},
         {'link': '/patrimonio/cadastros', 'text': 'Cadastros'},
         {'link': '/patrimonio/entradas', 'text': 'Entradas'},
         {'link': '/patrimonio/saidas/lista', 'text': 'Saídas'},
@@ -104,6 +103,7 @@ def menu_consultas(request):
         {'link': '/patrimonio/consultas/ferramenta/estoque', 'text': 'Estoque de ferramentas'},
         {'link': '/patrimonio/consultas/patrimonio/status', 'text': 'Status de patrimônio'},
         {'link': '/patrimonio/consultas/saidas', 'text': 'Registro de saídas'},
+        {'link': '/patrimonio/consultas/colaboradores', 'text': 'Colaboradores'},
     ]
     button_return = {'link': '/patrimonio', 'text': 'Voltar'}
 

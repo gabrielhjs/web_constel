@@ -1,0 +1,30 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Beneficiados</th>
+            </tr>
+            <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.user_to__username|title }}</td>
+                <td>{{ item.user_to__first_name|title }} {{ item.user_to__last_name|title }}</td>
+                <td>{% if item.value %} R$ {{ item.value|floatformat:2 }} {% endif %}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'patrimonio_combustivel_cartao_consulta_depositos' %}?{{ request.GET.urlencode }}">voltar</a>
+</div>
+{% endblock %}

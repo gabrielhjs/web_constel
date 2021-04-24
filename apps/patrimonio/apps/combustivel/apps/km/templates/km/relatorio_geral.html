@@ -1,0 +1,39 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+{% load humanize %}
+{% include 'constel/v2/form_get_inline.html' %}
+<div class="table-responsive table-content">
+    <div class="table-responsive table-content enumerated">
+        <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+            <thead>
+                <tr>
+                    <th scope="col" colspan="8">Colaboradores</th>
+                </tr>
+                <tr>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Colaborador</th>
+                    <th scope="col">Gestor</th>
+                    <th scope="col">Vale</th>
+                    <th scope="col">Cartão</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Distância</th>
+                    <th scope="col">Índice</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in itens %}
+                <tr class="text-md-left">
+                    <td></td>
+                    <td>{{ item.user_to__first_name|title }} {{ item.user_to__last_name|title }}</td>
+                    <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                    <td>R$ {{ item.total_vale|floatformat:2|intcomma }}</td>
+                    <td>R$ {{ item.total_cartao|floatformat:2|intcomma }}</td>
+                    <td>R$ {{ item.total|floatformat:2|intcomma }}</td>
+                    <td>{{ item.total_distancia|floatformat:2|intcomma }} km</td>
+                    <td>{{ item.indice }}</td>
+                </tr>
+                {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

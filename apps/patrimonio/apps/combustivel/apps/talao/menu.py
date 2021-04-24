@@ -10,9 +10,11 @@ def menu_principal(request):
     """
 
     menu_buttons = [
+        {'link': '/patrimonio/combustivel/km', 'text': 'Km'},
         {'link': '/patrimonio/combustivel/talao/cadastros', 'text': 'Cadastros'},
         {'link': '/patrimonio/combustivel/talao/taloes', 'text': 'Gerenciamento de talões'},
         {'link': '/patrimonio/combustivel/talao/vales', 'text': 'Gerenciamento de vales'},
+        {'link': '/patrimonio/combustivel/cartao', 'text': 'Gerenciamento de cartão'},
         {'link': '/patrimonio/combustivel/talao/consultas', 'text': 'Consultas'},
         {'link': '/patrimonio/combustivel/talao/relatorios', 'text': 'Relatórios'},
     ]
@@ -106,6 +108,7 @@ def menu_consultas(request):
     menu_buttons = [
         {'link': '/patrimonio/combustivel/talao/consultas/taloes', 'text': 'Talões'},
         {'link': '/patrimonio/combustivel/talao/consultas/vales', 'text': 'Vales'},
+        {'link': '/patrimonio/combustivel/cartao/consultas/depositos', 'text': 'Depósitos'},
         {'link': '/patrimonio/combustivel/talao/consultas/usuario/taloes', 'text': 'Meus talões'},
         {'link': '/patrimonio/combustivel/talao/consultas/usuario/vales', 'text': 'Meus vales'},
         {'link': '/patrimonio/combustivel/talao/consultas/funcionarios', 'text': 'Funcionários'},

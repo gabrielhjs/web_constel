@@ -54,4 +54,14 @@ urlpatterns = [
         views.view_consulta_km_pendencias_hoje,
         name='patrimonio_combustivel_km_consultas_pendencias_hoje'
     ),
+    path(
+        'patrimonio/combustivel/km/relatorios/',
+        views.view_menu_relatorios,
+        name='patrimonio_combustivel_km_relatorios'
+    ),
+    path(
+        'patrimonio/combustivel/km/relatorios/geral/',
+        views.view_relatorio_geral,
+        name='patrimonio_combustivel_km_relatorios_geral'
+    ),
 ]
