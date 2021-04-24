@@ -5,8 +5,9 @@ def principal(request):
   menu_buttons = [
     {'link': '/patrimonio/combustivel/km/registros', 'text': 'Registrar quilometragem'},
     {'link': '/patrimonio/combustivel/km/consultas', 'text': 'Consultas'},
+    {'link': '/patrimonio/combustivel/km/relatorios', 'text': 'Relatórios'},
   ]
-  button_return = {'link': '/patrimonio', 'text': 'Voltar'}
+  button_return = {'link': '/patrimonio/combustivel/talao', 'text': 'Voltar'}
 
   context = {
     'app': 'Km',
@@ -48,6 +49,23 @@ def consultas(request):
   context = {
     'app': 'Km',
     'menu': 'Consutas',
+    'menu_buttons': menu_buttons,
+    'button_return': button_return,
+  }
+
+  return context
+
+
+def relatorios(request):
+
+  menu_buttons = [
+    {'link': '/patrimonio/combustivel/km/relatorios/geral', 'text': 'Geral'},
+  ]
+  button_return = {'link': '/patrimonio/combustivel/km', 'text': 'Voltar'}
+
+  context = {
+    'app': 'Km',
+    'menu': 'Relatórios',
     'menu_buttons': menu_buttons,
     'button_return': button_return,
   }

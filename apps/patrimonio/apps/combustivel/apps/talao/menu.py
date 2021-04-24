@@ -10,6 +10,7 @@ def menu_principal(request):
     """
 
     menu_buttons = [
+        {'link': '/patrimonio/combustivel/km', 'text': 'Km'},
         {'link': '/patrimonio/combustivel/talao/cadastros', 'text': 'Cadastros'},
         {'link': '/patrimonio/combustivel/talao/taloes', 'text': 'Gerenciamento de talões'},
         {'link': '/patrimonio/combustivel/talao/vales', 'text': 'Gerenciamento de vales'},
