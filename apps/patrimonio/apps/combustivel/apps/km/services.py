@@ -218,6 +218,8 @@ def query_general_report(initial_date: str, final_date: str, owner: str) -> Quer
     total_distancia=Sum(F("distancia")),
     total_vale=Coalesce(Subquery(vales, FloatField()), 0),
     total_cartao=Coalesce(Subquery(cartao, FloatField()), 0),
+  ).values(
+    "user_to"
   ).annotate(
     indice=Case(
       When(
