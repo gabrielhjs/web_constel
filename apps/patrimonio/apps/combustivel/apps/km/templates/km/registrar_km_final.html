@@ -5,11 +5,12 @@
     <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
         <thead>
             <tr>
-                <th scope="col" colspan="3">Colaboradores</th>
+                <th scope="col" colspan="4">Colaboradores</th>
             </tr>
             <tr>
                 <th scope="col">Matrícula</th>
                 <th scope="col">Nome</th>
+                <th scope="col">Data</th>
                 <th scope="col">#</th>
             </tr>
         </thead>
@@ -18,9 +19,10 @@
             <tr class="text-md-left">
                 <td>{{ item.user_to__username }}</td>
                 <td>{{ item.user_to__first_name|title }} {{ item.user_to__last_name|title }}</td>
+                <td>{{ item.date|date:'d/m/Y' }}</td>
                 <td>
                     <a class="btn btn-primary btn-sm"
-                        href="{% url details item.user_to__id %}?next={{ request.get_full_path }}">
+                        href="{% url 'patrimonio_combustivel_km_registros_final_detalhes' user_id=item.user_to__id km_id=item.id %}?next={{ request.get_full_path }}">
                         registrar
                     </a>
                 </td>

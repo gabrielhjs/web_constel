@@ -27,12 +27,12 @@ urlpatterns = [
     path(
         'patrimonio/combustivel/km/registros/inicial/<int:user_id>/',
         views.view_registrar_km_inicial_detalhes,
-        name='patrimonio_combustivel_km_registros_inicial',
+        name='patrimonio_combustivel_km_registros_inicial_datelhes',
     ),
     path(
-        'patrimonio/combustivel/km/registros/final/<int:user_id>/',
+        'patrimonio/combustivel/km/registros/final/<int:user_id>/<int:km_id>/',
         views.view_registrar_km_final_detalhes,
-        name='patrimonio_combustivel_km_registros_final',
+        name='patrimonio_combustivel_km_registros_final_detalhes',
     ),
     path(
         'patrimonio/combustivel/km/consultas/',
