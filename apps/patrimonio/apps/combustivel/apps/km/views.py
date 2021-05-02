@@ -250,10 +250,16 @@ def view_registrar_km_final(request: HttpRequest) -> HttpResponse:
     )
 
   itens = services.get_user_team_final_km(query).values(
+    "id",
+    "date",
     "user_to__id",
     "user_to__username",
     "user_to__first_name",
     "user_to__last_name",
+  ).order_by(
+    "user_to__first_name",
+    "user_to__last_name",
+    "date",
   )
 
   paginator = Paginator(itens, 50)
@@ -296,15 +302,15 @@ def view_registrar_km_inicial_detalhes(request: HttpRequest, user_id: int) -> Ht
 
 @login_required()
 @permission("patrimonio - combustivel - km")
-def view_registrar_km_final_detalhes(request: HttpRequest, user_id: int) -> HttpResponse:
+def view_registrar_km_final_detalhes(request: HttpRequest, user_id: int, km_id: int) -> HttpResponse:
   menu = mn.registros(request)
 
-  form = forms.KmForm(user_id=user_id, gestor_id=request.user.id, data=request.POST or None)
+  form = forms.KmForm(km_id=km_id, gestor_id=request.user.id, user_id=user_id, data=request.POST or None)
 
   if request.method == "POST":
     if form.is_valid():
       km = form.cleaned_data["km"]
-      services.set_user_team_final_km(user_id, request.user.id, km)
+      services.set_user_team_final_km(km_id, km)
 
       return HttpResponseRedirect("/patrimonio/combustivel/km/registros/final")
 
