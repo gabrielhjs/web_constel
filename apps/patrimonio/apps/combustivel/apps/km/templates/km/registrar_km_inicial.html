@@ -20,7 +20,7 @@
                 <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
                 <td>
                     <a class="btn btn-primary btn-sm"
-                        href="{% url patrimonio_combustivel_km_registros_inicial_detalhes item.user__id %}?next={{ request.get_full_path }}">
+                        href="{% url 'patrimonio_combustivel_km_registros_inicial_detalhes' item.user__id %}?next={{ request.get_full_path }}">
                         registrar
                     </a>
                 </td>
