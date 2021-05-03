@@ -29,8 +29,8 @@
                     <td>R$ {{ item.total_vale|floatformat:2|intcomma }}</td>
                     <td>R$ {{ item.total_cartao|floatformat:2|intcomma }}</td>
                     <td>R$ {{ item.total|floatformat:2|intcomma }}</td>
-                    <td>{{ item.total_distancia|floatformat:2|intcomma }} km</td>
-                    <td>{{ item.indice }}</td>
+                    <td>{{ item.total_distancia }} km</td>
+                    <td>{{ item.indice|default_if_none:"" }}</td>
                 </tr>
                 {% endfor %}
         </table>

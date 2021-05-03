@@ -129,8 +129,8 @@ def query_today_pending(query: Q = Q()) -> QuerySet:
     "gestor__last_name",
   ).annotate(
     total=Count(F("user__id")),
-    initial=Count(F("user__id")) - Subquery(registred_initial),
-    final=Count(F("user__id")) - Subquery(registred_final),
+    initial=Count(F("user__id")) - Coalesce(Subquery(registred_initial), 0),
+    final=Count(F("user__id")) - Coalesce(Subquery(registred_final), 0),
   )
 
   return pendency.values(
@@ -225,7 +225,6 @@ def query_general_report(initial_date: str, final_date: str, owner: str) -> Quer
     "total_vale",
     "total_cartao",
     "total",
-    "km_final",
     "indice"
   ).exclude(
     total_distancia__isnull=True
