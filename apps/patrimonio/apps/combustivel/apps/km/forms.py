@@ -20,7 +20,7 @@ class KmForm(forms.Form):
         form_data = super(KmForm, self).clean()
 
         if form_data["km"] <= 0:
-            self.errors["km"] = ["Não é possível registrar entrada futura."]
+            self.errors["km"] = ["Não é possível registrar quilometragem nula ou negativa"]
 
         if not services.is_team(self.user_id, self.gestor_id):
             self.errors["km"] = ["Este colaborador não pertence à sua equipe."]
