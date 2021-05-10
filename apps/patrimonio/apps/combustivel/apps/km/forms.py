@@ -1,6 +1,8 @@
 from django import forms
 
+from constel.forms import DateInput
 from . import services
+from .models import Km
 
 
 class KmForm(forms.Form):
@@ -29,6 +31,56 @@ class KmForm(forms.Form):
         verify, km_inicial = services.is_final_gte_initial(self.km_id, form_data["km"])
         if not verify:
             self.errors["km"] = [
+                "A quilometragem final deve ser maior ou igual a inicial.",
+                f"Quilometragem inicial: {km_inicial} km"
+            ]
+
+        return form_data
+
+
+class RegistroForm(forms.Form):
+
+    funcionario = forms.CharField(label="Funcionário", required=True)
+    data = forms.DateField(widget=DateInput(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(RegistroForm, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        form_data = super(RegistroForm, self).clean()
+
+        if not services.is_km_register(form_data.get("funcionario"), form_data.get("data")):
+            self.errors["data"] = ["Não existe registro"]
+
+        return form_data
+
+
+class EditaRegistroForm(forms.ModelForm):
+
+    class Meta:
+        model = Km
+        fields = ('km_initial', 'km_final')
+
+    def __init__(self, *args, **kwargs):
+        super(EditaRegistroForm, self).__init__(*args, **kwargs)
+
+        self.fields['km_initial'].label = 'Quilometragem incial'
+        self.fields['km_final'].label = 'Quilometragem final'
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        form_data = super(EditaRegistroForm, self).clean()
+
+        verify, km_inicial = services.is_final_gte_initial(self.instance.id, self.cleaned_data["km_final"])
+        print(self.instance.id)
+        if not verify:
+
+            self.errors["km_final"] = [
                 "A quilometragem final deve ser maior ou igual a inicial.",
                 f"Quilometragem inicial: {km_inicial} km"
             ]
