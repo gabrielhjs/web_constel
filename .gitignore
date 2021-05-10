@@ -1,7 +1,7 @@
 .git/
 .idea/
 .vscode/
-venv_*/
+venv_web_constel/
 */__pycache__/
 
 # Byte-compiled / optimized / DLL files
