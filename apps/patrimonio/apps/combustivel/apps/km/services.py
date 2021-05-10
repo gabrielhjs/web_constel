@@ -2,8 +2,7 @@ import datetime
 from datetime import date
 
 from django.contrib.auth.models import User
-from django.db.models import QuerySet, Subquery, OuterRef, F, Q, Count, ExpressionWrapper, FloatField, Sum, Case, When, \
-  CharField, Value
+from django.db.models import QuerySet, Subquery, OuterRef, F, Q, Count, ExpressionWrapper, FloatField, Sum, Case, When
 from django.db.models.functions import Coalesce
 
 from constel.models import GestorUser
@@ -31,17 +30,12 @@ def set_user_team_initial_km(user_id: int, gestor_id: int, km: int) -> None:
 
 
 def get_user_team_final_km(query: Q = Q()) -> QuerySet:
-  return Km.objects.filter(query, date__gte=date.today(), km_final__isnull=True)
+  return Km.objects.filter(query, date__gte=(date.today() - datetime.timedelta(days=1.0)), km_final__isnull=True)
 
 
-def set_user_team_final_km(user_id: int, gestor_id: int, km_final: float) -> None:
+def set_user_team_final_km(km_id: int, km_final: float) -> None:
 
-  km = Km.objects.get(
-    date__gte=date.today(),
-    km_final__isnull=True,
-    user=User.objects.get(id=gestor_id),
-    user_to=User.objects.get(id=user_id),
-  )
+  km = Km.objects.get(id=km_id)
 
   km.km_final = km_final
 
@@ -56,18 +50,13 @@ def is_team(user_id: int, gestor_id: int) -> bool:
   return False
 
 
-def is_final_gte_initial(user_id: int, gestor_id: int, km_final: float) -> (bool, int):
+def is_final_gte_initial(km_id: int, km_final: float) -> (bool, int):
   if Km.objects.filter(
-    date__gte=date.today(),
-    km_final__isnull=True,
-    user=User.objects.get(id=gestor_id),
-    user_to=User.objects.get(id=user_id),
+    id=km_id,
+    km_final__isnull=True
   ).exists():
     km_initial = Km.objects.get(
-      date__gte=date.today(),
-      km_final__isnull=True,
-      user=User.objects.get(id=gestor_id),
-      user_to=User.objects.get(id=user_id),
+      id=km_id,
     ).km_initial
 
     if km_initial > km_final:
