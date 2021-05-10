@@ -35,6 +35,21 @@ urlpatterns = [
         name='patrimonio_combustivel_km_registros_final_detalhes',
     ),
     path(
+        'patrimonio/combustivel/km/edicoes/',
+        views.view_menu_edicoes,
+        name='patrimonio_combustivel_km_edicoes'
+    ),
+    path(
+        'patrimonio/combustivel/km/edicoes/registro/',
+        views.view_editar_registro,
+        name='patrimonio_combustivel_km_editar_registro'
+    ),
+    path(
+        'patrimonio/combustivel/km/edicoes/registro/<int:registro_id>/',
+        views.view_editar_registro_detalhe,
+        name='patrimonio_combustivel_km_editar_registro_detalhe'
+    ),
+    path(
         'patrimonio/combustivel/km/consultas/',
         views.view_menu_consultas,
         name='patrimonio_combustivel_km_consultas'
@@ -53,6 +68,11 @@ urlpatterns = [
         'patrimonio/combustivel/km/consultas/pendencias/hoje/',
         views.view_consulta_km_pendencias_hoje,
         name='patrimonio_combustivel_km_consultas_pendencias_hoje'
+    ),
+    path(
+        'patrimonio/combustivel/km/consultas/registros/',
+        views.view_consulta_registros,
+        name='patrimonio_combustivel_km_consultas_registros'
     ),
     path(
         'patrimonio/combustivel/km/relatorios/',

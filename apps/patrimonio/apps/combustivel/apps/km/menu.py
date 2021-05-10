@@ -4,6 +4,7 @@ def principal(request):
 
   menu_buttons = [
     {'link': '/patrimonio/combustivel/km/registros', 'text': 'Registrar quilometragem'},
+    {'link': '/patrimonio/combustivel/km/edicoes', 'text': 'Edição'},
     {'link': '/patrimonio/combustivel/km/consultas', 'text': 'Consultas'},
     {'link': '/patrimonio/combustivel/km/relatorios', 'text': 'Relatórios'},
   ]
@@ -42,13 +43,31 @@ def consultas(request):
   menu_buttons = [
     {'link': '/patrimonio/combustivel/km/consultas/equipe', 'text': 'Minha equipe'},
     {'link': '/patrimonio/combustivel/km/consultas/hoje', 'text': 'Registros de hoje'},
-    {'link': '/patrimonio/combustivel/km/consultas/pendencias/hoje', 'text': 'Painel diário de pendências'}
+    {'link': '/patrimonio/combustivel/km/consultas/pendencias/hoje', 'text': 'Painel diário de pendências'},
+    {'link': '/patrimonio/combustivel/km/consultas/registros', 'text': 'Registros'},
   ]
   button_return = {'link': '/patrimonio/combustivel/km', 'text': 'Voltar'}
 
   context = {
     'app': 'Km',
     'menu': 'Consutas',
+    'menu_buttons': menu_buttons,
+    'button_return': button_return,
+  }
+
+  return context
+
+
+def edicoes(request):
+
+  menu_buttons = [
+    {'link': '/patrimonio/combustivel/km/edicoes/registro', 'text': 'Editar registro'},
+  ]
+  button_return = {'link': '/patrimonio/combustivel/km', 'text': 'Voltar'}
+
+  context = {
+    'app': 'Km',
+    'menu': 'Edições',
     'menu_buttons': menu_buttons,
     'button_return': button_return,
   }

@@ -4,6 +4,7 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.db.models import QuerySet, Subquery, OuterRef, F, Q, Count, ExpressionWrapper, FloatField, Sum, Case, When
 from django.db.models.functions import Coalesce
+from django.shortcuts import get_object_or_404
 
 from constel.models import GestorUser
 from .models import Km
@@ -53,7 +54,6 @@ def is_team(user_id: int, gestor_id: int) -> bool:
 def is_final_gte_initial(km_id: int, km_final: float) -> (bool, int):
   if Km.objects.filter(
     id=km_id,
-    km_final__isnull=True
   ).exists():
     km_initial = Km.objects.get(
       id=km_id,
@@ -63,6 +63,19 @@ def is_final_gte_initial(km_id: int, km_final: float) -> (bool, int):
       return False, km_initial
 
   return True, 0
+
+
+def is_km_register(owner: str, date_date: str) -> [int, False]:
+  if Km.objects.filter(
+    user_to__username=owner,
+    date=date_date
+  ).exists():
+    return Km.objects.get(
+      user_to__username=owner,
+      date=date_date
+    )
+
+  return False
 
 
 def query_km_team(query: Q = Q()) -> QuerySet:
@@ -235,3 +248,37 @@ def query_general_report(initial_date: str, final_date: str, owner: str) -> Quer
   )
 
   return km
+
+
+def get_km(initial_date: str, final_date: str, owner: str) -> QuerySet:
+  query = Q()
+
+  if owner:
+    query = query & Q(
+      Q(user_to__username__icontains=owner) |
+      Q(user_to__first_name__icontains=owner) |
+      Q(user_to__last_name__icontains=owner))
+
+  if initial_date:
+    data_inicial = datetime.datetime.strptime(initial_date, "%Y-%m-%d").date()
+    query = query & Q(date__gte=data_inicial)
+
+  if final_date:
+    data_final = datetime.datetime.strptime(final_date, "%Y-%m-%d").date()
+    query = query & Q(date__lte=data_final)
+
+  return Km.objects.filter(
+    query
+  ).values(
+    "user__first_name",
+    "user__last_name",
+    "user_to__first_name",
+    "user_to__last_name",
+    "km_initial",
+    "km_final",
+    "date"
+  )
+
+
+def get_km_by_id(km_id: int) -> Km:
+  return get_object_or_404(Km, pk=km_id)
