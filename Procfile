@@ -1,1 +1,1 @@
-web: gunicorn web_constel.asgi:application --preload -k uvicorn.workers.UvicornWorker
+web: daphne web_constel.asgi
