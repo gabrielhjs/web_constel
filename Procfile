@@ -1,1 +1,1 @@
-web: gunicorn web_constel.wsgi
+web: daphne web_constel.asgi
