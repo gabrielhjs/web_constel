@@ -31,7 +31,12 @@ def set_user_team_initial_km(user_id: int, gestor_id: int, km: int) -> None:
 
 
 def get_user_team_final_km(query: Q = Q()) -> QuerySet:
-  return Km.objects.filter(query, date__gte=(date.today() - datetime.timedelta(days=1.0)), km_final__isnull=True)
+  return Km.objects.filter(
+    query,
+    date__gte=(date.today() - datetime.timedelta(days=1.0)),
+    km_final__isnull=True,
+    status=True
+  )
 
 
 def set_user_team_final_km(km_id: int, km_final: float) -> None:
@@ -87,6 +92,7 @@ def query_km_team(query: Q = Q()) -> QuerySet:
     "user_to__first_name",
     "user_to__last_name",
     "user_to__username",
+    "status",
   ).order_by(
     "-date",
     "user_to__first_name",
@@ -282,3 +288,16 @@ def get_km(initial_date: str, final_date: str, owner: str) -> QuerySet:
 
 def get_km_by_id(km_id: int) -> Km:
   return get_object_or_404(Km, pk=km_id)
+
+
+def set_falta(user: User, owner: str, data: date) -> bool:
+  user_to = get_object_or_404(User, username=owner)
+
+  Km.objects.create(
+    user=user,
+    user_to=user_to,
+    status=False,
+    date=data,
+  ).save()
+
+  return True
