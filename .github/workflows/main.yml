@@ -1,0 +1,26 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Deploy Production
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+    
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy Production
+      uses: fjogeleit/http-request-action@master
+      with:
+        url: 'https://api.heroku.com/pipeline-promotions'
+        method: 'POST'
+        contentType: 'application/json'
+        customHeaders: '{\"Accept\": \"application/vnd.heroku+json; version=3\", \"Authorization\": \"Bearer 189de531-2e6e-496c-af22-05faf19c6209\"}'
+        data: '{\"pipeline\": {\"id\": \"5fa54a27-83e3-410a-806e-ac76bdd86958\", \"source\":{\"app\":{\"id\":\"cccecc06-0b43-45bd-b0fd-c951da7c191a\"}},\"targets\":[{\"app\":{\"id\":\"c55d81e4-b55c-4bff-8b95-1ecf04c36735}}]}'
