@@ -25,6 +25,7 @@ def registros(request):
   menu_buttons = [
     {'link': '/patrimonio/combustivel/km/registros/inicial', 'text': 'Inicial dia'},
     {'link': '/patrimonio/combustivel/km/registros/final', 'text': 'Final dia'},
+    {'link': '/patrimonio/combustivel/km/registros/falta', 'text': 'Falta'},
   ]
   button_return = {'link': '/patrimonio/combustivel/km', 'text': 'Voltar'}
 

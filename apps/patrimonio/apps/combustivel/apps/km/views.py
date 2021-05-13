@@ -197,7 +197,7 @@ def view_relatorio_geral(request: HttpRequest) -> HttpResponse:
   menu = mn.relatorios(request)
 
   funcionario = request.GET.get("funcionario", "")
-  data_inicial = request.GET.get("data_inicial", "")
+  data_inicial = request.GET.get("data_inicial", datetime.date.today().replace(day=1).isoformat())
   data_final = request.GET.get("data_final", "")
 
   form = FormDataInicialFinalFuncionario(initial={
@@ -403,3 +403,26 @@ def view_editar_registro_detalhe(request: HttpRequest, registro_id: int) -> Http
   context.update(menu)
 
   return render(request, "km/registrar_km_form.html", context)
+
+
+@login_required()
+@permission("patrimonio - combustivel - km", "gestor", "patrimonio - combustivel")
+def view_registrar_falta(request: HttpRequest) -> HttpResponse:
+  menu = mn.registros(request)
+
+  form = forms.RegistraFaltaForm(data=request.POST or None)
+
+  if request.method == "POST":
+    if form.is_valid():
+      services.set_falta(request.user, form.cleaned_data.get("funcionario"), form.cleaned_data.get("data"))
+
+      return HttpResponseRedirect(f"/patrimonio/combustivel/km/registros/falta/")
+
+  context = {
+    "form": form,
+    "form_submit_text": "Registrar"
+  }
+  context.update(menu)
+
+  return render(request, "km/registrar_km_form.html", context)
+

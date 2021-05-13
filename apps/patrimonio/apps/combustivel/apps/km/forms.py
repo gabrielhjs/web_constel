@@ -1,4 +1,7 @@
+from datetime import date
+
 from django import forms
+from django.contrib.auth.models import User
 
 from constel.forms import DateInput
 from . import services
@@ -84,5 +87,28 @@ class EditaRegistroForm(forms.ModelForm):
                 "A quilometragem final deve ser maior ou igual a inicial.",
                 f"Quilometragem inicial: {km_inicial} km"
             ]
+
+        return form_data
+
+
+class RegistraFaltaForm(forms.Form):
+
+    funcionario = forms.CharField(label="Colaborador", required=True)
+    data = forms.DateField(widget=DateInput(), required=False, initial=date.today().isoformat())
+
+    def __init__(self, *args, **kwargs):
+        super(RegistraFaltaForm, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        form_data = super(RegistraFaltaForm, self).clean()
+
+        if not User.objects.filter(username=form_data.get("funcionario")).exists():
+            self.errors["funcionario"] = ["Este colaborador não está cadastrado no sistema"]
+
+        if services.is_km_register(form_data.get("funcionario"), form_data.get("data")):
+            self.errors["data"] = ["Este colaborador já possui registro nesta data"]
 
         return form_data
