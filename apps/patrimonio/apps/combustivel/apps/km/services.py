@@ -34,7 +34,7 @@ def get_user_team_final_km(user: User, query: Q = Q()) -> QuerySet:
   return Km.objects.filter(
     query,
     user=user,
-    date__gte=(date.today() - datetime.timedelta(days=1)),
+    date__gte=(date.today() - datetime.timedelta(days=1.0)),
     km_final__isnull=True,
     status=True
   )
