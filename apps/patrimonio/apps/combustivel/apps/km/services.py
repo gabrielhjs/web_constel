@@ -30,10 +30,11 @@ def set_user_team_initial_km(user_id: int, gestor_id: int, km: int) -> None:
   ).save()
 
 
-def get_user_team_final_km(query: Q = Q()) -> QuerySet:
+def get_user_team_final_km(user: User, query: Q = Q()) -> QuerySet:
   return Km.objects.filter(
     query,
-    date__gte=(date.today() - datetime.timedelta(days=1.0)),
+    user=user,
+    date__gte=(date.today() - datetime.timedelta(days=1)),
     km_final__isnull=True,
     status=True
   )
@@ -70,7 +71,7 @@ def is_final_gte_initial(km_id: int, km_final: float) -> (bool, int):
   return True, 0
 
 
-def is_km_register(owner: str, date_date: str) -> [int, False]:
+def is_km_register(owner: str, date_date: date) -> [int, False]:
   if Km.objects.filter(
     user_to__username=owner,
     date=date_date
@@ -112,6 +113,7 @@ def query_km(query: Q = Q()) -> QuerySet:
     "user__last_name",
     "user_to__first_name",
     "user_to__last_name",
+    "status",
   ).order_by(
     "-date",
     "user__first_name",
@@ -126,7 +128,17 @@ def query_km(query: Q = Q()) -> QuerySet:
 def query_today_pending(query: Q = Q()) -> QuerySet:
   registred_initial = Km.objects.filter(
     user__id=OuterRef("gestor__id"),
-    date__gte=date.today()
+    date=date.today(),
+  ).values(
+    "user__id"
+  ).annotate(
+    total=Count(F("user_to__id"))
+  ).values("total")
+
+  registred_initial_ok = Km.objects.filter(
+    user__id=OuterRef("gestor__id"),
+    date=date.today(),
+    status=True
   ).values(
     "user__id"
   ).annotate(
@@ -135,8 +147,9 @@ def query_today_pending(query: Q = Q()) -> QuerySet:
 
   registred_final = Km.objects.filter(
     user__id=OuterRef("gestor__id"),
-    date__gte=date.today(),
-    km_final__isnull=False
+    date=date.today(),
+    km_initial__isnull=False,
+    status=True
   ).values(
     "user__id"
   ).annotate(
@@ -144,12 +157,11 @@ def query_today_pending(query: Q = Q()) -> QuerySet:
   ).values("total")
 
   pendency = get_user_team(query).values(
-    "gestor__first_name",
-    "gestor__last_name",
+    "gestor",
   ).annotate(
     total=Count(F("user__id")),
     initial=Count(F("user__id")) - Coalesce(Subquery(registred_initial), 0),
-    final=Count(F("user__id")) - Coalesce(Subquery(registred_final), 0),
+    final=Coalesce(Subquery(registred_initial_ok), 0) - Coalesce(Subquery(registred_final), 0),
   )
 
   return pendency.values(
@@ -282,7 +294,8 @@ def get_km(initial_date: str, final_date: str, owner: str) -> QuerySet:
     "user_to__last_name",
     "km_initial",
     "km_final",
-    "date"
+    "date",
+    "status"
   )
 
 
@@ -297,6 +310,19 @@ def set_falta(user: User, owner: str, data: date) -> bool:
     user=user,
     user_to=user_to,
     status=False,
+    date=data,
+  ).save()
+
+  return True
+
+
+def set_pendencia(user: User, owner: str, data: date, km_initial: float, km_final: float) -> bool:
+
+  Km.objects.create(
+    km_initial=km_initial,
+    km_final=km_final,
+    user=user,
+    user_to=User.objects.get(username=owner),
     date=data,
   ).save()
 

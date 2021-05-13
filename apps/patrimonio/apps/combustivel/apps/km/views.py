@@ -286,7 +286,7 @@ def view_registrar_km_final(request: HttpRequest) -> HttpResponse:
       Q(user_to__username__icontains=q)
     )
 
-  itens = services.get_user_team_final_km(query).values(
+  itens = services.get_user_team_final_km(request.user, query).values(
     "id",
     "date",
     "user_to__id",
@@ -426,3 +426,31 @@ def view_registrar_falta(request: HttpRequest) -> HttpResponse:
 
   return render(request, "km/registrar_km_form.html", context)
 
+
+@login_required()
+@permission("patrimonio - combustivel - km", "gestor", "patrimonio - combustivel")
+def view_registrar_pendencia(request: HttpRequest) -> HttpResponse:
+  menu = mn.registros(request)
+
+  form = forms.RegistraPendenciaForm(data=request.POST or None)
+
+  if request.method == "POST":
+    if form.is_valid():
+      print(form.cleaned_data.get("data"))
+      services.set_pendencia(
+        request.user,
+        form.cleaned_data.get("funcionario"),
+        form.cleaned_data.get("data"),
+        form.cleaned_data.get("km_initial"),
+        form.cleaned_data.get("km_final"),
+      )
+
+      return HttpResponseRedirect(f"/patrimonio/combustivel/km/registros/pendencia/")
+
+  context = {
+    "form": form,
+    "form_submit_text": "Registrar"
+  }
+  context.update(menu)
+
+  return render(request, "km/registrar_km_form.html", context)

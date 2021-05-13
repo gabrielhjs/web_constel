@@ -112,3 +112,36 @@ class RegistraFaltaForm(forms.Form):
             self.errors["data"] = ["Este colaborador já possui registro nesta data"]
 
         return form_data
+
+
+class RegistraPendenciaForm(forms.Form):
+
+    funcionario = forms.CharField(label="Colaborador", required=True)
+    data = forms.DateField(widget=DateInput(), required=True)
+    km_initial = forms.FloatField(label="Quilometragem inicial", min_value=0, required=True)
+    km_final = forms.FloatField(label="Quilometragem final", min_value=0, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(RegistraPendenciaForm, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        form_data = super(RegistraPendenciaForm, self).clean()
+
+        if not User.objects.filter(username=form_data.get("funcionario")).exists():
+            self.errors["funcionario"] = ["Este colaborador não está cadastrado no sistema"]
+
+        if services.is_km_register(form_data.get("funcionario"), form_data.get("data")):
+            self.errors["data"] = ["Este colaborador já possui registro nesta data"]
+
+        if not form_data.get("km_initial") <= form_data.get("km_final"):
+            self.errors["km_final"] = [
+                "A quilometragem final deve ser maior ou igual a inicial.",
+            ]
+
+        if not form_data.get("data") < date.today():
+            self.errors["data"] = ["A data deve ser anterior a hoje"]
+
+        return form_data
