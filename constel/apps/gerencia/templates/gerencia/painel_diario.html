@@ -1,0 +1,19 @@
+{% extends 'constel/v2/app.html' %}
+{% load static %}
+{% block app_content %}
+<span id="sentinel_is_active_light"></span>
+<button class="btn btn-primary btn-lg" id="activate_sentinel" disabled="">
+    ativar
+</button>
+<button class="btn btn-primary btn-lg" id="deactivate_sentinel" disabled="">
+    desativar
+</button>
+
+<h1>Atividades:</h1>
+<div id="board"></div>
+<script>
+    const board = $("#board");
+</script>
+<script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+<script src="{% static 'constel/v2/scripts/gerencia_socketio.js' %}"></script>
+{% endblock %}
