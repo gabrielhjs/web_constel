@@ -4,6 +4,7 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.db.models import QuerySet, Subquery, OuterRef, F, Q, Count, ExpressionWrapper, FloatField, Sum, Case, When
 from django.db.models.functions import Coalesce
+from django.shortcuts import get_object_or_404
 
 from constel.models import GestorUser
 from .models import Km
@@ -29,8 +30,14 @@ def set_user_team_initial_km(user_id: int, gestor_id: int, km: int) -> None:
   ).save()
 
 
-def get_user_team_final_km(query: Q = Q()) -> QuerySet:
-  return Km.objects.filter(query, date__gte=(date.today() - datetime.timedelta(days=1.0)), km_final__isnull=True)
+def get_user_team_final_km(user: User, query: Q = Q()) -> QuerySet:
+  return Km.objects.filter(
+    query,
+    user=user,
+    date__gte=(date.today() - datetime.timedelta(days=1.0)),
+    km_final__isnull=True,
+    status=True
+  )
 
 
 def set_user_team_final_km(km_id: int, km_final: float) -> None:
@@ -53,7 +60,6 @@ def is_team(user_id: int, gestor_id: int) -> bool:
 def is_final_gte_initial(km_id: int, km_final: float) -> (bool, int):
   if Km.objects.filter(
     id=km_id,
-    km_final__isnull=True
   ).exists():
     km_initial = Km.objects.get(
       id=km_id,
@@ -65,6 +71,21 @@ def is_final_gte_initial(km_id: int, km_final: float) -> (bool, int):
   return True, 0
 
 
+def is_km_register(owner: str, date_date: date) -> [int, False]:
+  if Km.objects.filter(
+    user_to__username=owner,
+    date=date_date,
+    status=True,
+  ).exists():
+    return Km.objects.get(
+      user_to__username=owner,
+      date=date_date,
+      status=True
+    )
+
+  return False
+
+
 def query_km_team(query: Q = Q()) -> QuerySet:
 
   km = Km.objects.filter(query).values(
@@ -74,6 +95,7 @@ def query_km_team(query: Q = Q()) -> QuerySet:
     "user_to__first_name",
     "user_to__last_name",
     "user_to__username",
+    "status",
   ).order_by(
     "-date",
     "user_to__first_name",
@@ -93,6 +115,7 @@ def query_km(query: Q = Q()) -> QuerySet:
     "user__last_name",
     "user_to__first_name",
     "user_to__last_name",
+    "status",
   ).order_by(
     "-date",
     "user__first_name",
@@ -107,7 +130,17 @@ def query_km(query: Q = Q()) -> QuerySet:
 def query_today_pending(query: Q = Q()) -> QuerySet:
   registred_initial = Km.objects.filter(
     user__id=OuterRef("gestor__id"),
-    date__gte=date.today()
+    date=date.today(),
+  ).values(
+    "user__id"
+  ).annotate(
+    total=Count(F("user_to__id"))
+  ).values("total")
+
+  registred_initial_ok = Km.objects.filter(
+    user__id=OuterRef("gestor__id"),
+    date=date.today(),
+    status=True
   ).values(
     "user__id"
   ).annotate(
@@ -116,8 +149,9 @@ def query_today_pending(query: Q = Q()) -> QuerySet:
 
   registred_final = Km.objects.filter(
     user__id=OuterRef("gestor__id"),
-    date__gte=date.today(),
-    km_final__isnull=False
+    date=date.today(),
+    km_initial__isnull=False,
+    status=True
   ).values(
     "user__id"
   ).annotate(
@@ -125,12 +159,11 @@ def query_today_pending(query: Q = Q()) -> QuerySet:
   ).values("total")
 
   pendency = get_user_team(query).values(
-    "gestor__first_name",
-    "gestor__last_name",
+    "gestor",
   ).annotate(
     total=Count(F("user__id")),
     initial=Count(F("user__id")) - Coalesce(Subquery(registred_initial), 0),
-    final=Count(F("user__id")) - Coalesce(Subquery(registred_final), 0),
+    final=Coalesce(Subquery(registred_initial_ok), 0) - Coalesce(Subquery(registred_final), 0),
   )
 
   return pendency.values(
@@ -235,3 +268,64 @@ def query_general_report(initial_date: str, final_date: str, owner: str) -> Quer
   )
 
   return km
+
+
+def get_km(initial_date: str, final_date: str, owner: str) -> QuerySet:
+  query = Q()
+
+  if owner:
+    query = query & Q(
+      Q(user_to__username__icontains=owner) |
+      Q(user_to__first_name__icontains=owner) |
+      Q(user_to__last_name__icontains=owner))
+
+  if initial_date:
+    data_inicial = datetime.datetime.strptime(initial_date, "%Y-%m-%d").date()
+    query = query & Q(date__gte=data_inicial)
+
+  if final_date:
+    data_final = datetime.datetime.strptime(final_date, "%Y-%m-%d").date()
+    query = query & Q(date__lte=data_final)
+
+  return Km.objects.filter(
+    query
+  ).values(
+    "user__first_name",
+    "user__last_name",
+    "user_to__first_name",
+    "user_to__last_name",
+    "km_initial",
+    "km_final",
+    "date",
+    "status"
+  )
+
+
+def get_km_by_id(km_id: int) -> Km:
+  return get_object_or_404(Km, pk=km_id, status=True)
+
+
+def set_falta(user: User, owner: str, data: date) -> bool:
+  user_to = get_object_or_404(User, username=owner)
+
+  Km.objects.create(
+    user=user,
+    user_to=user_to,
+    status=False,
+    date=data,
+  ).save()
+
+  return True
+
+
+def set_pendencia(user: User, owner: str, data: date, km_initial: float, km_final: float) -> bool:
+
+  Km.objects.create(
+    km_initial=km_initial,
+    km_final=km_final,
+    user=user,
+    user_to=User.objects.get(username=owner),
+    date=data,
+  ).save()
+
+  return True

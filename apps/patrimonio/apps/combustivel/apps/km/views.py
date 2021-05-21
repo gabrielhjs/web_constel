@@ -30,6 +30,12 @@ def view_menu_consultas(request: HttpRequest) -> HttpResponse:
   return render(request, "constel/v2/app.html", context)
 
 
+def view_menu_edicoes(request: HttpRequest) -> HttpResponse:
+  context = mn.edicoes(request)
+
+  return render(request, "constel/v2/app.html", context)
+
+
 @login_required()
 @permission("patrimonio - combustivel - km")
 def view_consulta_km_time(request: HttpRequest) -> HttpResponse:
@@ -150,6 +156,37 @@ def view_consulta_km_pendencias_hoje(request: HttpRequest) -> HttpResponse:
   return render(request, "km/consultar_pendencias_hoje.html", context)
 
 
+@login_required()
+@permission("patrimonio - combustivel - km")
+def view_consulta_registros(request: HttpRequest) -> HttpResponse:
+  menu = mn.consultas(request)
+
+  funcionario = request.GET.get("funcionario", "")
+  data_inicial = request.GET.get("data_inicial", "")
+  data_final = request.GET.get("data_final", "")
+
+  form = FormDataInicialFinalFuncionario(initial={
+    "funcionario": funcionario,
+    "data_inicial": data_inicial,
+    "data_final": data_final
+  })
+
+  itens = services.get_km(data_inicial, data_final, funcionario)
+
+  paginator = Paginator(itens, 50)
+  page_number = request.GET.get("page")
+  page_obj = paginator.get_page(page_number)
+
+  context = {
+    "page_obj": page_obj,
+    "form": form,
+    "form_submit_text": "Filtrar"
+  }
+  context.update(menu)
+
+  return render(request, "km/consultar_registros.html", context)
+
+
 def view_menu_relatorios(request: HttpRequest) -> HttpResponse:
   context = mn.relatorios(request)
 
@@ -160,7 +197,7 @@ def view_relatorio_geral(request: HttpRequest) -> HttpResponse:
   menu = mn.relatorios(request)
 
   funcionario = request.GET.get("funcionario", "")
-  data_inicial = request.GET.get("data_inicial", "")
+  data_inicial = request.GET.get("data_inicial", datetime.date.today().replace(day=1).isoformat())
   data_final = request.GET.get("data_final", "")
 
   form = FormDataInicialFinalFuncionario(initial={
@@ -249,7 +286,7 @@ def view_registrar_km_final(request: HttpRequest) -> HttpResponse:
       Q(user_to__username__icontains=q)
     )
 
-  itens = services.get_user_team_final_km(query).values(
+  itens = services.get_user_team_final_km(request.user, query).values(
     "id",
     "date",
     "user_to__id",
@@ -313,6 +350,103 @@ def view_registrar_km_final_detalhes(request: HttpRequest, user_id: int, km_id: 
       services.set_user_team_final_km(km_id, km)
 
       return HttpResponseRedirect("/patrimonio/combustivel/km/registros/final")
+
+  context = {
+    "form": form,
+    "form_submit_text": "Registrar"
+  }
+  context.update(menu)
+
+  return render(request, "km/registrar_km_form.html", context)
+
+
+@login_required()
+@permission("patrimonio - combustivel - km", "gestor", "patrimonio - combustivel")
+def view_editar_registro(request: HttpRequest) -> HttpResponse:
+  menu = mn.edicoes(request)
+
+  form = forms.RegistroForm(data=request.POST or None)
+
+  if request.method == "POST":
+    if form.is_valid():
+      registro = services.is_km_register(form.cleaned_data.get("funcionario"), form.cleaned_data.get("data"))
+
+      return HttpResponseRedirect(f"/patrimonio/combustivel/km/edicoes/registro/{registro.id}")
+
+  context = {
+    "form": form,
+    "form_submit_text": "Avançar"
+  }
+  context.update(menu)
+
+  return render(request, "km/registrar_km_form.html", context)
+
+
+@login_required()
+@permission("patrimonio - combustivel - km", "gestor", "patrimonio - combustivel")
+def view_editar_registro_detalhe(request: HttpRequest, registro_id: int) -> HttpResponse:
+  menu = mn.edicoes(request)
+
+  registro = services.get_km_by_id(registro_id)
+
+  form = forms.EditaRegistroForm(data=request.POST or None, instance=registro)
+
+  if request.method == "POST":
+    if form.is_valid():
+      form.save(commit=True)
+      return HttpResponseRedirect(f"/patrimonio/combustivel/km/edicoes/registro/")
+
+  context = {
+    "form": form,
+    "registro": registro,
+    "form_submit_text": "Salvar"
+  }
+  context.update(menu)
+
+  return render(request, "km/editar_registro_form.html", context)
+
+
+@login_required()
+@permission("patrimonio - combustivel - km", "gestor", "patrimonio - combustivel")
+def view_registrar_falta(request: HttpRequest) -> HttpResponse:
+  menu = mn.registros(request)
+
+  form = forms.RegistraFaltaForm(data=request.POST or None)
+
+  if request.method == "POST":
+    if form.is_valid():
+      services.set_falta(request.user, form.cleaned_data.get("funcionario"), form.cleaned_data.get("data"))
+
+      return HttpResponseRedirect(f"/patrimonio/combustivel/km/registros/falta/")
+
+  context = {
+    "form": form,
+    "form_submit_text": "Registrar"
+  }
+  context.update(menu)
+
+  return render(request, "km/registrar_km_form.html", context)
+
+
+@login_required()
+@permission("patrimonio - combustivel - km", "gestor", "patrimonio - combustivel")
+def view_registrar_pendencia(request: HttpRequest) -> HttpResponse:
+  menu = mn.registros(request)
+
+  form = forms.RegistraPendenciaForm(data=request.POST or None)
+
+  if request.method == "POST":
+    if form.is_valid():
+      print(form.cleaned_data.get("data"))
+      services.set_pendencia(
+        request.user,
+        form.cleaned_data.get("funcionario"),
+        form.cleaned_data.get("data"),
+        form.cleaned_data.get("km_initial"),
+        form.cleaned_data.get("km_final"),
+      )
+
+      return HttpResponseRedirect(f"/patrimonio/combustivel/km/registros/pendencia/")
 
   context = {
     "form": form,

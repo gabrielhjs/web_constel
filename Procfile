@@ -1,1 +1,1 @@
-web: gunicorn web_constel.wsgi
+web: gunicorn web_constel.wsgi --preload
