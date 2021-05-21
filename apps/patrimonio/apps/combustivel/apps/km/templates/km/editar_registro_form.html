@@ -1,0 +1,21 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="2">Colaborador</th>
+            </tr>
+            <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">{{ registro.user_to.username }}</th>
+            </tr>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">{{ registro.user_to.first_name|title }} {{ registro.user_to.last_name|title }}</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+{% include 'constel/v2/form_post.html' %}
+{% endblock %}

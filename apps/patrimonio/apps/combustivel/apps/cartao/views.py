@@ -23,7 +23,7 @@ def index(request: HttpRequest) -> HttpResponse:
 
 
 @login_required()
-@permission('patrimonio',)
+@permission('patrimonio - combustivel - km',)
 def importa_csv(request: HttpRequest) -> HttpResponse:
   menu = menu_principal(request)
 
@@ -45,7 +45,7 @@ def importa_csv(request: HttpRequest) -> HttpResponse:
 
 
 @login_required()
-@permission('patrimonio',)
+@permission('patrimonio - combustivel - km',)
 def consulta_depositos(request: HttpRequest) -> HttpResponse:
   menu = menu_consultas(request)
 
@@ -86,7 +86,7 @@ def consulta_depositos(request: HttpRequest) -> HttpResponse:
 
 
 @login_required()
-@permission('patrimonio',)
+@permission('patrimonio - combustivel - km',)
 def consulta_depositos_detalhe(request: HttpRequest, upload: int) -> HttpResponse:
   menu = menu_consultas(request)
 

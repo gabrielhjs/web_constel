@@ -74,11 +74,13 @@ def is_final_gte_initial(km_id: int, km_final: float) -> (bool, int):
 def is_km_register(owner: str, date_date: date) -> [int, False]:
   if Km.objects.filter(
     user_to__username=owner,
-    date=date_date
+    date=date_date,
+    status=True,
   ).exists():
     return Km.objects.get(
       user_to__username=owner,
-      date=date_date
+      date=date_date,
+      status=True
     )
 
   return False
@@ -300,7 +302,7 @@ def get_km(initial_date: str, final_date: str, owner: str) -> QuerySet:
 
 
 def get_km_by_id(km_id: int) -> Km:
-  return get_object_or_404(Km, pk=km_id)
+  return get_object_or_404(Km, pk=km_id, status=True)
 
 
 def set_falta(user: User, owner: str, data: date) -> bool:

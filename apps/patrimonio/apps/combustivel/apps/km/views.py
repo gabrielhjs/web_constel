@@ -398,11 +398,12 @@ def view_editar_registro_detalhe(request: HttpRequest, registro_id: int) -> Http
 
   context = {
     "form": form,
+    "registro": registro,
     "form_submit_text": "Salvar"
   }
   context.update(menu)
 
-  return render(request, "km/registrar_km_form.html", context)
+  return render(request, "km/editar_registro_form.html", context)
 
 
 @login_required()
