@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  const socket = io("ws://sentinelawe2.herokuapp.com")
+  const socket = io("wss://sentinelawe2.herokuapp.com")
   const button_activate = document.querySelector("#activate_sentinel")
   const button_deactivate = document.querySelector("#deactivate_sentinel")
 
