@@ -2,18 +2,20 @@ $(document).ready(function () {
   const socket = io("wss://sentinelawe2.herokuapp.com")
   const button_activate = document.querySelector("#activate_sentinel")
   const button_deactivate = document.querySelector("#deactivate_sentinel")
+  const updatedHour = document.querySelector("#updatedHour")
 
-  socket.on("connect", response => {
+  socket.on("connect", _ => {
     socket.emit("is_on");
   });
 
-  socket.on("disconnect", response => {
+  socket.on("disconnect", _ => {
     button_activate.disabled = true
     button_deactivate.disabled = true
   });
 
   socket.on("send_data", response => {
     loadBoard(response)
+    updatedHour.innerHTML = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
   });
 
   socket.on("is_on", response => {
@@ -44,8 +46,12 @@ function loadBoard(result) {
   const activityTypeCard = (activityTypeKey) => {
     return `
       <div class="card w-100 bg-dark text-white mb-2">
-        <h1 class="card-header">${activityTypeKey}</h1>
-        <div class="card-body ${activityTypeKey}">
+        <h2 class="card-header">${activityTypeKey}</h2>
+        <div class="card-body pb-0">
+          <div class="container-fluit">
+            <div class="row row-cols-auto ${activityTypeKey}">
+            </div>
+          </div>
         </div>
       </div>
     `
@@ -53,11 +59,11 @@ function loadBoard(result) {
 
   const activityStatusCard = (activityStatusKey, activityStatusValue) => {
     return `
-      <div class="col">
+      <div class="col mb-3">
         <div class="card m-auto bg-info ${activityStatusKey}">
-          <h1 class="card-header text-center" style="font-size: 8em;">${activityStatusValue}</h1>
-          <div class="card-body">
-            <h5 class="card-title">${activityStatusKey.toUpperCase()}</h5>
+          <h1 class="card-header text-center p-2" style="font-size: 5em;">${activityStatusValue}</h1>
+          <div class="card-body p-2">
+            <h5 class="card-title m-auto">${activityStatusKey.toUpperCase()}</h5>
           </div>
         </div>
       </div>
