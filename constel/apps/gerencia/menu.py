@@ -10,7 +10,8 @@ def menu_principal(request):
     """
 
     menu_buttons = [
-
+        {'link': '/gerencia', 'text': 'Dashboard'},
+        {'link': '/gerencia/painel-diario', 'text': 'Painel diário'},
     ]
 
     button_return = {'link': '/', 'text': 'Voltar'}

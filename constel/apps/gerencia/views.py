@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import TruncMonth, TruncDay, Coalesce
@@ -90,3 +91,11 @@ def index(request):
     context.update(menu)
 
     return render(request, 'gerencia/dashboard.html', context)
+
+
+@login_required
+@permission('gerencia')
+def painel_diario(request: HttpRequest) -> HttpResponse:
+    context = menu_principal(request)
+
+    return render(request, "gerencia/painel_diario.html", context)
