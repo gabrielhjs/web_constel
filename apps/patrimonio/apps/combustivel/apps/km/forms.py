@@ -171,10 +171,10 @@ class KmFormFuncionario(forms.Form):
 
         user_id = User.objects.get(username=form_data.get("funcionario")).id
 
-        form_data["funcionario"] = user_id
-
         if services.is_km_register(form_data.get("funcionario"), date.today()):
             self.errors["funcionario"] = ["Este colaborador já possui registro de hoje"]
+
+        form_data["funcionario"] = user_id
 
         if form_data["km"] <= 0:
             self.errors["km"] = ["Não é possível registrar quilometragem nula ou negativa"]
