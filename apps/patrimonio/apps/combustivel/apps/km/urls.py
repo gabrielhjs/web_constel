@@ -45,6 +45,11 @@ urlpatterns = [
         name='patrimonio_combustivel_km_registros_pendencia'
     ),
     path(
+        'patrimonio/combustivel/km/registros/funcionario/',
+        views.view_registrar_km_inicial_sem_equipe,
+        name='patrimonio_combustivel_km_registros_incial_sem_equipe'
+    ),
+    path(
         'patrimonio/combustivel/km/edicoes/',
         views.view_menu_edicoes,
         name='patrimonio_combustivel_km_edicoes'
