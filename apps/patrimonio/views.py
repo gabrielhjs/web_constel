@@ -1,4 +1,5 @@
 import datetime
+from pprint import pprint
 
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
@@ -251,7 +252,11 @@ def consulta_colaboradores_detalhes(request: HttpRequest, user: str) -> HttpResp
         "ferramenta__nome"
     )
 
-    lista_patrimonio = PatrimonioSaida.objects.filter(
+    lista_patrimonio = PatrimonioSaida.objects.values(
+        "patrimonio"
+    ).annotate(
+        ultima_saida=Max("id")
+    ).filter(
         user_to__username=user,
         patrimonio__status=1
     ).values(

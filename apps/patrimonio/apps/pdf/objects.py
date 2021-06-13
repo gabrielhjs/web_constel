@@ -41,7 +41,7 @@ class FichaPatrimonio(FPDF):
       self.responsavel = self.patrimonios[0].user.get_full_name().title()
       self.responsavel_id = self.patrimonios[0].user.username
       self.colaborador = self.patrimonios[0].user_to.get_full_name().title()
-      self.colaborador_id = self.patrimonios[0].user.username
+      self.colaborador_id = self.patrimonios[0].user_to.username
 
     self.cabecalho()
     self.termos_de_uso()
