@@ -1,4 +1,5 @@
 import datetime
+from pprint import pprint
 
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -157,6 +158,28 @@ def view_consulta_km_pendencias_hoje(request: HttpRequest) -> HttpResponse:
 
 
 @login_required()
+@permission("patrimonio - combustivel - km", "patrimonio")
+def view_consulta_km_pendencias_hoje_detalhe(request: HttpRequest, gestor_id: int) -> HttpResponse:
+  menu = mn.consultas(request)
+
+  itens = services.query_today_pending_detail(gestor_id)
+
+  pprint(list(itens))
+
+  paginator = Paginator(itens, 50)
+  page_number = request.GET.get("page")
+  page_obj = paginator.get_page(page_number)
+
+  context = {
+    "page_obj": page_obj,
+    "form_submit_text": "Filtrar"
+  }
+  context.update(menu)
+
+  return render(request, "km/consultar_pendencias_hoje_detalhes.html", context)
+
+
+@login_required()
 @permission("patrimonio - combustivel - km")
 def view_consulta_registros(request: HttpRequest) -> HttpResponse:
   menu = mn.consultas(request)
@@ -193,6 +216,8 @@ def view_menu_relatorios(request: HttpRequest) -> HttpResponse:
   return render(request, "constel/v2/app.html", context)
 
 
+@login_required()
+@permission("patrimonio - combustivel - km", "gestor", "patrimonio - combustivel")
 def view_relatorio_geral(request: HttpRequest) -> HttpResponse:
   menu = mn.relatorios(request)
 

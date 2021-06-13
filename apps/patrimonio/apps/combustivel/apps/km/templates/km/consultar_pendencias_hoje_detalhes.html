@@ -1,0 +1,31 @@
+{% extends 'constel/v2/app.html' %}
+{% block app_content %}
+<div class="table-responsive table-content">
+    <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+            <tr>
+                <th scope="col" colspan="4">Detalhes</th>
+            </tr>
+            <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Km inicial</th>
+                <th scope="col">Km final</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in page_obj %}
+            <tr class="text-md-left">
+                <td>{{ item.user__username }}</td>
+                <td>{{ item.user__first_name|title }} {{ item.user__last_name|title }}</td>
+                <td style="color: {% if item.initial == 'PENDENTE' %}Red{% else %}Lime{% endif %};">{{ item.initial|default_if_none:"" }}</td>
+                <td style="color: {% if item.final == 'PENDENTE' %}Red{% else %}Lime{% endif %};">{{ item.final|default_if_none:"" }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% include 'constel/v2/pagination.html' %}
+<div class="row justify-content-center m-0">
+    <a class="btn btn-danger px-5 my-3" href="{% url 'patrimonio_combustivel_km_consultas_pendencias_hoje' %}?{{ request.GET.urlencode }}">voltar</a>
+</div>
+{% endblock %}
