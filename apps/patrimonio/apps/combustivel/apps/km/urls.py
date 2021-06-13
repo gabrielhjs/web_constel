@@ -80,6 +80,11 @@ urlpatterns = [
         name='patrimonio_combustivel_km_consultas_pendencias_hoje'
     ),
     path(
+        'patrimonio/combustivel/km/consultas/pendencias/hoje/<str:gestor_id>/',
+        views.view_consulta_km_pendencias_hoje_detalhe,
+        name='patrimonio_combustivel_km_consultas_pendencias_hoje_detalhe'
+    ),
+    path(
         'patrimonio/combustivel/km/consultas/registros/',
         views.view_consulta_registros,
         name='patrimonio_combustivel_km_consultas_registros'

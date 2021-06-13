@@ -2,7 +2,8 @@ import datetime
 from datetime import date
 
 from django.contrib.auth.models import User
-from django.db.models import QuerySet, Subquery, OuterRef, F, Q, Count, ExpressionWrapper, FloatField, Sum, Case, When
+from django.db.models import QuerySet, Subquery, OuterRef, F, Q, Count, ExpressionWrapper, FloatField, Sum, Case, When, \
+  Value, CharField
 from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404
 
@@ -171,6 +172,43 @@ def query_today_pending(query: Q = Q()) -> QuerySet:
     "gestor__first_name",
     "gestor__last_name",
     "total",
+    "initial",
+    "final",
+  )
+
+
+def query_today_pending_detail(gestor_id: int) -> QuerySet:
+  subquery = Km.objects.filter(
+    user_to__id=OuterRef("user__id"),
+    date=date(year=2021, month=5, day=12),
+  ).values(
+    "user_to__username",
+    "user_to__first_name",
+    "user_to__last_name",
+  ).annotate(
+    initial=Case(
+      When(status=False, then=Value("OK FALTA", output_field=CharField())),
+      When(km_initial__isnull=False, then=Value("OK", output_field=CharField())),
+      default=Value("PENDENTE", output_field=CharField())
+    ),
+    final=Case(
+      When(status=False, then=Value("OK FALTA", output_field=CharField())),
+      When(km_final__isnull=False, then=Value("OK", output_field=CharField())),
+      default=Value("PENDENTE", output_field=CharField())
+    ),
+  )
+
+  query = Q(gestor__username=gestor_id)
+
+  return get_user_team(query).values(
+    "user",
+  ).annotate(
+    initial=Coalesce(Subquery(subquery.values("initial")), Value("PENDENTE", output_field=CharField())),
+    final=Coalesce(Subquery(subquery.values("final")), Value("PENDENTE", output_field=CharField())),
+  ).values(
+    "user__username",
+    "user__first_name",
+    "user__last_name",
     "initial",
     "final",
   )
