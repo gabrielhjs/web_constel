@@ -466,7 +466,6 @@ def view_registrar_km_inicial_sem_equipe(request: HttpRequest) -> HttpResponse:
   if request.method == "POST":
     if form.is_valid():
       km = form.cleaned_data["km"]
-      print(form.cleaned_data["funcionario"])
       services.set_user_team_initial_km(form.cleaned_data["funcionario"], request.user.id, km)
 
       return HttpResponseRedirect("/patrimonio/combustivel/km/registros")
