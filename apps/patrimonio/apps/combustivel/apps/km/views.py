@@ -462,7 +462,6 @@ def view_registrar_pendencia(request: HttpRequest) -> HttpResponse:
 
   if request.method == "POST":
     if form.is_valid():
-      print(form.cleaned_data.get("data"))
       services.set_pendencia(
         request.user,
         form.cleaned_data.get("funcionario"),
@@ -472,6 +471,29 @@ def view_registrar_pendencia(request: HttpRequest) -> HttpResponse:
       )
 
       return HttpResponseRedirect(f"/patrimonio/combustivel/km/registros/pendencia/")
+
+  context = {
+    "form": form,
+    "form_submit_text": "Registrar"
+  }
+  context.update(menu)
+
+  return render(request, "km/registrar_km_form.html", context)
+
+
+@login_required()
+@permission("patrimonio - combustivel - km")
+def view_registrar_km_inicial_sem_equipe(request: HttpRequest) -> HttpResponse:
+  menu = mn.registros(request)
+
+  form = forms.KmFormFuncionario(gestor_id=request.user.id, data=request.POST or None)
+
+  if request.method == "POST":
+    if form.is_valid():
+      km = form.cleaned_data["km"]
+      services.set_user_team_initial_km(form.cleaned_data["funcionario"], request.user.id, km)
+
+      return HttpResponseRedirect("/patrimonio/combustivel/km/registros")
 
   context = {
     "form": form,

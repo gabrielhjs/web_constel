@@ -27,6 +27,7 @@ def registros(request):
     {'link': '/patrimonio/combustivel/km/registros/final', 'text': 'Final dia'},
     {'link': '/patrimonio/combustivel/km/registros/falta', 'text': 'Falta'},
     {'link': '/patrimonio/combustivel/km/registros/pendencia', 'text': 'Pendência'},
+    {'link': '/patrimonio/combustivel/km/registros/funcionario', 'text': 'Fora da equipe'},
   ]
   button_return = {'link': '/patrimonio/combustivel/km', 'text': 'Voltar'}
 
