@@ -387,11 +387,12 @@ def entregar_vale_2(request):
 
     context = {
         'form': form,
+        'user_to': user_to,
         'form_submit_text': 'Entregar vale',
     }
     context.update(menu)
 
-    return render(request, 'talao/v2/entregar_talao.html', context)
+    return render(request, 'talao/v2/entregar_vale.html', context)
 
 
 @login_required()
