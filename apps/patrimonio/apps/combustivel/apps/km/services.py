@@ -180,7 +180,7 @@ def query_today_pending(query: Q = Q()) -> QuerySet:
 def query_today_pending_detail(gestor_id: int) -> QuerySet:
   subquery = Km.objects.filter(
     user_to__id=OuterRef("user__id"),
-    date=date(year=2021, month=5, day=12),
+    date=date.today(),
   ).values(
     "user_to__username",
     "user_to__first_name",
