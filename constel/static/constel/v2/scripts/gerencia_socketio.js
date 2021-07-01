@@ -58,9 +58,17 @@ function loadBoard(result) {
   }
 
   const activityStatusCard = (activityStatusKey, activityStatusValue) => {
+    const cardColor = {
+      STARTED: "rgb(93,190,63)",
+      COMPLETED: "rgb(121,182,235)",
+      NOTDONE: "rgb(96,206,206)",
+      PENDING: "rgb(255,222,0)",
+      SUSPENDED: "rgb(153,255,255)",
+      CANCELLED: "rgb(119,233,118)",
+    }
     return `
-      <div class="col mb-3">
-        <div class="card m-auto bg-info ${activityStatusKey}">
+      <div class="col mb-3 text-dark">
+        <div class="card m-auto ${activityStatusKey}" style="background-color: ${cardColor[activityStatusKey.toUpperCase()]};">
           <h1 class="card-header text-center p-2" style="font-size: 5em;">${activityStatusValue}</h1>
           <div class="card-body p-2">
             <h5 class="card-title m-auto">${activityStatusKey.toUpperCase()}</h5>
