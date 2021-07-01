@@ -2,27 +2,38 @@ $(document).ready(function () {
   const socket = io("wss://sentinelawe2.herokuapp.com")
   const button_activate = document.querySelector("#activate_sentinel")
   const button_deactivate = document.querySelector("#deactivate_sentinel")
+  const buttonDateSubmit = document.querySelector("button[type='submit']")
   const updatedHour = document.querySelector("#updatedHour")
 
+  buttonDateSubmit.onclick = (event) => {
+    event.preventDefault()
+    const initialDate = document.getElementById("id_data_inicial").value
+    const finalDate = document.getElementById("id_data_final").value
+    socket.emit("change_dates", {
+      initialDate,
+      finalDate,
+    })
+  }
+
   socket.on("connect", _ => {
-    socket.emit("is_on");
-  });
+    socket.emit("is_on")
+  })
 
   socket.on("disconnect", _ => {
     button_activate.disabled = true
     button_deactivate.disabled = true
-  });
+  })
 
   socket.on("send_data", response => {
     loadBoard(response)
     updatedHour.innerHTML = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
-  });
+  })
 
   socket.on("is_on", response => {
 
     if (response.response) {
-      button_activate.disabled = true;
-      button_deactivate.disabled = false;
+      button_activate.disabled = true
+      button_deactivate.disabled = false
     }
     else {
       button_activate.disabled = false
@@ -32,8 +43,13 @@ $(document).ready(function () {
   })
 
   button_activate.onclick = () => {
+    const initialDate = document.getElementById("id_data_inicial").value
+    const finalDate = document.getElementById("id_data_final").value
     button_activate.blur()
-    socket.emit("turn_on")
+    socket.emit("turn_on", {
+      initialDate,
+      finalDate,
+    })
   };
 
   button_deactivate.onclick = () => {

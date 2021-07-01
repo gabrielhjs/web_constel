@@ -3,13 +3,16 @@
 {% block app_content %}
 <div class="fluid-container m-0 p-0">
   <div class="row m-0 p-0">
-    <div class="col p-0 my-2 ml-2 mr-1">
-      <button class="btn btn-success btn-lg w-100" id="activate_sentinel" disabled="">
+    <div class="col-lg-6 p-0 my-2 ml-1 mr-1">
+      {% include 'gerencia/form_get_inline.html' %}
+    </div>
+    <div class="col-lg-1 p-0 my-2 ml-2 mr-1">
+      <button class="btn btn-success btn w-100" id="activate_sentinel" disabled="">
         ativar
       </button>
     </div>
-    <div class="col p-0 my-2 ml-1 mr-2">
-      <button class="btn btn-danger btn-lg w-100" id="deactivate_sentinel" disabled="">
+    <div class="col-lg-1 p-0 my-2 ml-1 mr-2">
+      <button class="btn btn-danger btn w-100" id="deactivate_sentinel" disabled="">
         desativar
       </button>
     </div>
@@ -21,7 +24,7 @@
   <div class="row m-0 p-0 mx-2" id="board"></div>
 </div>
 <script>
-  const board = $("#board")
+  const board = $("#board");
 </script>
 <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
 <script src="{% static 'constel/v2/scripts/gerencia_socketio.js' %}"></script>
