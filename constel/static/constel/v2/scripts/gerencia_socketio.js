@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  const socket = io("ws://localhost:3333");
+  const socket = io("wss://sentinelawe2.herokuapp.com");
   const button_activate = document.querySelector("#activate_sentinel");
   const button_deactivate = document.querySelector("#deactivate_sentinel");
   const buttonDateSubmit = document.querySelector("button[type='submit']");
@@ -122,7 +122,7 @@ function loadBoard(result) {
 
 function loadTimeTable(activitiesTime) {
   const table = `
-    <div class="table-responsive table-content">
+    <div class="table-responsive table-content h3">
       <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
         <thead>
           <tr>
@@ -154,7 +154,7 @@ function loadTimeTable(activitiesTime) {
     tableTime.append(table);
   }
 
-  let body = tableTime.find("tbody")[0];
+  let body = tableTime.find("tbody");
 
   body.empty();
 
