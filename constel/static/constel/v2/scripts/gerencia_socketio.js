@@ -1,60 +1,61 @@
 $(document).ready(function () {
-  const socket = io("wss://sentinelawe2.herokuapp.com")
-  const button_activate = document.querySelector("#activate_sentinel")
-  const button_deactivate = document.querySelector("#deactivate_sentinel")
-  const buttonDateSubmit = document.querySelector("button[type='submit']")
-  const updatedHour = document.querySelector("#updatedHour")
+  const socket = io("ws://localhost:3333");
+  const button_activate = document.querySelector("#activate_sentinel");
+  const button_deactivate = document.querySelector("#deactivate_sentinel");
+  const buttonDateSubmit = document.querySelector("button[type='submit']");
+  const updatedHour = document.querySelector("#updatedHour");
 
   buttonDateSubmit.onclick = (event) => {
-    event.preventDefault()
-    const initialDate = document.getElementById("id_data_inicial").value
-    const finalDate = document.getElementById("id_data_final").value
+    event.preventDefault();
+    const initialDate = document.getElementById("id_data_inicial").value;
+    const finalDate = document.getElementById("id_data_final").value;
+    board.empty();
     socket.emit("change_dates", {
       initialDate,
       finalDate,
-    })
-  }
+    });
+  };
 
-  socket.on("connect", _ => {
-    socket.emit("is_on")
-  })
+  socket.on("connect", (_) => {
+    socket.emit("is_on");
+  });
 
-  socket.on("disconnect", _ => {
-    button_activate.disabled = true
-    button_deactivate.disabled = true
-  })
+  socket.on("disconnect", (_) => {
+    button_activate.disabled = true;
+    button_deactivate.disabled = true;
+  });
 
-  socket.on("send_data", response => {
-    loadBoard(response)
-    updatedHour.innerHTML = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
-  })
+  socket.on("send_data", (response) => {
+    loadBoard(response.activities);
+    loadTimeTable(response.activitiesTime);
+    updatedHour.innerHTML = new Date().toLocaleString("pt-BR", {
+      timeZone: "America/Sao_Paulo",
+    });
+  });
 
-  socket.on("is_on", response => {
-
+  socket.on("is_on", (response) => {
     if (response.response) {
-      button_activate.disabled = true
-      button_deactivate.disabled = false
+      button_activate.disabled = true;
+      button_deactivate.disabled = false;
+    } else {
+      button_activate.disabled = false;
+      button_deactivate.disabled = true;
     }
-    else {
-      button_activate.disabled = false
-      button_deactivate.disabled = true
-    }
-
-  })
+  });
 
   button_activate.onclick = () => {
-    const initialDate = document.getElementById("id_data_inicial").value
-    const finalDate = document.getElementById("id_data_final").value
-    button_activate.blur()
+    const initialDate = document.getElementById("id_data_inicial").value;
+    const finalDate = document.getElementById("id_data_final").value;
+    button_activate.blur();
     socket.emit("turn_on", {
       initialDate,
       finalDate,
-    })
+    });
   };
 
   button_deactivate.onclick = () => {
-    button_deactivate.blur()
-    socket.emit("turn_off")
+    button_deactivate.blur();
+    socket.emit("turn_off");
   };
 });
 
@@ -70,8 +71,8 @@ function loadBoard(result) {
           </div>
         </div>
       </div>
-    `
-  }
+    `;
+  };
 
   const activityStatusCard = (activityStatusKey, activityStatusValue) => {
     const cardColor = {
@@ -81,32 +82,83 @@ function loadBoard(result) {
       PENDING: "rgb(255,222,0)",
       SUSPENDED: "rgb(153,255,255)",
       CANCELLED: "rgb(119,233,118)",
-    }
+    };
     return `
       <div class="col mb-3 text-dark">
-        <div class="card m-auto ${activityStatusKey}" style="background-color: ${cardColor[activityStatusKey.toUpperCase()]};">
+        <div class="card m-auto ${activityStatusKey}" style="background-color: ${
+      cardColor[activityStatusKey.toUpperCase()]
+    };">
           <h1 class="card-header text-center p-2" style="font-size: 5em;">${activityStatusValue}</h1>
           <div class="card-body p-2">
             <h5 class="card-title m-auto">${activityStatusKey.toUpperCase()}</h5>
           </div>
         </div>
       </div>
-    `
-  }
+    `;
+  };
 
   for (let [activityTypeKey, activityTypeValue] of Object.entries(result)) {
     if (!board.find(`.${activityTypeKey}`).length) {
-      board.append(activityTypeCard(activityTypeKey))
+      board.append(activityTypeCard(activityTypeKey));
     }
-    let activityType = board.find(`.${activityTypeKey}`)
+    let activityType = board.find(`.${activityTypeKey}`);
 
-    for (let [activityStatusKey, activityStatusValue] of Object.entries(activityTypeValue)) {
+    for (let [activityStatusKey, activityStatusValue] of Object.entries(
+      activityTypeValue
+    )) {
       if (!activityType.find(`.${activityStatusKey}`).length) {
-        activityType.append(activityStatusCard(activityStatusKey, activityStatusValue))
-      }
-      else {
-        activityType.find(`.${activityStatusKey}`).children("h1").text(`${activityStatusValue}`)
+        activityType.append(
+          activityStatusCard(activityStatusKey, activityStatusValue)
+        );
+      } else {
+        activityType
+          .find(`.${activityStatusKey}`)
+          .children("h1")
+          .text(`${activityStatusValue}`);
       }
     }
+  }
+}
+
+function loadTimeTable(activitiesTime) {
+  const table = `
+    <div class="table-responsive table-content">
+      <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
+        <thead>
+          <tr>
+            <th scope="col" colspan="3">Atividades de ativação concluídas por horário</th>
+          </tr>
+          <tr>
+            <th scope="col">Hora</th>
+            <th scope="col">Concluídas</th>
+            <th scope="col">Espectativa</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  const row = (hour, total) => {
+    return `
+      <tr class="text-md-left">
+        <td>${hour}h</td>
+        <td>${total}</td>
+        <td>-</td>
+      </tr>
+    `;
+  };
+
+  if (!tableTime.find("div").length) {
+    tableTime.append(table);
+  }
+
+  let body = tableTime.find("tbody")[0];
+
+  body.empty();
+
+  for (item in activitiesTime) {
+    body.append(row(item, activitiesTime[item]));
   }
 }
