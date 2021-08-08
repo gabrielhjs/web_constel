@@ -1,4 +1,5 @@
 import datetime
+from pprint import pprint
 
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -157,6 +158,28 @@ def view_consulta_km_pendencias_hoje(request: HttpRequest) -> HttpResponse:
 
 
 @login_required()
+@permission("patrimonio - combustivel - km", "patrimonio")
+def view_consulta_km_pendencias_hoje_detalhe(request: HttpRequest, gestor_id: int) -> HttpResponse:
+  menu = mn.consultas(request)
+
+  itens = services.query_today_pending_detail(gestor_id)
+
+  pprint(list(itens))
+
+  paginator = Paginator(itens, 50)
+  page_number = request.GET.get("page")
+  page_obj = paginator.get_page(page_number)
+
+  context = {
+    "page_obj": page_obj,
+    "form_submit_text": "Filtrar"
+  }
+  context.update(menu)
+
+  return render(request, "km/consultar_pendencias_hoje_detalhes.html", context)
+
+
+@login_required()
 @permission("patrimonio - combustivel - km")
 def view_consulta_registros(request: HttpRequest) -> HttpResponse:
   menu = mn.consultas(request)
@@ -193,6 +216,8 @@ def view_menu_relatorios(request: HttpRequest) -> HttpResponse:
   return render(request, "constel/v2/app.html", context)
 
 
+@login_required()
+@permission("patrimonio - combustivel - km", "gestor", "patrimonio - combustivel")
 def view_relatorio_geral(request: HttpRequest) -> HttpResponse:
   menu = mn.relatorios(request)
 
@@ -437,7 +462,6 @@ def view_registrar_pendencia(request: HttpRequest) -> HttpResponse:
 
   if request.method == "POST":
     if form.is_valid():
-      print(form.cleaned_data.get("data"))
       services.set_pendencia(
         request.user,
         form.cleaned_data.get("funcionario"),
@@ -447,6 +471,29 @@ def view_registrar_pendencia(request: HttpRequest) -> HttpResponse:
       )
 
       return HttpResponseRedirect(f"/patrimonio/combustivel/km/registros/pendencia/")
+
+  context = {
+    "form": form,
+    "form_submit_text": "Registrar"
+  }
+  context.update(menu)
+
+  return render(request, "km/registrar_km_form.html", context)
+
+
+@login_required()
+@permission("patrimonio - combustivel - km")
+def view_registrar_km_inicial_sem_equipe(request: HttpRequest) -> HttpResponse:
+  menu = mn.registros(request)
+
+  form = forms.KmFormFuncionario(gestor_id=request.user.id, data=request.POST or None)
+
+  if request.method == "POST":
+    if form.is_valid():
+      km = form.cleaned_data["km"]
+      services.set_user_team_initial_km(form.cleaned_data["funcionario"], request.user.id, km)
+
+      return HttpResponseRedirect("/patrimonio/combustivel/km/registros")
 
   context = {
     "form": form,

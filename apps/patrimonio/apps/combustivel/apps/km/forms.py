@@ -28,15 +28,15 @@ class KmForm(forms.Form):
         if form_data["km"] <= 0:
             self.errors["km"] = ["Não é possível registrar quilometragem nula ou negativa"]
 
-        if not services.is_team(self.user_id, self.gestor_id):
-            self.errors["km"] = ["Este colaborador não pertence à sua equipe."]
-
         verify, km_inicial = services.is_final_gte_initial(self.km_id, form_data["km"])
         if not verify:
             self.errors["km"] = [
                 "A quilometragem final deve ser maior ou igual a inicial.",
                 f"Quilometragem inicial: {km_inicial} km"
             ]
+
+        if not services.is_team(self.user_id, self.gestor_id) and (km_inicial > 0):
+            self.errors["km"] = ["Este colaborador não pertence à sua equipe."]
 
         return form_data
 
@@ -143,5 +143,50 @@ class RegistraPendenciaForm(forms.Form):
 
         if not form_data.get("data") < date.today():
             self.errors["data"] = ["A data deve ser anterior a hoje"]
+
+        return form_data
+
+
+class KmFormFuncionario(forms.Form):
+
+    funcionario = forms.CharField(label="Colaborador", required=True)
+    km = forms.FloatField(label="Quilometragem", required=True)
+
+    def __init__(self, km_id=None, gestor_id=None, *args, **kwargs):
+        super(KmFormFuncionario, self).__init__(*args, **kwargs)
+
+        self.km_id = km_id
+        self.gestor_id = gestor_id
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs.update({'class': 'form-control'})
+
+    def clean(self):
+        form_data = super(KmFormFuncionario, self).clean()
+
+        if not User.objects.filter(username=form_data.get("funcionario")).exists():
+            self.errors["funcionario"] = ["Este colaborador não está cadastrado no sistema"]
+
+            return form_data
+
+        user_id = User.objects.get(username=form_data.get("funcionario")).id
+
+        if services.is_km_register(form_data.get("funcionario"), date.today()):
+            self.errors["funcionario"] = ["Este colaborador já possui registro de hoje"]
+
+        form_data["funcionario"] = user_id
+
+        if form_data["km"] <= 0:
+            self.errors["km"] = ["Não é possível registrar quilometragem nula ou negativa"]
+
+        if services.is_team(user_id, self.gestor_id):
+            self.errors["km"] = ["Este colaborador pertence à sua equipe."]
+
+        verify, km_inicial = services.is_final_gte_initial(self.km_id, form_data["km"])
+        if not verify:
+            self.errors["km"] = [
+                "A quilometragem final deve ser maior ou igual a inicial.",
+                f"Quilometragem inicial: {km_inicial} km"
+            ]
 
         return form_data

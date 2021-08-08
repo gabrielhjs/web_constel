@@ -1,0 +1,28 @@
+{% for message in messages %}
+<div class="col-md-12 text-md-center">
+    <div class="alert alert-danger mt-1">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+        {{ message }}
+    </div>
+</div>
+{% endfor %}
+
+<form method="GET" class="form-inline justify-content-center">
+
+    {% for field in form %}
+    <div class="form-group">
+        <label for="{{ field.id_for_label }}" class="col">{{ field.label_tag }}</label>
+        {{ field }}
+
+        {% for error in field.errors %}
+        <div class="col text-center">
+            <div class="alert alert-danger mt-1">
+                <a class="close" href="#" data-dismiss="alert">×</a>
+                {{ error }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success ml-1">{{ form_submit_text }}</button>
+</form>

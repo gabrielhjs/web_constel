@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
@@ -13,6 +13,7 @@ from apps.almoxarifado.models import MaterialSaida
 from apps.almoxarifado.apps.cont.models import OntSaida, OntEntrada
 
 from .menu import menu_principal
+from constel.forms import FormDataInicialFinal
 
 
 @login_required
@@ -32,7 +33,7 @@ def index(request):
         'mes'
     )
 
-    hoje = datetime.today()
+    hoje = datetime.datetime.today()
 
     combustivel_mes = EntregaVale.objects.filter(
         data__year=hoje.year,
@@ -96,6 +97,20 @@ def index(request):
 @login_required
 @permission('gerencia')
 def painel_diario(request: HttpRequest) -> HttpResponse:
-    context = menu_principal(request)
+    menu = menu_principal(request)
+
+    data_inicial = request.GET.get("data_inicial", datetime.date.today().isoformat())
+    data_final = request.GET.get("data_final", datetime.date.today().isoformat())
+
+    form = FormDataInicialFinal(initial={
+        "data_inicial": data_inicial,
+        "data_final": data_final,
+    })
+
+    context = {
+        "form": form,
+        "form_submit_text": "Filtrar"
+    }
+    context.update(menu)
 
     return render(request, "gerencia/painel_diario.html", context)

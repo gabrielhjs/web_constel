@@ -5,7 +5,7 @@
     <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
         <thead>
             <tr>
-                <th scope="col" colspan="5">Painel diário de pendências por gestor</th>
+                <th scope="col" colspan="6">Painel diário de pendências por gestor</th>
             </tr>
             <tr>
                 <th scope="col">Matrícula</th>
@@ -13,6 +13,7 @@
                 <th scope="col">Equipe</th>
                 <th scope="col">Pen. km inicial</th>
                 <th scope="col">Pen. km final</th>
+                <th scope="col">#</th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +24,12 @@
                 <td>{{ item.total|default_if_none:"" }}</td>
                 <td>{{ item.initial|default_if_none:"" }}</td>
                 <td>{{ item.final|default_if_none:"" }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                        href="{% url 'patrimonio_combustivel_km_consultas_pendencias_hoje_detalhe' item.gestor__username %}?{{ request.GET.urlencode }}">
+                        detalhe
+                    </a>
+                </td>
             </tr>
             {% endfor %}
     </table>
