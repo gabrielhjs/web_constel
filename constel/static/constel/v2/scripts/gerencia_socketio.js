@@ -126,10 +126,19 @@ function loadTimeTable(activitiesTime) {
       <table class="table table-sm table-bordered table-hover table-dark p-0 m-0">
         <thead>
           <tr>
-            <th scope="col" colspan="3">Atividades de ativação concluídas por horário</th>
+            <th scope="col" colspan="6">Atividades concluídas por horário</th>
           </tr>
           <tr>
-            <th scope="col">Hora</th>
+            <th scope="col" rowspan="2">Hora</th>
+            <th scope="col" colspan="2">Ativação</th>
+            <th scope="col" colspan="2">Ativação Corporativo</th>
+            <th scope="col" colspan="2">Remanejamento Externo</th>
+          </tr>
+          <tr>
+            <th scope="col">Concluídas</th>
+            <th scope="col">Espectativa</th>
+            <th scope="col">Concluídas</th>
+            <th scope="col">Espectativa</th>
             <th scope="col">Concluídas</th>
             <th scope="col">Espectativa</th>
           </tr>
@@ -144,7 +153,11 @@ function loadTimeTable(activitiesTime) {
     return `
       <tr class="text-md-left">
         <td>${hour}h</td>
-        <td>${total}</td>
+        <td>${total.AT}</td>
+        <td>-</td>
+        <td>${total.ATC}</td>
+        <td>-</td>
+        <td>${total.RO}</td>
         <td>-</td>
       </tr>
     `;
