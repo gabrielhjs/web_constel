@@ -242,6 +242,8 @@ def consulta_colaboradores_detalhes(request: HttpRequest, user: str) -> HttpResp
     ).values(
         "ferramenta__nome",
         "total",
+    ).exclude(
+        total=0,
     ).order_by(
         "-total"
     )
