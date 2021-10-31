@@ -244,6 +244,8 @@ def consulta_colaboradores_detalhes(request: HttpRequest, user: str) -> HttpResp
         "total",
     ).order_by(
         "-total"
+    ).exclude(
+        total=0,
     )
 
     lista_patrimonio = PatrimonioSaida.objects.filter(
