@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 from constel.apps.controle_acessos.decorator import permission
 from constel.forms import FormDataInicialFinal, FormFiltraQ
-from .apps.ferramenta.models import FerramentaSaida, FerramentaFechamento
+from .apps.ferramenta.models import FerramentaSaida, FerramentaFechamento, FerramentaQuantidadeFuncionario
 from .apps.patrimonio1.models import PatrimonioSaida, PatrimonioId
 
 from .menu import (
@@ -233,22 +233,17 @@ def consulta_colaboradores_detalhes(request: HttpRequest, user: str) -> HttpResp
         total_quantidade=Sum(F("quantidade"))
     )
 
-    lista_ferramenta = FerramentaSaida.objects.filter(user_to__username=user).annotate(
-        descontos=Subquery(descontos.values("total_quantidade")[:1])
-    ).annotate(
-        total=Case(
-            When(descontos__isnull=True, then="quantidade"),
-            default=ExpressionWrapper(F("quantidade") - F("descontos"), output_field=IntegerField())
-        ),
+    lista_ferramenta = FerramentaQuantidadeFuncionario.filter(
+        user__username=user
     ).values(
-        "ferramenta__nome"
+        "ferramenta__nome",
     ).annotate(
-        total=Sum(F("total"))
+        total=F("quantidade")
     ).values(
         "ferramenta__nome",
         "total",
     ).order_by(
-        "ferramenta__nome"
+        "-total"
     )
 
     lista_patrimonio = PatrimonioSaida.objects.filter(
