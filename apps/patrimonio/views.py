@@ -233,7 +233,7 @@ def consulta_colaboradores_detalhes(request: HttpRequest, user: str) -> HttpResp
         total_quantidade=Sum(F("quantidade"))
     )
 
-    lista_ferramenta = FerramentaQuantidadeFuncionario.filter(
+    lista_ferramenta = FerramentaQuantidadeFuncionario.objects.filter(
         user__username=user
     ).values(
         "ferramenta__nome",
